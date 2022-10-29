@@ -1,0 +1,24 @@
+.formControllogin{
+    background-color: rgb(245, 248, 247);
+    width: 342px;
+    height: 400px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    margin-top: 6px; 
+    margin-bottom: 16px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.link{
+    text-decoration: none;
+    color: #083b68;
+}
+
+.h2text{
+    color: #1d1d1d;
+    font-size: 15px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
