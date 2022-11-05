@@ -22,3 +22,19 @@
     margin-bottom: 10px;
     margin-top: 10px;
 }
+
+.bayat{
+    margin-top: 40px;
+}
+
+.bayat:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: no-drop;
+}
+
+.emailLabel{
+    margin-left: 0px;
+}
