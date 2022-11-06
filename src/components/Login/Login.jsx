@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import './login.css';
 import { useState } from "react";
 import * as Yup from "yup";
-import images from '../../assets/img/images.jpg'
+import doctor from '../../assets/img/doctor.jpg'
 
 const value = {
     email: "",
@@ -11,10 +11,9 @@ const value = {
 }
 
 const validationSchema = Yup.object({
-    email: Yup.string().email("فرم ایمیلت اشتباهه").required("ایمیلت ضروریه"),
+    email: Yup.string().required("ایمیلت ضروریه"),
     password: Yup.string()
     .required("پسوردت ضروریه")
-    .min(8, "password must be at least 8 characters")
     .matches(/[a-zA-Z]/, "پسورد باید شامل حروف لاتین باشه"),
 })
 
@@ -81,7 +80,7 @@ const Login = () => {
           </form>
             </div>
             <div className="signUpimgcontainer">
-              <img  src= {images} />
+              <img  src= {doctor} />
             </div>
           </div>
         </div>

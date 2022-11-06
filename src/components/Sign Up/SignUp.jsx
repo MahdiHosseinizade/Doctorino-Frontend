@@ -3,19 +3,22 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
-import images from '../../assets/img/images.jpg'
+import doctor from '../../assets/img/doctor.jpg'
+import axios from "axios";
+import { TextField } from "@mui/material";
 
 const value = {
-  email: "",
+  username: "",
   password: "",
   passwordconfrim: "",
+  is_doctor: false,
+  is_hotel_owner: false,
 };
 
 const validationSchema = Yup.object({
-  email: Yup.string().email("ایمیلت نامعتبره").required("ایمیل ضروریه"),
+  username: Yup.string().required("نام کاربری ضروریه"),
   password: Yup.string()
     .required("رمزت نامعتبره")
-    // .min(8, "password must be at least 8 characters")
     .matches(/[a-zA-Z]/, "رمزت باید حداقل یک حرف داشته باشه"),
   passwordconfrim: Yup.string()
     .required("تایید رمزت ضروزیه")
@@ -24,25 +27,26 @@ const validationSchema = Yup.object({
 
 
 const SignUp = () => {
-  const [user, setUser] = useState([]);
-  
+  const [user, setUser] = useState({...value});
   console.log(user);
 
   
   const formik = useFormik({
     initialValues: value,
-    onSubmit: (values) => setUser([...user, values]),
+    onSubmit: (values) => {
+      postuserHandler(values);
+    },
     validationSchema: validationSchema,
     validateOnMount: true,
   });
   // console.log(formik);
  
 
-  // const post{userHandler = () =>{
-  //     axios.post("http://localhost:3001/users",{...user})
-  //     .then((res) => setUser(res.data))
-  //     .catch((err) => console.log(err));
-  // }
+  const postuserHandler = (user) =>{
+      axios.post("http://127.0.0.1:8000/api/auth/new-user/",{username:user.username,password:user.password,is_doctor:user.is_doctor,is_hotel_owner:user.is_hotel_owner})
+      .then((res) => setUser(res.data))
+      .catch((err) => console.log(err));
+  }
 
   // async function  getUsers() {
   //   try {
@@ -66,18 +70,16 @@ const SignUp = () => {
         <hr />
         <div className="input">
           <div className="emailInput mb4">
-            <label >ایمیل</label>
+            <label >نام کاربری</label>
             <div className="icon-email">
               <input
-                type = "email"
+                type = "text"
                 className="email"
-                // type="text"
-                // placeholder="email@test.com"
-                name="email"
-                {...formik.getFieldProps("email")}
+                name="username"
+                {...formik.getFieldProps("username")}
               />
-              {formik.errors.email && formik.touched.email && (
-                <div className="error">{formik.errors.email}</div>
+              {formik.errors.username && formik.touched.username && (
+                <div className="error">{formik.errors.username}</div>
               )}
               {/* <AiOutlineMail className="icon" /> */}
             </div>
@@ -90,6 +92,10 @@ const SignUp = () => {
                 type= "password"
                 // placeholder="Password"
                 name="password"
+                // onChange={(e)=>{
+                //   setUser({...user,password:e.target.value})
+                // }}
+                
                 {...formik.getFieldProps("password")}
               />
               {formik.errors.password && formik.touched.password && (
@@ -115,7 +121,7 @@ const SignUp = () => {
             </div>
           </div>
         </div>
-        <button disabled={!(formik.isValid && formik.dirty)}   type="submit">ثبت نام</button>
+        <button onClick={postuserHandler}  disabled={!(formik.isValid && formik.dirty)}   type="submit">ثبت نام</button>
         <h2 className="h2text">
           آیا حساب کاربری دارید ؟
           <Link className="link" to="/">
@@ -125,7 +131,7 @@ const SignUp = () => {
       </form>
         </div>
         <div className="signUpimgcontainer">
-          <img  src= {images} />
+          <img  src= {doctor} />
         </div>
       </div>
     </div>
