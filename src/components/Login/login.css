@@ -10,6 +10,13 @@
     margin-bottom: 16px;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+/* center of the page formlogin*/
+.formLogin{
+    /* width: 100%;
+    height: 100vh;
+    display: grid ;
+    place-items: center; */
+}
 
 .link{
     text-decoration: none;
@@ -20,7 +27,7 @@
     color: #1d1d1d;
     font-size: 15px;
     margin-bottom: 10px;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .bayat{
@@ -29,10 +36,10 @@
 
 .bayat:disabled,
 button[disabled]{
-  border: 1px solid #999999;
-  background-color: #cccccc;
-  color: #666666;
-  cursor: no-drop;
+    border: 1px solid #999999;
+    background-color: #65b9d3;
+    color: #fefefe;
+    cursor: no-drop;
 }
 
 .emailLabel{
