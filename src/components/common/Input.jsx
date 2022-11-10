@@ -1,22 +1,21 @@
 
 
-const Input = ({label,name,formik}) => {
-    return (
+const Input = ({label,name,formik,type}) => {
+  return (
         <div>
             <div className="emailInput mb4">
-            <label >{label}</label>
+            <label htmlFor={name} >{label}</label>
             <div className="icon-email">
               <input
-                type = {name}
-                className={name}
-                placeholder={name}
+                className={formik.errors[name] && formik.touched[name] ? "error-border" : null}
+                id={name}
+                type = {type}
                 name={name}
                 {...formik.getFieldProps(name)}
               />
               {formik.errors[name] && formik.touched[name] && (
                 <div className="error">{formik.errors[name]}</div>
               )}
-              {/* <AiOutlineMail className="icon" /> */}
             </div>
           </div>
         </div>
