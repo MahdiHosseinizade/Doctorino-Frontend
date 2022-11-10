@@ -1,65 +1,84 @@
 import "./signUp.css";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {useState } from "react";
+import { Link, withRouter } from "react-router-dom";
 import * as Yup from "yup";
-import doctor from '../../assets/img/doctor.jpg'
 import axios from "axios";
-import { TextField } from "@mui/material";
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Input from "../common/Input";
+
 
 const value = {
-  username: "",
+  email: "",
   password: "",
   passwordconfrim: "",
   is_doctor: false,
   is_hotel_owner: false,
 };
 
+
 const validationSchema = Yup.object({
-  username: Yup.string().required("نام کاربری ضروریه"),
+  email : Yup.string().email("ایمیل معتبر نیست").required("ایمیل الزامی است"),
   password: Yup.string()
-    .required("رمزت نامعتبره")
-    .matches(/[a-zA-Z]/, "رمزت باید حداقل یک حرف داشته باشه"),
+    .required("رمز عبور الزامی است"),
   passwordconfrim: Yup.string()
-    .required("تایید رمزت ضروزیه")
-    .oneOf([Yup.ref("password"), null], "پسورد باید یکی باشه "),
+    .required("تکرار رمز عبور الزامی است")
+    .oneOf([Yup.ref("password"), null], "رمز عبور همخوانی ندارد"),
 });
 
 
-const SignUp = () => {
+const SignUp = ({history}) => {
   const [user, setUser] = useState({...value});
-  console.log(user);
+  // const [error,setError] = useState(null);
+  
 
   
   const formik = useFormik({
     initialValues: value,
-    onSubmit: (values) => {
-      postuserHandler(values);
+    onSubmit: (values,e) => {
+      postuserHandler(values)
+      e.preventDefault();
     },
     validationSchema: validationSchema,
-    validateOnMount: true,
+    validateOnMount: false,
   });
-  // console.log(formik);
+  
  
 
   const postuserHandler = (user) =>{
       axios.post("http://127.0.0.1:8000/api/auth/new-user/",{username:user.username,password:user.password,is_doctor:user.is_doctor,is_hotel_owner:user.is_hotel_owner})
-      .then((res) => setUser(res.data))
-      .catch((err) => console.log(err));
+      .then((res) =>{
+        // setUser(res.data);
+        history.push("/");
+        toast.success('ثبت نام با موفقیت انجام شد',{
+          className:"toast-succces",
+          position: "top-right",
+          autoClose: 5000,
+        });
+      })
+      .catch((error) => {
+        toast.error('you have some error')
+        console.log(error);
+      });
   }
 
-  // async function  getUsers() {
-  //   try {
-  //     const res = await axios.get("http://localhost:3001/users");
-  //     setUser(res.data);
-  //   } catch (error) {
-  //     console.log(error);
+  // const changeHandler = (selectedOption) =>{
+  //   setSelect(selectedOption);
+  //   if (selectedOption.value === "مریض"){
+  //     formik.values.is_doctor = false;
+  //     formik.values.is_hotel_owner = false;
   //   }
+  //   else if (selectedOption.value === "دکتر"){
+  //     formik.values.is_doctor = true;
+  //     formik.values.is_hotel_owner = false;
+  //   }
+  //   else {
+  //     formik.values.is_doctor = false;
+  //     formik.values.is_hotel_owner = true;
+  //   }
+  //   setUser(formik.values);
   // }
-
-  // useEffect (() =>{
-  //     getUsers();
-  // },[])
 
   return (
     <div className="signUpPage">
@@ -70,58 +89,18 @@ const SignUp = () => {
         <hr />
         <div className="input">
           <div className="emailInput mb4">
-            <label >نام کاربری</label>
-            <div className="icon-email">
-              <input
-                type = "text"
-                className="email"
-                name="username"
-                {...formik.getFieldProps("username")}
-              />
-              {formik.errors.username && formik.touched.username && (
-                <div className="error">{formik.errors.username}</div>
-              )}
-              {/* <AiOutlineMail className="icon" /> */}
-            </div>
+            <Input label="ایمیل" name="email" formik={formik} type="email" />
           </div>
           <div className="mb4">
-            <label >کلمه عبور</label>
-            <div className="icon-password">
-              <input
-                className="password"
-                type= "password"
-                // placeholder="Password"
-                name="password"
-                // onChange={(e)=>{
-                //   setUser({...user,password:e.target.value})
-                // }}
-                
-                {...formik.getFieldProps("password")}
-              />
-              {formik.errors.password && formik.touched.password && (
-                <div className="error">{formik.errors.password}</div>
-              )}
-              {/* <GrKey className="icon2" /> */}
-            </div>
+            <Input label="رمز عبور" name="password" formik={formik} type="password" />
           </div>
           <div className="re-enter mb4">
-            <label >تایید کلمه عبور</label>
-            <div className="icon-password">
-              <input
-                className="password"
-                type="password"
-                // placeholder="Password confrimation"
-                name="passwordconfrim"
-                {...formik.getFieldProps("passwordconfrim")}
-              />
-              {formik.errors.passwordconfrim && formik.touched.passwordconfrim && (
-                <div className="error">{formik.errors.passwordconfrim}</div>
-              )}
-              {/* <GrKey className="icon2" /> */}
-            </div>
+            <Input label="تایید رمز عبور" name="passwordconfrim" formik={formik} type="password" />
           </div>
         </div>
-        <button onClick={postuserHandler}  disabled={!(formik.isValid && formik.dirty)}   type="submit">ثبت نام</button>
+        <div>
+        </div>
+        <button  disabled={!(formik.isValid)}  type="submit">ثبت نام</button>
         <h2 className="h2text">
           آیا حساب کاربری دارید ؟
           <Link className="link" to="/">
@@ -130,12 +109,10 @@ const SignUp = () => {
         </h2>
       </form>
         </div>
-        <div className="signUpimgcontainer">
-          <img  src= {doctor} />
-        </div>
+        
       </div>
     </div>
   );
 };
 
-export default SignUp;
+export default withRouter(SignUp);

@@ -1,9 +1,14 @@
 import {useFormik} from "formik";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import './login.css';
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import * as Yup from "yup";
 import doctor from '../../assets/img/doctor.jpg'
+import axios from "axios";
+import { toast } from "react-toastify";
+import { Box, TextField } from "@mui/material";
+import Input from "../common/Input";
+
 
 const value = {
     email: "",
@@ -11,63 +16,61 @@ const value = {
 }
 
 const validationSchema = Yup.object({
-    email: Yup.string().required("ایمیلت ضروریه"),
-    password: Yup.string()
-    .required("پسوردت ضروریه")
-    .matches(/[a-zA-Z]/, "پسورد باید شامل حروف لاتین باشه"),
+    email : Yup.string().email("ایمیل معتبر نیست").required("ایمیل را وارد کنید"),
+    password : Yup.string().required("کلمه عبور را وارد کنید"),
 })
 
 
-const Login = () => {
-    const [user, setUser] = useState([]);   
+const Login = ({history}) => {
+    const [user, setUser] = useState({...value});   
     // console.log(user);
     const formik = useFormik({
         initialValues: value,
-        onSubmit : (values) => setUser(values),
+        onSubmit : (values,e) =>{
+          postuserHandler(values);
+          console.log();
+          e.preventDefault();
+        },
         validationSchema: validationSchema,
         validateOnMount: true,
     }) 
 
+    // useEffect(() => {
+    //   if (document.cookie.token ) {
+    //     history.push("/");
+    //   }  
+    //   },[])
+    
+
+    const postuserHandler = (user) =>{
+      axios.post("http://127.0.0.1:8000/api/auth/token/",{username:user.username,password:user.password,is_doctor:user.is_doctor,is_hotel_owner:user.is_hotel_owner})
+      .then((res) => {
+        setUser(res.data);
+        document.cookie = `token=${res.data.access}`;
+        document.cookie = `refresh=${res.data.refresh}`;
+        toast.success('Enter Succesfuly',{
+          position: "top-right",
+          autoClose: 2000,
+          
+        })
+      })
+      .catch((err) => console.log(err));
+  }
+
     return (
+        
         <div className="signUpPage">
-          <div className="signUpBox">
-            <div className="signUpBoxForm">
-            <form className="formControl" onSubmit={formik.handleSubmit}>
-            <h2 className="signUpTitle">ورود </h2>
+          <div>
+            <div className="formControllogin">
+            <form onSubmit={formik.handleSubmit}>
+            <h2 className="signUpTitle">ورود</h2>
             <hr />
             <div className="input">
               <div className="emailInput mb4">
-                <label >ایمیل</label>
-                <div className="icon-email">
-                  <input
-                    type = "email"
-                    className="email"
-                    // type="text"
-                    // placeholder="email@test.com"
-                    name="email"
-                    {...formik.getFieldProps("email")}
-                  />
-                  {formik.errors.email && formik.touched.email && (
-                    <div className="error">{formik.errors.email}</div>
-                  )}
-                  {/* <AiOutlineMail className="icon" /> */}
-                </div>
+                <Input formik={formik} name= "email" type="email" label="ایمیل" />
               </div>
               <div className="mb4">
-                <label >کلمه عبور</label>
-                <div className="icon-password">
-                  <input
-                    className="password"
-                    type= "password"
-                    // placeholder="Password"
-                    name="password"
-                    {...formik.getFieldProps("password")}
-                  />
-                  {formik.errors.password && formik.touched.password && (
-                    <div className="error">{formik.errors.password}</div>
-                  )}
-                  {/* <GrKey className="icon2" /> */}
-                </div>
+                <Input formik={formik} name= "password" type="password" label="کلمه عبور" />
               </div>
             </div>
             <button disabled={!(formik.isValid && formik.dirty)}   type="submit">ورود</button>
@@ -79,12 +82,9 @@ const Login = () => {
             </h2>
           </form>
             </div>
-            <div className="signUpimgcontainer">
-              <img  src= {doctor} />
-            </div>
           </div>
         </div>
       );
 }
  
-export default Login;
+export default withRouter(Login);
