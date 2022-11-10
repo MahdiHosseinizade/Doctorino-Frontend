@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+// import notfound from '../../assets/img/notfound.jpg'
 
 const NotFound = () => {
     return (
@@ -10,7 +10,9 @@ const NotFound = () => {
                 this page not found
             </p>
             <Link to='/'>LoginPage</Link>
-        </div>
+            {/* <img src={notfound} alt="notfound" /> */}
+         </div>
+        
     );
 }
  
