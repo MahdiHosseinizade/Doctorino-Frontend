@@ -1,12 +1,11 @@
 import {useFormik} from "formik";
 import { Link, withRouter } from "react-router-dom";
 import './login.css';
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import * as Yup from "yup";
 import doctor from '../../assets/img/doctor.jpg'
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Box, TextField } from "@mui/material";
 import Input from "../common/Input";
 
 
@@ -28,7 +27,6 @@ const Login = ({history}) => {
         initialValues: value,
         onSubmit : (values,e) =>{
           postuserHandler(values);
-          console.log();
           e.preventDefault();
         },
         validationSchema: validationSchema,
@@ -51,7 +49,6 @@ const Login = ({history}) => {
         toast.success('Enter Succesfuly',{
           position: "top-right",
           autoClose: 2000,
-          
         })
       })
       .catch((err) => console.log(err));
