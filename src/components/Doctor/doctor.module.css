@@ -1,0 +1,22 @@
+/* this section is get out form right card */
+
+.doctorRegisterForm{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0 10px;
+}
+
+.selectDocotorOption{
+    border: 1.5px solid #ccc;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 0 10px;
+    margin-top: 41px;
+    padding: 4px 40px;
+    border-radius: 10px;
+    background-color: white;
+    font-family: 'IranYekan';
+}
+
+/* this selectScale same size with other input and have grid with each other */
+

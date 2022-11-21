@@ -29,6 +29,7 @@ const SickRegister = () => {
         initialValues: value,
         onSubmit: (values) => setUser([...user, values]),
         validationSchema: validationSchema,
+        validateOnMount: true,
     })
 
     return (
@@ -47,7 +48,7 @@ const SickRegister = () => {
         </div>
         <div>
         </div>
-        <button  disabled={!(formik.isValid)}  type="submit">ثبت نام</button>
+        <button  disabled={!(formik.isValid && formik.dirty)}   type="submit">ثبت نام</button>
             </form>
         </div>
     );

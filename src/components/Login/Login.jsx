@@ -51,7 +51,13 @@ const Login = ({history}) => {
           autoClose: 2000,
         })
       })
-      .catch((err) => console.log(err));
+      // add style to toast
+      .catch((err) =>{
+        toast.error('مشکلی پیش آمده',{
+          position: "top-right",
+          autoClose: 2000,
+        })
+      })
   }
 
     return (

@@ -1,13 +1,12 @@
 import "./signUp.css";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
-import images from '../../assets/img/images.jpg'
-import DoctorRegister from "../Doctor.jsx/doctorLogin";
+import DoctorRegister from "../Doctor/doctorRegister";
 import SickRegister from "../Sick/sickRegister";
 import Hotelregister from "../Hotel/hotelRegister";
-import { RadioGroup ,FormControlLabel,Radio } from '@mui/material';
+import { RadioGroup ,FormControlLabel,Radio, Typography } from '@mui/material';
 
 
 const value = {
@@ -23,7 +22,7 @@ const SignUp = () => {
   const formik = useFormik({
     initialValues: value,
     validationSchema: Yup.object({
-      gender: Yup.string().required("Required"),
+      gender: Yup.string().required("لطفا یکی از گزینه ها را انتخاب کنید"),
     })
   })
 
@@ -65,10 +64,10 @@ const SignUp = () => {
         <div className="signUpimgcontainer">
           <h3 className="roleSignUpTitle">ثبت نام در سایت به عنوان</h3>
           <div className="roleSignUp">
-          <RadioGroup name="use-radio-group" defaultValue="مریض">
-              <FormControlLabel  onChange={sickHandler} value="مریض" label="مریض" control={<Radio />} />
-              <FormControlLabel  onChange={doctorHandler} value="دکتر" label="دکتر" control={<Radio />} />
-              <FormControlLabel onChange={hotelHandler} value="هتل" label="هتل" control={<Radio />} />
+          <RadioGroup  name="use-radio-group" defaultValue="مریض">
+              <FormControlLabel className="mamad"  onChange={sickHandler} value="مریض" label={<Typography style={{fontFamily : 'IranYekan'}} >مریض</Typography>} control={<Radio />} />
+              <FormControlLabel className="mamad" onChange={doctorHandler} value="دکتر" label={<Typography style={{fontFamily : 'IranYekan'}} >دکتر</Typography>} control={<Radio />} />
+              <FormControlLabel className="mamad" onChange={hotelHandler} value="هتل" label={<Typography style={{fontFamily : 'IranYekan'}} >هتل دار</Typography>} control={<Radio />} />
           </RadioGroup>
           </div>
         </div>

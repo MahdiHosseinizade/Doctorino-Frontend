@@ -1,34 +1,30 @@
-/* full screen is not ok form in already have an account */
-
+/* img is top of the inout section */
 .signUpPage{
     width: 100%;
     height: 100vh;
     display: grid ;
     place-items: center;
 }
-   
+    
+
 .signUpBoxForm{
     border: 1px solid #ccc;
+    border-radius: 10px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    /* width: 37%; */
-    width: 400px;
-    height: 500px;
-    background-color: rgb(245, 246, 248);
+    padding: 12px 20px;
     box-sizing: border-box;
-    border-radius: 10px;
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    place-items: center;
+    width: 60%;
+    background-color: rgb(245, 246, 248);
+    display: flex;
+    align-items: center;
+    height: 500px;
+    justify-content: center;
 }
- /* h2text should in form */
-
-
-
 .formControl{
     background-color: rgb(245, 246, 248);
     width: 80%;
+    
 }
 
 hr{
@@ -44,7 +40,7 @@ input{
     height: 33px;
     display: block;
     background-color: #fff;
-    outline-color: #65b9d3;
+    outline-color: #bfdbfe;
     color: #444;
     border: 1px solid rgb(174, 172, 172);
     border-radius: 10px;
@@ -69,14 +65,14 @@ button{
     cursor: pointer;
     width: 100%;
     margin-bottom: 10px;
-    margin-top: 15px;
+    margin-top: 15 px;
     font-size: 16px;
 }
 
 button:disabled{
     border: 1px solid #999999;
-    background-color: #65b9d3;
-    color: #fefefe;
+    background-color: #cccccc;
+    color: #666666;
     cursor: no-drop;
 }
 
@@ -84,17 +80,45 @@ button:disabled{
     position: relative;
 }
 
+.email{
+    /* padding-left: 30px; */
+}
+ 
+.icon{
+    position: absolute;
+    top: 6px;
+    left: 0;
+    margin-left: 2px;
+    color: rgb(28, 26, 26);
+    font-size: 20px;
+    margin-left: 3px;
+}
+
 .password{
     padding-left: 30px;
 }
 
-
+.icon-password{
+    position: relative;
+}
+.icon2{
+    position: absolute;
+    top: 6px;
+    left: 0;
+    margin-left: 2px;
+    color: rgb(36, 34, 34);
+    font-size: 20px;
+    margin-left: 3px;    
+}
 
 .h2text{
     display: flex;
     justify-content: space-between;
 }
 
+.h2text link{
+    margin-right: 1rem;
+}
 
 
 
@@ -104,21 +128,19 @@ button:disabled{
 }
 
 .error{
-    color: #ef4444;
+    color: #e11d48;
     font-size: 13px;
+    margin-top: 5px;
     margin-bottom: 5px;
     position: absolute;
     margin-left: 0;
     font: bold;
     font-family: "IranYekan";
-}
-
-.error-border{
-    border: 1px solid #ef9999;
+    
 }
 
 .mb4{
-    margin-bottom: 25px !important;
+    margin-bottom: 32px !important;
 }
 
 
@@ -126,7 +148,8 @@ button:disabled{
     text-align: center;
 }
 .signUpimgcontainer{
-    width: 63%;
+    width: 40%;
+    background-color: rgb(197, 248, 231);
 }
 
 .signUpimgcontainer img{
@@ -141,8 +164,8 @@ button:disabled{
     display: flex;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 10px;
-    /* height:500px;
-    width: 900px ; */
+    height: 500px;
+    width: 900px ;
 }
 
 @media screen and (max-width: 768px){
@@ -155,18 +178,62 @@ button:disabled{
         align-items: center;
     }
     .signUpBoxForm{
-        margin-top: 80px;
-        margin-bottom: 80px;
-        /* width: 100%; */
-        /* height: 100%; */
+        width: 100%;
+        height: 100%;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
         border-top-left-radius: 10px;
         border-bottom-left-radius: 10px;
     }
     .signUpimgcontainer{
-        margin-top: 20px;
         width: 100%;
-        height: 170px;
     }
-    
+    .signUpimgcontainer img{
+        width:100%;
+        height: 100%;
+        border-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
 }
 
+.roleSignUpTitle{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+/* roleSignup should center the page  */
+.roleSignUp{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 50vh;
+}
+
+.role{
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 5px 100px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.RadioSick{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+
+
+.mamad{
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 3px 40px;
+    margin-top: 10px;
+}

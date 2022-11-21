@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   return (
     <div>
-        <ToastContainer />
+        <ToastContainer rtl className= 'toastStyle' />
         <BrowserRouter>
         <Switch>
           {routes.map((route ) => (
