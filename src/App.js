@@ -1,22 +1,46 @@
 import './App.css';
 import routes from './routes';
-import { Switch,Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import PrivateSwitch from './utils/PrivateSwitch';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import createCache from '@emotion/cache';
+import { prefixer } from 'stylis';
+import rtlPlugin from 'stylis-plugin-rtl';
+import { CacheProvider } from '@emotion/react';
+import React from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './assets/theme/defaultTheme';
+import { AuthProvider } from './context/AuthContext';
+
+
+const cacheRtl = createCache({
+  key: 'muirtl',
+  stylisPlugins: [prefixer, rtlPlugin],
+})
 
 const App = () => {
+
+  React.useLayoutEffect(() => {
+    document.body.setAttribute('dir', 'rtl');
+  }, []);
+
   return (
-    <div>
-        <ToastContainer rtl className= 'toastStyle' />
+    <CacheProvider value={cacheRtl}>
+      <ThemeProvider theme={theme}>
+        <ToastContainer rtl className='toastStyle' />
         <BrowserRouter>
-        <Switch>
-          {routes.map((route ) => (
-              <Route {...route} />
-          ))}
-        </Switch>
+          <AuthProvider>
+            <Switch>
+              {routes.map((route, index) => (
+                route.private ? <PrivateSwitch key={index} {...route} /> : <Route key={index} {...route} />
+              ))}
+            </Switch>
+          </AuthProvider>
         </BrowserRouter>
-    </div>
+      </ThemeProvider>
+    </CacheProvider>
   );
 }
- 
+
 export default App;

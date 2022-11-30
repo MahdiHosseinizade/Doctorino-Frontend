@@ -46,3 +46,14 @@ button[disabled]{
     margin-left: 0px;
 }
 
+/* Navbar fixed the top  */
+nav{
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 80px;
+    align-items: center;
+    box-sizing: border-box;
+}
+

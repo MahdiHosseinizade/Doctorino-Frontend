@@ -1,4 +1,5 @@
-/* img is top of the inout section */
+
+
 .signUpPage{
     width: 100%;
     height: 100vh;
@@ -7,24 +8,28 @@
 }
     
 
+
+
 .signUpBoxForm{
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    border:1px  solid #ccc;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    width: 60%;
-    background-color: rgb(245, 246, 248);
-    display: flex;
-    align-items: center;
+    width: 700px;
     height: 500px;
-    justify-content: center;
+    background-color: rgb(245, 246, 248);
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+    display:grid;
+    grid-template-rows: 1fr 1fr;
+    place-items: center;
+
+
 }
+/* formcontrol is getting out from page */
 .formControl{
     background-color: rgb(245, 246, 248);
     width: 80%;
-    
 }
 
 hr{
@@ -80,6 +85,7 @@ button:disabled{
     position: relative;
 }
 
+
 .email{
     /* padding-left: 30px; */
 }
@@ -120,6 +126,13 @@ button:disabled{
     margin-right: 1rem;
 }
 
+.h2text a:hover{
+    color: #083b68;
+    font-size: 15px;
+    background-color: rgb(201, 193, 193);
+    border-radius: 50%;
+    padding: 2px 5px;
+}
 
 
 .re-enter{
@@ -140,7 +153,7 @@ button:disabled{
 }
 
 .mb4{
-    margin-bottom: 32px !important;
+    margin-bottom: 24px !important;
 }
 
 
@@ -149,7 +162,7 @@ button:disabled{
 }
 .signUpimgcontainer{
     width: 40%;
-    background-color: rgb(197, 248, 231);
+    background-color: rgb(217, 236, 230);
 }
 
 .signUpimgcontainer img{
@@ -168,7 +181,7 @@ button:disabled{
     width: 900px ;
 }
 
-@media screen and (max-width: 768px){
+@media screen and (max-width: 768px){  
     .signUpBox{
         width: 100%;
         height: 100%;
@@ -176,6 +189,7 @@ button:disabled{
         flex-direction: column-reverse;
         justify-content: center;
         align-items: center;
+        margin-top: 30%;
     }
     .signUpBoxForm{
         width: 100%;
@@ -189,16 +203,19 @@ button:disabled{
         width: 100%;
     }
     .signUpimgcontainer img{
-        width:100%;
-        height: 100%;
+        width:20%;
+        height: 20%;
         border-radius: 10px;
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
+    .signUp{
+        width: 100%;
+        height: 100%;
+    }
 }
-
 .roleSignUpTitle{
     display: flex;
     text-align: center;
@@ -211,7 +228,7 @@ button:disabled{
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 50vh;
+    height: 35vh;
 }
 
 .role{
@@ -230,10 +247,27 @@ button:disabled{
 }
 
 
-
-.mamad{
+.radio{
     border: 1px solid #bfdbfe;
     border-radius: 10px;
     padding: 3px 40px;
     margin-top: 10px;
+}
+
+.radio:hover{
+    background-color: #bfdbfe;
+}
+
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* padding: 0 2rem; */
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+    height: 60px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1;
 }

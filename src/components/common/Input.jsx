@@ -1,6 +1,6 @@
 
 
-const Input = ({label,name,formik,type}) => {
+const Input = ({label,name,formik,type,placeholder}) => {
   return (
         <div>
             <div className="emailInput mb4">
@@ -12,6 +12,7 @@ const Input = ({label,name,formik,type}) => {
                 type = {type}
                 name={name}
                 {...formik.getFieldProps(name)}
+                placeholder={placeholder}
               />
               {formik.errors[name] && formik.touched[name] && (
                 <div className="error">{formik.errors[name]}</div>
@@ -22,4 +23,4 @@ const Input = ({label,name,formik,type}) => {
     );
 }
  
-export default Input;
+export default Input; 
