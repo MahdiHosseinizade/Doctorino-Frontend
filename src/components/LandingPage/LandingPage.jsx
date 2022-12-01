@@ -1,7 +1,11 @@
+import './landingPage.css';
 import React, { useContext, useEffect } from "react";
 import NavBar from "../NavBar/newNavBar";
 import { makeStyles } from "@mui/styles";
 import AuthContext from "../../context/AuthContext";
+import otagh from '../../assets/img/otagh.jpg'
+import { useState } from 'react';
+
 
 const useStyles = makeStyles({
   root: {
@@ -16,6 +20,8 @@ const useStyles = makeStyles({
 });
 
 export default function LandingPage() {
+  const [input,setInput] = useState("");
+  console.log(input);
   const { user} = useContext(AuthContext)
   const classes = useStyles();
 
@@ -23,14 +29,20 @@ export default function LandingPage() {
     console.log(user);
   }, [user]);
 
+  const chnageHandler = (e) => {
+    setInput(e.target.value)
+  }
+
   return (
     <div className={classes.root}>
       <NavBar />
-      <h1
-      //   className={classes.root}
-      >
-        landing page
-      </h1>
+      <div className="landingPage">
+        <div className="searchBar">
+          <div className="search">
+            <input onChange={chnageHandler} className="searchDoctor" type="text" placeholder="جستجوی پزشک و تخصص ..." />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

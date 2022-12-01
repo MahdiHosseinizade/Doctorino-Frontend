@@ -1,0 +1,21 @@
+.searchBar{
+    margin-bottom: 60px;
+    background-image: url('../../assets/img/otagh.jpg');
+    width: 60vw;
+    height: 60vh;
+    padding: 10px;
+    font-size: 16px;
+    outline: none;
+    border-radius: 10px;
+}
+
+.search{
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+.searchDoctor::placeholder{
+    font-family: 'IranYekan';
+}
