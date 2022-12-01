@@ -18,7 +18,7 @@
 //         </div>
 //     );
 // }
- 
+
 // export default PanelLayout;
 
 import { Box, Container, CssBaseline } from '@mui/material';
@@ -48,10 +48,10 @@ export default function PanelLayout({ children }) {
 
             <Container sx={{ width: '100%', position: "sticky", display: "flex" }}>
                 <SideBar />
-                <Box sx={{alignItems: "center", justifyContent: "center",  display: "flex"}}>
-                {children}
+                <Box sx={{ alignItems: "center", justifyContent: "center", display: "flex" }}>
+                    {children}
                 </Box>
-                
+
             </Container>
         </Container >
 

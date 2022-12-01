@@ -85,7 +85,7 @@ export default function DoctorCard({ doctor }) {
                     width: "150px",
                     float: "right",
                   }}
-                  onClick={() => history.push("/doctor/" + doctor.firstName + "-" + doctor.lastName)}
+                  onClick={() => history.push("/doctor/" + doctor.id)}
                 >
                   مشاهده اطلاعات
                 </Button>
