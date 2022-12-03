@@ -36,19 +36,26 @@ const useStyles = makeStyles({
 const Profile = () => {
   const { id } = useParams();
   const [doctor, setDoctor] = useState();
+  const [specialty, setSpecialty] = useState("_");
   const [loading, setLoading] = useState(true);
   const classes = useStyles();
+
+
+  async function fetchData() {
+    await axios.get(`http://188.121.113.74/api/doctor/1/`)
+      .then(res => {
+        setDoctor(res.data);
+        console.log(res.data);
+      })
+      .catch(err => console.log(err))
+
+    setLoading(false);
+  }
 
   useEffect(() => {
 
     if (loading) {
-      axios.get(`http://localhost:8000/doctors/${id}`)
-        .then(res => {
-          setDoctor(res.data);
-          console.log(res.data)
-        })
-        .catch(err => console.log(err))
-      setLoading(false);
+      fetchData();
     }
 
   }, [loading, doctor])
@@ -62,14 +69,14 @@ const Profile = () => {
             <CardMedia
               component="img"
               className={classes.doctor_image}
-              image={doctor?.profileImage}
+              image={doctor?.image}
               alt="doctor image"
             />
           </Grid>
           <Grid item xs={12} md={8}>
             <CardContent sx={{ marginTop: "50px" }}>
               <Typography variant="subtitle2" sx={{ fontSize: "30px" }}>
-                دکتر {doctor?.firstName} {doctor?.lastName}
+                دکتر {doctor?.user.first_name} {doctor?.user.last_name}
               </Typography>
               <Typography
                 variant="subtitle1"
@@ -79,7 +86,7 @@ const Profile = () => {
                   marginTop: "20px"
                 }}
               >
-                متخصص {doctor?.specialty}
+                متخصص {doctor?.specialties[0]}
               </Typography>
               <Grid container sx={{ marginTop: "20px" }}>
                 <Grid item xs={0.8} md={0.8}>
