@@ -14,6 +14,12 @@ import theme from './assets/theme/defaultTheme';
 import { AuthProvider } from './context/AuthContext';
 
 
+<<<<<<< HEAD
+=======
+import Doctors from './components/Doctor/DoctorProfile/Doctors';
+import Profile from './components/Doctor/DoctorProfile/Profile';
+
+>>>>>>> 0a6b197821002573a23f63dacc443c6e98893e34
 const cacheRtl = createCache({
   key: 'muirtl',
   stylisPlugins: [prefixer, rtlPlugin],
@@ -32,9 +38,19 @@ const App = () => {
         <BrowserRouter>
           <AuthProvider>
             <Switch>
+<<<<<<< HEAD
               {routes.map((route, index) => (
                 route.private ? <PrivateSwitch key={index} {...route} /> : <Route key={index} {...route} />
               ))}
+=======
+              <Route path={`/doctor/:id`} component={Profile} />
+
+              {routes.map((route, index) => (
+                route.private ? <PrivateSwitch key={index} {...route} /> : <Route key={index} {...route} />
+              ))}
+
+
+>>>>>>> 0a6b197821002573a23f63dacc443c6e98893e34
             </Switch>
           </AuthProvider>
         </BrowserRouter>

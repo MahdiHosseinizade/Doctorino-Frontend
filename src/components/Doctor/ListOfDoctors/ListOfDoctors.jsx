@@ -18,8 +18,13 @@ export default function Doctors() {
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
+<<<<<<< HEAD
     // fetch("http://localhost:8000/doctors") 
     fetch("http://127.0.0.1:8000/api/doctor/")
+=======
+    fetch("http://localhost:8000/doctors") 
+    // fetch("http://127.0.0.1:8000/api/doctor/")
+>>>>>>> 0a6b197821002573a23f63dacc443c6e98893e34
       .then((res) => res.json())
       .then((data) => setDoctors(data));
   }, []);
