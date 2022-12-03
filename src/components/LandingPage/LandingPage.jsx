@@ -21,13 +21,22 @@ const useStyles = makeStyles({
 
 export default function LandingPage() {
   const [input,setInput] = useState("");
+  const [location,setLocation] = useState({
+    lat: 0,
+    lng: 0,
+  });
   console.log(input);
   const { user} = useContext(AuthContext)
   const classes = useStyles();
 
   useEffect(() => {
-    console.log(user);
-  }, [user]);
+    navigator.geolocation.getCurrentPosition(function(position) {
+      setLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      })
+    });
+  }, []);
 
   const chnageHandler = (e) => {
     setInput(e.target.value)
