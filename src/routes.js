@@ -4,6 +4,7 @@ import Login from "./components/Login/Login";
 import SignUpPage from "./components/Sign Up/SignUp";
 
 import HotelPanel from "./components/Hotel/Panel/HotelPanel";
+import Hotels from './components/Hotel/HotelList/Hotels';
 
 import DoctorPanel from "./components/Doctor/DoctorPanel/DoctorPanel";
 import ListOfDoctors from "./components/Doctor/ListOfDoctors/ListOfDoctors";
@@ -14,7 +15,8 @@ import NotFound from "./pages/NotFoundPage";
 const routes = [
   { path: "/signup", component: SignUpPage },
 
-  { path: "/hotel-panel", component: HotelPanel },
+  { path: "/hotel-panel", component: HotelPanel, private: true },
+  { path: '/hotels', component: Hotels},
 
   { path: "/doctor-panel", component: DoctorPanel, private: true },
   { path: "/list-of-doctors", component: ListOfDoctors },

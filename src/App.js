@@ -12,9 +12,6 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './assets/theme/defaultTheme';
 import { AuthProvider } from './context/AuthContext';
-
-
-import Doctors from './components/Doctor/DoctorProfile/Doctors';
 import Profile from './components/Doctor/DoctorProfile/Profile';
 
 const cacheRtl = createCache({
@@ -35,12 +32,11 @@ const App = () => {
         <BrowserRouter>
           <AuthProvider>
             <Switch>
-              <Route path={`/doctor/:id`} component={Profile} />
+              <Route path={`/list-of-doctors/:id`} component={Profile} />
 
               {routes.map((route, index) => (
                 route.private ? <PrivateSwitch key={index} {...route} /> : <Route key={index} {...route} />
               ))}
-
 
             </Switch>
           </AuthProvider>
