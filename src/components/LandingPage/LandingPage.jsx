@@ -6,8 +6,12 @@ import AuthContext from "../../context/AuthContext";
 import otagh from '../../assets/img/otagh.jpg'
 import { useState } from 'react';
 // import NeshanMap from 'react-neshan-map-leaflet'
+// import NeshanMap from 'react-neshan-map-leaflet'
 import {CiSearch} from 'react-icons/ci'
 import {MdPlace} from 'react-icons/md'
+import SimpleMap from './GoogleMap';
+import Test from './Map';
+import Map from './Map';
 
 
 const useStyles = makeStyles({
@@ -24,6 +28,7 @@ const useStyles = makeStyles({
 
 export default function LandingPage() {
   const [input,setInput] = useState("");
+  const[map,setMap] = useState(false);
   const [location,setLocation] = useState({
     lat: 0,
     lng: 0,
@@ -46,12 +51,15 @@ export default function LandingPage() {
   }
 
   return (
-    <div className={classes.root}>
+    <>
+    {map && <Map location={location} /> }
+        <div className={classes.root}>
       <NavBar />
+      
       <div className="landingPage">
         <div className="searchBar">
           <div className="search">
-            <input onChange={chnageHandler} className="searchDoctor" type="text" placeholder="جستجوی پزشک   ..." />
+            <input onChange={chnageHandler} className="searchDoctor" type="text" placeholder="جستجوی پزشک   ..."/>
             <div className="IconSelect">
               <select className='selectScale'>
                 <option value="1">پزشک عمومی</option>
@@ -63,7 +71,8 @@ export default function LandingPage() {
               </select>
               <div className='place'>
                 <h6 >انتخاب مکان</h6>
-                <button className='placeIcon'>{<MdPlace/>}</button>
+                <button onClick={() => setMap(!map) } className='placeIcon'>{<MdPlace/>}</button>
+                
               </div>
               <button className='searchIcon' >{<CiSearch/>}</button>
             </div>
@@ -72,5 +81,7 @@ export default function LandingPage() {
         </div>
       </div>
     </div>
+    </>
+    
   );
 }
