@@ -5,17 +5,17 @@ import DoctorProfile from "./Profile";
 export default function DoctorProfileLayout() {
     return (
         <Container>
-            <Grid container>
+            <Grid container spacing={4}>
                 <Grid
 
-                    xs={8}
-                    md={8}
-                    lg={8}
+                    xs={7}
+                    md={7}
+                    lg={7}
                     item
                     sx={{
                         Width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
+                        display: "static",
+                        // flexDirection: "row",
                         height: "auto",
                         alignItems: "center",
                         boxSizing: " border-box"
@@ -28,12 +28,14 @@ export default function DoctorProfileLayout() {
 
                 <Grid
                     item
-                    xs={4}
-                    md={4}
-                    lg={4}
+                    
+                    xs={4.5}
+                    md={4.5}
+                    lg={4.5}
                     sx={{
+                        mr: "10px",
                         Width: "100%",
-                        display: "flex",
+                        display: "static",
                         flexDirection: "row",
                         height: "auto",
                         alignItems: "center",
