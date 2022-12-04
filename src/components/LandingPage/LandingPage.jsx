@@ -10,8 +10,8 @@ import { useState } from 'react';
 import {CiSearch} from 'react-icons/ci'
 import {MdPlace} from 'react-icons/md'
 import SimpleMap from './GoogleMap';
-import Test from './Map';
-import Map from './Map';
+import Test from './Test';
+import Map from './Test';
 
 
 const useStyles = makeStyles({
@@ -36,6 +36,7 @@ export default function LandingPage() {
   console.log(input);
   const { user} = useContext(AuthContext)
   const classes = useStyles();
+  console.log(location);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -69,9 +70,9 @@ export default function LandingPage() {
                 <option value="5">پزشک ارتوپد</option>
                 <option value="6">پزشک اورولوژی</option>
               </select>
-              <div className='place'>
+              <div onClick={() => setMap(!map) } className='place'>
                 <h6 >انتخاب مکان</h6>
-                <button onClick={() => setMap(!map) } className='placeIcon'>{<MdPlace/>}</button>
+                <button  className='placeIcon'>{<MdPlace/>}</button>
                 
               </div>
               <button className='searchIcon' >{<CiSearch/>}</button>

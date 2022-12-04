@@ -1,12 +1,14 @@
 .searchBar{
     margin-bottom: 60px;
     background-image: url('https://www.finds.ir/img/2020081384124649.jpg');
+    /* background-color: #D9ECF2; */
     width: 60vw;
     height: 60vh;
     padding: 10px;
     font-size: 16px;
     outline: none;
     border-radius: 10px;
+    z-index: -1;
 }
 
 .search{
@@ -23,7 +25,7 @@
 
 .searchIcon{
     height: 32px;
-    margin: 0;
+    margin: 4px;
     /* border: none; */
 }
 .placeIcon{
@@ -32,14 +34,17 @@
     /* border: none; */
 }
 .place{
+    cursor: pointer;
     min-width: max-content;
     display: flex;
     justify-content: center;
     border: none;
+    margin: 4px;
 }
 .place h6{
     min-width: max-content;
     display: flex;
+    margin: 2px;
     justify-content: center;
     align-items: center;
 }
@@ -59,8 +64,11 @@
 }
 .selectScale{
     font-family: 'IranYekan';
-    font-size: 14px;
+    font-size: 12px;
+    height: 30px;
+    margin-top: 5px;
     border-radius: 10px;
     margin-left: 10px;
+    border: 1px solid #ccc;
     margin-right: 10px;
 }
