@@ -1,6 +1,6 @@
 .searchBar{
     margin-bottom: 60px;
-    background-image: url('../../assets/img/otagh.jpg');
+    background-image: url('https://www.finds.ir/img/2020081384124649.jpg');
     width: 60vw;
     height: 60vh;
     padding: 10px;
@@ -10,12 +10,45 @@
 }
 
 .search{
-    width: 60%;
+    width: 100%;
+    height: 36px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    background-color: white;
+    padding: 4px;
+    /* margin: 0; */
+    /* margin: 0 auto; */
+}
+
+.searchIcon{
+    height: 32px;
+    margin: 0;
+    /* border: none; */
+}
+.placeIcon{
+    height: 32px;
+    margin: 0;
+    /* border: none; */
+}
+.place{
+    min-width: max-content;
+    display: flex;
+    justify-content: center;
+    border: none;
+}
+.place h6{
+    min-width: max-content;
+}
+
+.searchDoctor{
+    margin : 0;
+    border: 1px solid #ccc;
 }
 .searchDoctor::placeholder{
     font-family: 'IranYekan';
+}
+
+.IconSelect{
+    display: flex;
 }

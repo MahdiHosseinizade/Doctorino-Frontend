@@ -5,6 +5,9 @@ import { makeStyles } from "@mui/styles";
 import AuthContext from "../../context/AuthContext";
 import otagh from '../../assets/img/otagh.jpg'
 import { useState } from 'react';
+// import NeshanMap from 'react-neshan-map-leaflet'
+import {CiSearch} from 'react-icons/ci'
+import {MdPlace} from 'react-icons/md'
 
 
 const useStyles = makeStyles({
@@ -49,7 +52,15 @@ export default function LandingPage() {
         <div className="searchBar">
           <div className="search">
             <input onChange={chnageHandler} className="searchDoctor" type="text" placeholder="جستجوی پزشک و تخصص ..." />
+            <div className="IconSelect">
+              <div className='place'>
+                <h6 >انتخاب مکان</h6>
+                <button className='placeIcon'>{<MdPlace/>}</button>
+              </div>
+              <button className='searchIcon' >{<CiSearch/>}</button>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
