@@ -51,8 +51,16 @@ export default function LandingPage() {
       <div className="landingPage">
         <div className="searchBar">
           <div className="search">
-            <input onChange={chnageHandler} className="searchDoctor" type="text" placeholder="جستجوی پزشک و تخصص ..." />
+            <input onChange={chnageHandler} className="searchDoctor" type="text" placeholder="جستجوی پزشک   ..." />
             <div className="IconSelect">
+              <select className='selectScale'>
+                <option value="1">پزشک عمومی</option>
+                <option value="2">پزشک دندانپزشک</option>
+                <option value="3">پزشک اطفال</option>
+                <option value="4">پزشک اورژانس</option>
+                <option value="5">پزشک ارتوپد</option>
+                <option value="6">پزشک اورولوژی</option>
+              </select>
               <div className='place'>
                 <h6 >انتخاب مکان</h6>
                 <button className='placeIcon'>{<MdPlace/>}</button>

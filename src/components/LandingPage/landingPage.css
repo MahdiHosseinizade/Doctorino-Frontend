@@ -39,11 +39,16 @@
 }
 .place h6{
     min-width: max-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 
 .searchDoctor{
     margin : 0;
     border: 1px solid #ccc;
+    font-family: 'IranYekan';
 }
 .searchDoctor::placeholder{
     font-family: 'IranYekan';
@@ -51,4 +56,11 @@
 
 .IconSelect{
     display: flex;
+}
+.selectScale{
+    font-family: 'IranYekan';
+    font-size: 14px;
+    border-radius: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
