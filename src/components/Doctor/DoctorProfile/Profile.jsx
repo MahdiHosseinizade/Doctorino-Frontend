@@ -19,6 +19,7 @@ import Tab from '@mui/material/Tab';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from "@mui/styles";
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
@@ -38,7 +39,7 @@ const useStyles = makeStyles({
     width: "100%",
     height: "100%",
     margin: "20px",
-    border: "3px solid #ccc",
+    border: "7px solid #ccc",
     borderRadius: "250px",
     maxHeight: "250px",
     maxWidth: "250px",
@@ -102,16 +103,15 @@ const Profile = () => {
 
   const { id } = useParams();
   const [doctor, setDoctor] = useState();
-  const [specialty, setSpecialty] = useState("_");
   const [loading, setLoading] = useState(true);
   const classes = useStyles();
 
 
-  async function fetchData() {
-    await axios.get(`http://188.121.113.74/api/doctor/1/`)
+  function fetchData() {
+    axios.get(`http://188.121.113.74/api/doctor/${id}/`)
       .then(res => {
         setDoctor(res.data);
-        console.log(res.data);
+        console.log(res.data)
       })
       .catch(err => console.log(err))
 
@@ -131,9 +131,6 @@ const Profile = () => {
     <Container className={classes.container} >
       <Card className={classes.card}>
         <Grid container sx={{ marginTop: "10px" }}>
-          <Grid item xs={12} lg={4} sx={{ display: 'flex', justifyContent: 'right' }}>
-            <Rating name="starRating" defaultValue={0} precision={0.1} readOnly />
-          </Grid>
           <Grid item xs={12} lg={4} sx={{ display: 'flex', position: "sticky", justifyContent: 'center' }}>
             <CardMedia
               component="img"
@@ -143,31 +140,45 @@ const Profile = () => {
             />
           </Grid>
           <Grid item xs={12} lg={8}>
-            <CardContent sx={{ marginTop: "50px" }}>
-              <Typography variant="subtitle2" sx={{ fontSize: "30px" }}>
-                دکتر {doctor?.user.first_name} {doctor?.user.last_name}
-              </Typography>
-              <Typography
-                variant="subtitle1"
-                color={'text.secondary'}
-                sx={{
-                  fontSize: 20,
-                  marginTop: "20px"
-                }}
-              >
-                متخصص {doctor?.specialties[0]}
-              </Typography>
-              <Grid item xs={12} lg={12}>
-                <Typography variant="body2" sx={{ fontSize: "20px", marginLeft: "10px" }}>
-                  <PlaceOutlinedIcon color='secondary' fontSize="large" sx={{ marginBottom: "-12px" }} />{doctor?.city}
-                </Typography>
+            <CardContent sx={{ marginTop: "20px" }}>
+              <Grid container spacing={3.5}>
+                <Grid item xs={12} md={12}>
+                  <Typography variant="subtitle2" sx={{ fontSize: "30px" }}>
+                    دکتر {doctor?.user.first_name} {doctor?.user.last_name}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={12}>
+                  <Typography
+                    variant="subtitle1"
+                    color={'text.secondary'}
+                    sx={{
+                      fontSize: 20,
+                    }}
+                  >
+                    متخصص {doctor?.specialties[0]}
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} md={12}>
+                  <Typography variant="body2" sx={{ fontSize: "20px"}}>
+                    <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{doctor?.city}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6} md={6}>
+
+                  <Typography noWrap variant="subtitle2" sx={{ fontSize: "18px", display: "inline" }}>
+                    <VerifiedIcon color='primary' sx={{ marginBottom: "-7px" }} />
+                    <span>     </span> کد نظام پزشکی
+                  </Typography>
+
+                  <Typography noWrap variant='subtitle1' color={'text.secondary'} sx={{ fontSize: "17px", display: 'inline', marginLeft: '15px' }} >
+                    {doctor?.medical_system_number}
+                  </Typography>
+
+                </Grid>
+
               </Grid>
-              <Grid item xs={12} lg={12}>
-                <Typography variant="body2" sx={{ fontSize: "20px", marginLeft: "10px" }}>
-                  کد نظام پزشکی: {doctor?.medical_system_number}
-                </Typography>
-              </Grid>
-              {/* </Grid> */}
             </CardContent>
           </Grid>
         </Grid>
