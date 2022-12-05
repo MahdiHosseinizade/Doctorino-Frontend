@@ -12,6 +12,8 @@ import {MdPlace} from 'react-icons/md'
 import SimpleMap from './GoogleMap';
 import Test from './Test';
 import Map from './Test';
+import getDoctorScale from '../../services/getDoctorScale';
+import axios from 'axios';
 
 
 const useStyles = makeStyles({
@@ -28,47 +30,65 @@ const useStyles = makeStyles({
 
 export default function LandingPage() {
   const [input,setInput] = useState("");
+  const [search,setSearch] = useState({
+    input : "",
+    scale: 0,
+  })
+  console.log(search);
+  const [specialitie,setSpecialitie] = useState([]);
   const[map,setMap] = useState(false);
-  const [location,setLocation] = useState({
-    lat: 0,
-    lng: 0,
-  });
-  console.log(input);
+    
+
   const { user} = useContext(AuthContext)
   const classes = useStyles();
-  console.log(location);
-
+  
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      setLocation({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      })
-    });
-  }, []);
+    getdoctor();
+  }, [])
+  
 
-  const chnageHandler = (e) => {
-    setInput(e.target.value)
+  const getdoctor = async ()=>{
+    try {
+      const {data} = await axios.get('http://188.121.113.74/api/doctor/specialties/')
+      setSpecialitie(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  
+
+
+  const inputHandler = (e) => {
+    setSearch({
+      ...search,
+      input : e.target.value
+    })
+  }
+
+  const changeHandler = (e) =>{
+    setSearch({
+      ...search,
+      scale : e.target.value
+    })
   }
 
   return (
     <>
-    {map && <Map location={location} /> }
+    {map && <Map  /> }
         <div className={classes.root}>
       <NavBar />
       
       <div className="landingPage">
         <div className="searchBar">
           <div className="search">
-            <input onChange={chnageHandler} className="searchDoctor" type="text" placeholder="جستجوی پزشک   ..."/>
+            <input onChange={inputHandler} className="searchDoctor" type="text" placeholder="جستجوی پزشک   ..."/>
             <div className="IconSelect">
-              <select className='selectScale'>
-                <option value="1">پزشک عمومی</option>
-                <option value="2">پزشک دندانپزشک</option>
-                <option value="3">پزشک اطفال</option>
-                <option value="4">پزشک اورژانس</option>
-                <option value="5">پزشک ارتوپد</option>
-                <option value="6">پزشک اورولوژی</option>
+              <select onChange={(e) => changeHandler(e)} className='selectScale'>
+              {specialitie &&
+                specialitie.map((item,index) => (
+                  <option key={index} value={item.id}>{item.name}</option>
+              ))}
               </select>
               <div onClick={() => setMap(!map) } className='place'>
                 <h6 >انتخاب مکان</h6>
