@@ -1,10 +1,11 @@
 import React from "react";
-import { Container, Grid, Paper } from "@mui/material";
+import { Container, CssBaseline, Grid, Paper } from "@mui/material";
 import DoctorProfile from "./Profile";
 
 export default function DoctorProfileLayout() {
     return (
         <Container>
+            <CssBaseline />
             <Grid container spacing={4}>
                 <Grid
 
@@ -15,20 +16,17 @@ export default function DoctorProfileLayout() {
                     sx={{
                         Width: "100%",
                         display: "static",
-                        // flexDirection: "row",
                         height: "auto",
                         alignItems: "center",
                         boxSizing: " border-box"
                     }}
                 >
-                    <Paper>
-                        <DoctorProfile />
-                    </Paper>
+                    <DoctorProfile />
                 </Grid>
 
                 <Grid
                     item
-                    
+
                     xs={4.5}
                     md={4.5}
                     lg={4.5}
@@ -42,9 +40,7 @@ export default function DoctorProfileLayout() {
                         boxSizing: " border-box"
                     }}
                 >
-                    <Paper>
-                        <DoctorProfile />
-                    </Paper>
+                    <DoctorProfile />
                 </Grid>
             </Grid>
         </Container >

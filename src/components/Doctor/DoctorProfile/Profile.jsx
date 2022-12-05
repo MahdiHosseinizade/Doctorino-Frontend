@@ -108,7 +108,7 @@ const Profile = () => {
 
 
   function fetchData() {
-    axios.get(`http://188.121.113.74/api/doctor/${id}/`)
+    axios.get(`http://188.121.113.74/api/doctor/1/`)
       .then(res => {
         setDoctor(res.data);
         console.log(res.data)
@@ -131,7 +131,7 @@ const Profile = () => {
     <Container className={classes.container} >
       <Card className={classes.card}>
         <Grid container sx={{ marginTop: "10px" }}>
-          <Grid item xs={12} lg={4} sx={{ display: 'flex', position: "sticky", justifyContent: 'center' }}>
+          <Grid item xs={12} lg={6} sx={{ display: 'flex', position: "sticky", justifyContent: 'center' }}>
             <CardMedia
               component="img"
               className={classes.doctor_image}
@@ -139,7 +139,7 @@ const Profile = () => {
               alt="doctor image"
             />
           </Grid>
-          <Grid item xs={12} lg={8}>
+          <Grid item xs={12} lg={6}>
             <CardContent sx={{ marginTop: "20px" }}>
               <Grid container spacing={3.5}>
                 <Grid item xs={12} md={12}>
@@ -161,7 +161,7 @@ const Profile = () => {
                 </Grid>
 
                 <Grid item xs={12} md={12}>
-                  <Typography variant="body2" sx={{ fontSize: "20px"}}>
+                  <Typography variant="body2" sx={{ fontSize: "20px" }}>
                     <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{doctor?.city}
                   </Typography>
                 </Grid>
@@ -186,7 +186,7 @@ const Profile = () => {
       <Card>
         <Box sx={{ width: '100%', }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs variant="scrollable" scrollButtons="auto" centered="true" value={value} onChange={secondaryHandleChange} aria-label="basic tabs example" >
+            <Tabs variant="scrollable" scrollButtons="auto" value={value} onChange={secondaryHandleChange} aria-label="basic tabs example" >
               <Tab label="درباره پزشک" {...a11yProps(0)} sx={{ width: "auto" }} />
               <Tab label="اطلاعات تماس" {...a11yProps(1)} sx={{ width: "auto" }} />
               <Tab label="نظرات و امتیاز" {...a11yProps(2)} sx={{ width: "auto" }} />
@@ -258,22 +258,20 @@ const Profile = () => {
 
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <h4 style={{ marginBottom: "15px" }}> آدرس</h4>
+            <h4 style={{ marginBottom: "15px" }}>  شماره تماس</h4>
             <p>
-              <PhoneEnabledIcon fontSize="small" style={{ marginBottom: "-5px" }} />
-              {/* example */}
-              <span>09175030240-07132313000-02142198641</span>
+              <PhoneEnabledIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
+              {doctor?.office_number}
             </p>
             <br />
-            <h4>  شماره تماس</h4>
+            <h4  style={{ marginBottom: "15px" }}> نشانی مطب</h4>
             <p>
-              <LocationOnIcon fontSize="small" style={{ marginBottom: "-5px" }} />
-              {/* example */}
-              فارس، شیراز، خیابان صورتگر، چهارراه معدل، ساختمان ام ار ای تابش، طبقه دوم، واحد ٥
+              <LocationOnIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
+              {`${doctor?.province}، ${doctor?.city}، ${doctor?.clinic_address}`}
             </p>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            Item Three
+            نظرات و امتیاز
           </TabPanel>
         </Box>
       </Card>
