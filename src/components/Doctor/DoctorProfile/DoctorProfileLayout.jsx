@@ -1,8 +1,35 @@
 import React from "react";
 import { Container, CssBaseline, Grid, Paper } from "@mui/material";
 import DoctorProfile from "./Profile";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
 export default function DoctorProfileLayout() {
+
+    const { id } = useParams();
+    const [doctor, setDoctor] = useState();
+    const [loading, setLoading] = useState(true);
+
+    function fetchData() {
+        axios.get(`http://188.121.113.74/api/doctor/${id}/`)
+            .then(res => {
+                setDoctor(res.data);
+            })
+            .catch(err => console.log(err))
+
+        setLoading(false);
+    }
+
+    useEffect(() => {
+
+        if (loading) {
+            fetchData();
+        }
+
+    }, [loading, doctor])
+
     return (
         <Container>
             <CssBaseline />
@@ -21,7 +48,7 @@ export default function DoctorProfileLayout() {
                         boxSizing: " border-box"
                     }}
                 >
-                    <DoctorProfile />
+                    <DoctorProfile doctor={doctor} />
                 </Grid>
 
                 <Grid
@@ -40,7 +67,7 @@ export default function DoctorProfileLayout() {
                         boxSizing: " border-box"
                     }}
                 >
-                    <DoctorProfile />
+                    {/* <DoctorProfile doctor={doctor} /> */}
                 </Grid>
             </Grid>
         </Container >
