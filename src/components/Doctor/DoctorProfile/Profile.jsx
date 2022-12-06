@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   Container,
   Card,
@@ -12,16 +11,17 @@ import {
   Collapse,
   Button,
 } from '@mui/material';
-import Rating from '@mui/material/Rating';
 import Tabs from '@mui/material/Tabs';
 import PropTypes from 'prop-types';
 import Tab from '@mui/material/Tab';
-import { useParams } from 'react-router-dom';
 import { makeStyles } from "@mui/styles";
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+
+
+// show the directory to the use with <basic breadcrums (mui)>
 
 const useStyles = makeStyles({
   container: {
@@ -84,7 +84,7 @@ function a11yProps(index) {
 
 
 
-const Profile = () => {
+const Profile = (props) => {
 
   const [value, setValue] = React.useState(0);
 
@@ -98,32 +98,7 @@ const Profile = () => {
     setChecked((prev) => !prev);
   };
 
-
-  const { id } = useParams();
-  const [doctor, setDoctor] = useState();
-  const [loading, setLoading] = useState(true);
   const classes = useStyles();
-
-
-  function fetchData() {
-    axios.get(`http://188.121.113.74/api/doctor/1/`)
-      .then(res => {
-        setDoctor(res.data);
-        console.log(res.data)
-      })
-      .catch(err => console.log(err))
-
-    setLoading(false);
-  }
-
-  useEffect(() => {
-
-    if (loading) {
-      fetchData();
-    }
-
-  }, [loading, doctor])
-
 
   return (
     <Container className={classes.container} >
@@ -133,7 +108,7 @@ const Profile = () => {
             <CardMedia
               component="img"
               className={classes.doctor_image}
-              image={doctor?.image}
+              image={props.doctor?.image}
               alt="doctor image"
             />
           </Grid>
@@ -143,11 +118,13 @@ const Profile = () => {
                 <Grid item xs={12} md={12}>
                   {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
                   <Typography variant="subtitle2" sx={{ fontSize: "30px" }}>
-                    دکتر {doctor?.user.first_name} {doctor?.user.last_name}
+                    دکتر {props.doctor?.user.first_name} {props.doctor?.user.last_name}
                   </Typography>
+                
                 </Grid>
 
                 <Grid item xs={12} md={12}>
+
                   <Typography
                     variant="subtitle1"
                     color={'text.secondary'}
@@ -155,16 +132,20 @@ const Profile = () => {
                       fontSize: 20,
                     }}
                   >
-                    متخصص {doctor?.specialties[0]}
+                    متخصص {props.doctor?.specialties[0]}
                   </Typography>
+                
                 </Grid>
 
                 <Grid item xs={12} md={12}>
+
                   <Typography variant="body2" sx={{ fontSize: "20px" }}>
-                    <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{doctor?.city}
+                    <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{props.doctor?.city}
                   </Typography>
+                
                 </Grid>
-                <Grid item xs={6} md={6}>
+
+                <Grid item xs={12} md={12}>
 
                   <Typography noWrap variant="subtitle2" sx={{ fontSize: "18px", display: "inline" }}>
                     <VerifiedIcon color='primary' sx={{ marginBottom: "-7px" }} />
@@ -172,7 +153,7 @@ const Profile = () => {
                   </Typography>
 
                   <Typography noWrap variant='subtitle1' color={'text.secondary'} sx={{ fontSize: "17px", display: 'inline', marginLeft: '15px' }} >
-                    {doctor?.medical_system_number}
+                    {props.doctor?.medical_system_number}
                   </Typography>
 
                 </Grid>
@@ -260,13 +241,13 @@ const Profile = () => {
             <h4 style={{ marginBottom: "15px" }}>  شماره تماس</h4>
             <p>
               <PhoneEnabledIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
-              {doctor?.office_number}
+              {props.doctor?.office_number}
             </p>
             <br />
             <h4 style={{ marginBottom: "15px" }}> نشانی مطب</h4>
             <p>
               <LocationOnIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
-              {`${doctor?.province}، ${doctor?.city}، ${doctor?.clinic_address}`}
+              {`${props.doctor?.province}، ${props.doctor?.city}، ${props.doctor?.clinic_address}`}
             </p>
           </TabPanel>
           <TabPanel value={value} index={2}>

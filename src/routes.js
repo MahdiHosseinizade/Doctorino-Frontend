@@ -8,7 +8,6 @@ import Hotels from './components/Hotel/HotelList/Hotels';
 
 import DoctorPanel from "./components/Doctor/DoctorPanel/DoctorPanel";
 import ListOfDoctors from "./components/Doctor/ListOfDoctors/ListOfDoctors";
-import DoctorProfileLayout from "./components/Doctor/DoctorProfile/DoctorProfileLayout";
 
 import LandingPage from "./components/LandingPage/LandingPage";
 import NotFound from "./pages/NotFoundPage";
@@ -21,7 +20,6 @@ const routes = [
 
   { path: "/doctor-panel", component: DoctorPanel, private: true },
   { path: "/list-of-doctors", component: ListOfDoctors },
-  { path: "/doctor-profile-layout", component: DoctorProfileLayout},
 
   { path: "/login", component: Login },
   
