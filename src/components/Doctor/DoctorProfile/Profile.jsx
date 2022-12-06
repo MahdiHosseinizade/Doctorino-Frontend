@@ -32,8 +32,6 @@ const useStyles = makeStyles({
     display: 'fix',
     paddingInline: "13px",
     marginBottom: "20px",
-    // border: '1px solid #000',
-    // borderRadius: '5px',
   },
   doctor_image: {
     width: "100%",
@@ -143,6 +141,7 @@ const Profile = () => {
             <CardContent sx={{ marginTop: "20px" }}>
               <Grid container spacing={3.5}>
                 <Grid item xs={12} md={12}>
+                  {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
                   <Typography variant="subtitle2" sx={{ fontSize: "30px" }}>
                     دکتر {doctor?.user.first_name} {doctor?.user.last_name}
                   </Typography>
@@ -264,7 +263,7 @@ const Profile = () => {
               {doctor?.office_number}
             </p>
             <br />
-            <h4  style={{ marginBottom: "15px" }}> نشانی مطب</h4>
+            <h4 style={{ marginBottom: "15px" }}> نشانی مطب</h4>
             <p>
               <LocationOnIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
               {`${doctor?.province}، ${doctor?.city}، ${doctor?.clinic_address}`}
