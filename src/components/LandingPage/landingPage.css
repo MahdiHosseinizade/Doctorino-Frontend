@@ -1,7 +1,6 @@
 .searchBar{
     margin-bottom: 60px;
     background-image: url('https://www.finds.ir/img/2020081384124649.jpg');
-    /* background-color: #D9ECF2; */
     width: 60vw;
     height: 60vh;
     padding: 10px;
@@ -26,12 +25,15 @@
 .searchIcon{
     height: 32px;
     margin: 4px;
-    /* border: none; */
+    background-color: #556a85;
+    display: flex;
 }
 .placeIcon{
+    display: flex;
     height: 32px;
     margin: 0;
-    /* border: none; */
+    text-align: center;
+    background-color: #556a85;
 }
 .place{
     cursor: pointer;
@@ -71,4 +73,17 @@
     margin-left: 10px;
     border: 1px solid #ccc;
     margin-right: 10px;
+}
+
+.item{
+    background-color: darkgray;
+    width: 600px;
+    height: 500px;
+    /* center the page */
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 10px;
+    padding: 10px;
 }
