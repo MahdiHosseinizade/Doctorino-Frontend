@@ -208,7 +208,7 @@ const SickRegister = () => {
                   error={
                     formik.errors["first_name"] && formik.touched["first_name"] 
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="نام"
                   name="first_name"
                   type="text"
@@ -230,7 +230,7 @@ const SickRegister = () => {
                   error={
                     formik.errors["last_name"] && formik.touched["last_name"] 
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="نام خانوادگی"
                   name="last_name"
                   type="text"
@@ -244,7 +244,7 @@ const SickRegister = () => {
                   error={
                     formik.errors["email"] && formik.touched["email"] 
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="ایمیل"
                   name="emiail"
                   type="text"
@@ -266,7 +266,7 @@ const SickRegister = () => {
                   error={
                     formik.errors["password"] && formik.touched["password"]
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="کلمه عبور"
                   name="password"
                   type="password"
@@ -287,7 +287,7 @@ const SickRegister = () => {
                   error={
                     formik.errors["passwordconfrim"] && formik.touched["passwordconfrim"] 
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="تایید کلمه عبور"
                   name="passwordconfrim"
                   type="text"
