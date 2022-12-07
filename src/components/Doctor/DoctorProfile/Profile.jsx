@@ -25,7 +25,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const useStyles = makeStyles({
   container: {
-    marginTop: "100px",
+    marginTop: "69px",
     paddingTop: "30px",
   },
   card: {

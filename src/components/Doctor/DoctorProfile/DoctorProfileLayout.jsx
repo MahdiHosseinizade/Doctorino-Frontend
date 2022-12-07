@@ -1,10 +1,12 @@
 import React from "react";
 import { Container, CssBaseline, Grid, Paper } from "@mui/material";
 import DoctorProfile from "./Profile";
+import ScheduleTime from "./scheduleTable";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
+import NavBar from "../../NavBar/newNavBar"
 
 export default function DoctorProfileLayout() {
 
@@ -32,6 +34,7 @@ export default function DoctorProfileLayout() {
 
     return (
         <Container>
+            <NavBar />
             <CssBaseline />
             <Grid container spacing={4}>
                 <Grid
@@ -61,13 +64,14 @@ export default function DoctorProfileLayout() {
                         mr: "10px",
                         Width: "100%",
                         display: "static",
+                        position: "static",
                         flexDirection: "row",
                         height: "auto",
                         alignItems: "center",
                         boxSizing: " border-box"
                     }}
                 >
-                    {/* <DoctorProfile doctor={doctor} /> */}
+                    <ScheduleTime />
                 </Grid>
             </Grid>
         </Container >

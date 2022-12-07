@@ -36,7 +36,7 @@ const App = () => {
               <Route path={`/list-of-doctors/:id`} component={DoctorProfileLayout} />
 
               {routes.map((route, index) => (
-                route.private ? <PrivateSwitch key={index} {...route} /> : <Route key={index} {...route} />
+                route.private ? <Route key={index} {...route} /> : <Route key={index} {...route} />
               ))}
 
             </Switch>

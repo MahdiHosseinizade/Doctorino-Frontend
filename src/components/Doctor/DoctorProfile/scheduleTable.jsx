@@ -65,12 +65,11 @@ export default function ScheduleTime() {
             // }}
             sx={{
                 marginTop: "100px",
-                display: 'fix',
+                display: 'sticky',
                 paddingInline: "13px",
                 marginBottom: "20px",
                 height: "auto",
                 width: "auto",
-                maxWidth: "40%",
                 paddingTop: "15px",
                 paddingBottom: "15px",
             }}
