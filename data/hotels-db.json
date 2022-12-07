@@ -1,0 +1,32 @@
+{
+    "hotels": [
+        {
+            "name": "هتل 1",
+            "description": "این اولین هتل این سایت است.",
+            "image": "https://cdn.britannica.com/96/115096-050-5AFDAF5D/Bellagio-Hotel-Casino-Las-Vegas.jpg",
+            "stars": 2,
+            "id": 1
+        },
+        {
+            "name": "هتل 2",
+            "description": "این یک هتل معمولی است.",
+            "image": "https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg",
+            "stars": 4,
+            "id": 2
+        },
+        {
+            "name": "هتل 3",
+            "description": "این ارزان ترین هتل موجود است.",
+            "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/23/6b/c8/06/hotel-exterior.jpg?w=700&h=-1&s=1",
+            "stars": 1,
+            "id": 3
+        },
+        {
+            "name": "هتل 4",
+            "description": "این با کیفیت ترین هتل موجود است.",
+            "image": "https://cf.bstatic.com/xdata/images/hotel/max1280x900/333184996.jpg?k=fba8b5509d9488bc5c24785b2e43ecf6c98fad6cf96830e70f8abb95b51481e2&o=&hp=1",
+            "stars": 5,
+            "id": 4
+        }
+    ]
+}

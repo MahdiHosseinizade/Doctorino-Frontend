@@ -9,3 +9,12 @@
   box-sizing: border-box;
   direction: rtl;
 }
+
+.Toastify__close-button{
+  width: 10%;
+}
+
+.Toastify__toast-body div{
+  font-family: "IranYekan" !important;; 
+}
+

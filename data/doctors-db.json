@@ -1,0 +1,64 @@
+{
+    "doctors": [
+        {
+            "id": 1,
+            "firstName": "زینب",
+            "lastName": "صالح",
+            "specialty": "پزشک عمومی",
+            "province": "تهران",
+            "city": "تهران",
+            "officeAddress": "شرق به غرب جلال آل احمد، بعد از پل آزمایش، پلاک ۱۷۵، طبقه اول",
+            "profileImage": "https://drnext.ir/_nuxt/img/doctor-female.91a42a3.svg",
+            "rating": 4,
+            "onlinePayment": true
+        },
+        {
+            "id": 2,
+            "firstName": "شهرام",
+            "lastName": "حسن زاده",
+            "specialty": "پزشک عمومی",
+            "province": "اصفهان",
+            "city": "اصفهان",
+            "officeAddress": "بلوارامیرمازندرانی، روبروی بیمارستان امام، مجتمع پزشکی کیمیا، جنب داروخانه شبانه روزی دکتر بهاری، نیم طبقه اول",
+            "profileImage": "https://drnext.ir/_nuxt/img/doctor-male.2c999d0.svg",
+            "rating": 4,
+            "onlinePayment": false
+        },
+        {
+            "id": 3,
+            "firstName": "علیرضا",
+            "lastName": "گل آقایی",
+            "specialty": "پزشک عمومی",
+            "province": "تهران",
+            "city": "تهران",
+            "officeAddress": "فاز 1، بین خیابان 6 و 7 شرقی، بالای داروخانه ثابتی، طبقه 4",
+            "profileImage": "https://drnext.ir/_nuxt/img/doctor-male.2c999d0.svg",
+            "rating": 3,
+            "onlinePayment": false
+        },
+        {
+            "id": 4,
+            "firstName": "آبتین",
+            "lastName": "خدایاری",
+            "specialty": "پزشک عمومی",
+            "province": "تهران",
+            "city": "تهران",
+            "officeAddress": "مامونیه(زرندیه)، خیابان امام خمینی، روبروی داروخانه شبانه روزی",
+            "profileImage": "https://drnext.ir/_nuxt/img/doctor-male.2c999d0.svg",
+            "rating": 5,
+            "onlinePayment": true
+        },
+        {
+            "id": 5,
+            "firstName": "رویا",
+            "lastName": "زارع",
+            "specialty": "پزشک عمومی",
+            "province": "مشهد",
+            "city": "مشهد",
+            "officeAddress": "صفاییه، خیابان استاد آرام، نرسیده به چهارراه پژوهش، جنب دفتر پیشخوان",
+            "profileImage": "https://drnext.ir/_nuxt/img/doctor-female.91a42a3.svg",
+            "rating": 3,
+            "onlinePayment": true
+        }
+    ]
+}

@@ -1,0 +1,312 @@
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { makeStyles } from "@mui/styles";
+import { provinces, educations, specialties } from "./Information";
+import {
+  Container,
+  Grid,
+  Box,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography,
+} from "@mui/material";
+
+const useStyles = makeStyles({
+  button: {
+    backgroundColor: "#3b82f6",
+    contrastText: "#fff",
+  },
+  formHeader: {
+    marginBottom: "1rem",
+  },
+  breakLine: {
+    marginBottom: "1rem",
+    marginTop: "1rem",
+    backgroundColor: "#000",
+  },
+});
+
+const formValue = {
+  firstName: "",
+  lastName: "",
+  idNumber: "",
+  medicalSystemCode: "",
+  phoneNumber: "",
+  officeNumber: "",
+  education: "",
+  specialty: "",
+  province: "",
+  city: "",
+  address: "",
+};
+
+export default function DoctorProfileCompletion() {
+  const classes = useStyles();
+  const [doctor, setDoctor] = useState({ ...formValue });
+
+  const postuserHandler = (user) => {
+    axios
+      .post("http://127.0.0.1:8000/api/auth/token/", {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        idNumber: user.idNumber,
+        medicalSystemCode: user.medicalSystemCode,
+        phoneNumber: user.phoneNumber,
+        officeNumber: user.officeNumber,
+        education: user.education,
+        specialty: user.specialty,
+        province: user.province,
+        city: user.city,
+        address: user.address,
+      })
+      .then((res) => {
+        setDoctor(res.data);
+        document.cookie = `token=${res.data.access}`;
+        document.cookie = `refresh=${res.data.refresh}`;
+        toast.success("اطلاعات شما با موفقیت ثبت شد.", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+      })
+      // add style to toast
+      .catch((err) => {
+        toast.error("مشکلی پیش آمده", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+      });
+  };
+
+  function handleSubmit(event) {
+    postuserHandler(doctor);
+    event.preventDefault();
+  }
+
+  return (
+    <Container>
+      <Box
+        sx={{
+          marginTop: "110px",
+          bgcolor: "rgb(245, 246, 248)",
+          height: "85%",
+          border: "1px solid black",
+          borderRadius: "10px",
+          padding: "20px",
+          "& .MuiTextField-root": { m: 0 },
+          boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+        }}
+        onSubmit={handleSubmit}
+        component="form"
+        method="post"
+      >
+        <Grid>
+          <Typography
+            className={classes.formHeader}
+            align="center"
+            variant="h5"
+            component="h5"
+          >
+            تکمیل اطلاعات پزشک
+          </Typography>
+        </Grid>
+        <hr className={classes.breakLine} />
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <TextField
+              onChange={(e) => {
+                setDoctor({ ...doctor, firstName: e.target.value });
+              }}
+              label="نام"
+              variant="outlined"
+              name="firstName"
+              type="text"
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              onChange={(e) => {
+                setDoctor({ ...doctor, lastName: e.target.value });
+              }}
+              variant="outlined"
+              label="نام خانوادگی"
+              name="lastName"
+              type="text"
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              onChange={(e) => {
+                setDoctor({ ...doctor, idNumber: e.target.value });
+              }}
+              variant="outlined"
+              label="کد ملی"
+              name="idNumber"
+              fullWidth
+              required
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              onChange={(e) => {
+                setDoctor({ ...doctor, medicalSystemCode: e.target.value });
+              }}
+              variant="outlined"
+              label="کد نظام پزشکی"
+              name="medicalSystemCode"
+              fullWidth
+              required
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              onChange={(e) => {
+                setDoctor({ ...doctor, phoneNumber: e.target.value });
+              }}
+              variant="outlined"
+              label="شماره موبایل"
+              name="phoneNumber"
+              fullWidth
+              required
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextField
+              onChange={(e) => {
+                setDoctor({ ...doctor, officeNumber: e.target.value });
+              }}
+              variant="outlined"
+              label="شماره تلفن مطب"
+              name="officeNumber"
+              fullWidth
+              required
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel>تحصیلات پزشک</InputLabel>
+              <Select
+                onChange={(e) => {
+                  setDoctor({ ...doctor, education: e.target.value });
+                }}
+                label="تحصیلات پزشک"
+                required
+              >
+                <MenuItem value={1}>عمومی</MenuItem>
+                <MenuItem value={2}>متخصص</MenuItem>
+                <MenuItem value={3}>فوق تخصص</MenuItem>
+                <MenuItem value={4}>کارشناس</MenuItem>
+                <MenuItem value={5}>مشاور</MenuItem>
+                <MenuItem value={6}>کارشناس ارشد</MenuItem>
+                <MenuItem value={7}>فلوشیپ</MenuItem>
+                <MenuItem value={8}>دکترا</MenuItem>
+                <MenuItem value={9}>سایر</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel>تخصص</InputLabel>
+              <Select
+                onChange={(e) => {
+                  setDoctor({ ...doctor, specialty: e.target.value });
+                }}
+                label="تخصص"
+                name="specialty"
+                required
+              >
+                <MenuItem value={1}>آسیب شناسی</MenuItem>
+                <MenuItem value={2}>جراحی کودکان</MenuItem>
+                <MenuItem value={3}>سونوگرافی</MenuItem>
+                <MenuItem value={4}>ارتوپدی کودکان</MenuItem>
+                <MenuItem value={5}>نفرولوژی</MenuItem>
+                <MenuItem value={6}>جراحی سر و گردن</MenuItem>
+                <MenuItem value={7}>جراحی سرطان</MenuItem>
+                <MenuItem value={8}>زنان، زایمان و نازایی</MenuItem>
+                <MenuItem value={9}>بهداشت خانواده</MenuItem>
+                <MenuItem value={10}>سایر</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel>استان</InputLabel>
+              <Select
+                onChange={(e) => {
+                  setDoctor({
+                    ...doctor,
+                    province: provinces.find((p) => {
+                      if (p.id === e.target.value) {
+                        return p.name;
+                      }
+                    })["name"],
+                  });
+                }}
+                name="province"
+                label="استان"
+                required
+              >
+                {provinces.map((province) => (
+                  <MenuItem value={province.id}>{province.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel>شهر</InputLabel>
+              <Select
+                onChange={(e) => {
+                  setDoctor({ ...doctor, city: e.target.value });
+                }}
+                label="شهر"
+                name="city"
+              ></Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} md={12}>
+            <TextField
+              onChange={(e) => {
+                setDoctor({ ...doctor, address: e.target.value });
+              }}
+              variant="outlined"
+              label="آدرس مطب"
+              name="address"
+              type="text"
+              multiline
+              rows={2}
+              fullWidth
+              required
+            />
+          </Grid>
+
+          <Grid item md={12} xs={12}>
+            <Button
+              className={classes.button}
+              type="submit"
+              variant="contained"
+            >
+              ذخیره اطلاعات
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
+  );
+}
