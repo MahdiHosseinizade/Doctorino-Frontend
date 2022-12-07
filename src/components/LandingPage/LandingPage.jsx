@@ -6,8 +6,9 @@ import AuthContext from "../../context/AuthContext";
 import { useState } from 'react';
 import {BiSearch} from 'react-icons/bi'
 import {MdPlace} from 'react-icons/md'
-import Map from './Test';
+import Map from './Map';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 const useStyles = makeStyles({
@@ -24,11 +25,13 @@ const useStyles = makeStyles({
 
 export default function LandingPage() {
   const [input,setInput] = useState("");
+  const [resDoctor,setResDoctor] = useState([]);
+  console.log(resDoctor);
   const [search,setSearch] = useState({
     input : "",
     scale: 0,
   })
-  console.log(search);
+  // console.log(search);
   const [specialitie,setSpecialitie] = useState([]);
   const[map,setMap] = useState(false);
     
@@ -53,7 +56,18 @@ export default function LandingPage() {
   }
 
   const searchDoctor = () =>{
-    console.log("search");
+    axios.post('http://188.121.113.74/api/doctor/search/',{
+      "specialty": search.scale,
+      "name": search.input,
+      "lat": 35.6892,
+      "lng": 51.3890,
+      // 37.699739,51.338097
+    }
+    ).then((res) => {
+      setResDoctor(res.data);
+    }).catch((err) => {
+      toast.error(err.response.data.message);
+    })
   }
   
 
