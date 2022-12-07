@@ -3,16 +3,10 @@ import React, { useContext, useEffect } from "react";
 import NavBar from "../NavBar/newNavBar";
 import { makeStyles } from "@mui/styles";
 import AuthContext from "../../context/AuthContext";
-import otagh from '../../assets/img/otagh.jpg'
 import { useState } from 'react';
-// import NeshanMap from 'react-neshan-map-leaflet'
-// import NeshanMap from 'react-neshan-map-leaflet'
-import {CiSearch} from 'react-icons/ci'
+import {BiSearch} from 'react-icons/bi'
 import {MdPlace} from 'react-icons/md'
-import SimpleMap from './GoogleMap';
-import Test from './Test';
 import Map from './Test';
-import getDoctorScale from '../../services/getDoctorScale';
 import axios from 'axios';
 
 
@@ -45,6 +39,8 @@ export default function LandingPage() {
   useEffect(() => {
     getdoctor();
   }, [])
+
+
   
 
   const getdoctor = async ()=>{
@@ -56,6 +52,9 @@ export default function LandingPage() {
     }
   }
 
+  const searchDoctor = () =>{
+    console.log("search");
+  }
   
 
 
@@ -78,7 +77,6 @@ export default function LandingPage() {
     {map && <Map  /> }
         <div className={classes.root}>
       <NavBar />
-      
       <div className="landingPage">
         <div className="searchBar">
           <div className="search">
@@ -95,10 +93,9 @@ export default function LandingPage() {
                 <button  className='placeIcon'>{<MdPlace/>}</button>
                 
               </div>
-              <button className='searchIcon' >{<CiSearch/>}</button>
+              <button onClick={searchDoctor} className='searchIcon' >{<BiSearch/>}</button>
             </div>
           </div>
-
         </div>
       </div>
     </div>
