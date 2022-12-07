@@ -114,55 +114,52 @@ const Profile = (props) => {
           </Grid>
           <Grid item xs={12} lg={6}>
             <CardContent sx={{ marginTop: "20px" }}>
-              <Grid container spacing={3.5}>
-                <Grid item xs={12} md={12}>
-                  {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
-                  <Typography variant="subtitle2" sx={{ fontSize: "30px" }}>
-                    دکتر {props.doctor?.user.first_name} {props.doctor?.user.last_name}
-                  </Typography>
-                
+              <Box>
+                <Grid container spacing={3.5}>
+                  <Grid item xs={12} md={12} >
+                    {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
+                    <Typography variant="subtitle2" sx={{ fontSize: "30px", display: "flex" }}>
+                      دکتر {props.doctor?.user.first_name} {props.doctor?.user.last_name}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={12} sx={{marginTop: "-20px", marginBottom: "20px"}}>
+                    <Typography
+                      variant="subtitle1"
+                      color={'text.secondary'}
+                      sx={{
+                        fontSize: 20,
+                      }}
+                    >
+                      متخصص {props.doctor?.specialties[0]}
+                    </Typography>
+                  </Grid>
                 </Grid>
+              </Box>
+              <Box>
+                <Grid container spacing={3.5} >
+                  <Grid item xs={12} md={12} >
+                    <Typography variant="body2" sx={{ fontSize: "20px",}}>
+                      <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{props.doctor?.city}
+                    </Typography>
+                  </Grid>
 
-                <Grid item xs={12} md={12}>
+                  <Grid item xs={12} md={12}>
+                    <Typography noWrap variant="subtitle2" sx={{ fontSize: "18px", display: "inline" }}>
+                      <VerifiedIcon color='primary' sx={{ marginBottom: "-7px" }} />
+                      <span>     </span> کد نظام پزشکی
+                    </Typography>
 
-                  <Typography
-                    variant="subtitle1"
-                    color={'text.secondary'}
-                    sx={{
-                      fontSize: 20,
-                    }}
-                  >
-                    متخصص {props.doctor?.specialties[0]}
-                  </Typography>
-                
+                    <Typography noWrap variant='subtitle1' color={'text.secondary'} sx={{ fontSize: "17px", display: 'inline', marginLeft: '15px' }} >
+                      {props.doctor?.medical_system_number}
+                    </Typography>
+
+                  </Grid>
                 </Grid>
-
-                <Grid item xs={12} md={12}>
-
-                  <Typography variant="body2" sx={{ fontSize: "20px" }}>
-                    <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{props.doctor?.city}
-                  </Typography>
-                
-                </Grid>
-
-                <Grid item xs={12} md={12}>
-
-                  <Typography noWrap variant="subtitle2" sx={{ fontSize: "18px", display: "inline" }}>
-                    <VerifiedIcon color='primary' sx={{ marginBottom: "-7px" }} />
-                    <span>     </span> کد نظام پزشکی
-                  </Typography>
-
-                  <Typography noWrap variant='subtitle1' color={'text.secondary'} sx={{ fontSize: "17px", display: 'inline', marginLeft: '15px' }} >
-                    {props.doctor?.medical_system_number}
-                  </Typography>
-
-                </Grid>
-
-              </Grid>
+              </Box>
             </CardContent>
           </Grid>
         </Grid>
-      </Card>
+      </Card >
       <Card>
         <Box sx={{ width: '100%', }}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -189,8 +186,6 @@ const Profile = (props) => {
                 }}
               >
                 <div>
-
-
                   <Collapse in={checked} collapsedSize={40}>
                     {/* example */}
                     <p>
@@ -227,8 +222,8 @@ const Profile = (props) => {
                 </div>
 
               </Box>
-              <Box sx={{ height: "auto", left: "0px" }}>
-                {/* how to mv it to lrft? */}
+              <Box sx={{ height: "auto",}}>
+                {/* how to mv it to left? */}
                 <FormControlLabel
                   control={<Button onClick={thiredHandleChange} label="▾بیشتر">بیشتر▾</Button>}
                 />
@@ -256,7 +251,7 @@ const Profile = (props) => {
         </Box>
       </Card>
       <br /><br /><br /><br />
-    </Container>
+    </Container >
   )
 }
 
