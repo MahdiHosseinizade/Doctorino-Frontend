@@ -264,7 +264,7 @@ const Login = ({ history }) => {
                 />
               </div>
             </div>
-            <button disabled={!(formik.isValid && formik.dirty)} type="submit">
+            <button  disabled={!(formik.isValid && formik.dirty)} type="submit">
               ورود
             </button>
             <h2 className="h2text">

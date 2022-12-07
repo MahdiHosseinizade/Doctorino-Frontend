@@ -53,7 +53,7 @@ const Hotelregister = () => {
               error={
                 formik.errors["first_name"] && formik.touched["first_name"]
               }
-              variant="filled"
+              variant="outlined"
               label="نام"
               name="first_name"
               type="text"
@@ -78,7 +78,7 @@ const Hotelregister = () => {
               error={
                 formik.errors["last_name"] && formik.touched["last_name"]
               }
-              variant="filled"
+              variant="outlined"
               label="نام خانوادگی"
               name="last_name"
               type="text"
@@ -97,7 +97,7 @@ const Hotelregister = () => {
                   error={
                     formik.errors["email"] && formik.touched["email"] 
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="ایمیل"
                   name="email"
                   type="email"
@@ -119,7 +119,7 @@ const Hotelregister = () => {
                   error={
                     formik.errors["pass"] && formik.touched["pass"] 
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="کلمه عبور"
                   name="pass"
                   type="password"
@@ -139,7 +139,7 @@ const Hotelregister = () => {
                 error={
                     formik.errors["rPass"] && formik.touched["rPass"] 
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="تکرار کلمه عبور"
                   name="tPass"
                   type="password"
