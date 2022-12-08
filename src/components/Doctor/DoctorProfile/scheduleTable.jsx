@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import {
     Container,
     Card,
@@ -12,7 +12,8 @@ import { useTheme } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-
+import axios from 'axios';
+import { useParams } from "react-router-dom";
 
 
 const steps = [
@@ -37,7 +38,19 @@ const availableTimes = [
     "20", "20:30", "21", "21:30", "22", "22:30", "23", "23:30",
 ]
 
-export default function ScheduleTime() {
+// doctor	
+// '1'
+// day	
+// '0'
+// from_time	
+// '15'
+// to_time	
+// '20'
+// _save	
+// 'Save'
+
+
+export default function ScheduleTime(props) {
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
     const maxSteps = steps.length;
@@ -49,6 +62,36 @@ export default function ScheduleTime() {
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
+
+
+    // const [times, setTimes] = useState([]);
+
+    // useEffect(() => {
+    //     getTimes()
+    // }, [])
+
+    // const { id } = useParams();
+    // let getTimes = async () => {
+    //     let response = await axios.put(`http://188.121.113.74/api/doctor/workday/${id}`)
+
+    //     if (response.status === 200) {
+    //         setTimes(response.data)
+    //         console.log(response.data)
+    //     } else {
+    //         alert("Something went wrong")
+    //     }
+    // }
+
+    // console.log(props.scheduleTime["from_time"].substring(0,2))
+    // console.log(props.scheduleTime.from_time.substring(0,2))
+    // let availableTimes = []
+    // let start = Number(props.scheduleTime.from_time.substring(0,2));
+    // let end = Number(props.scheduleTime.to_time.substring(0,2));
+    // console.log(props.scheduleTime.from_time.substring(0,2), props.scheduleTime.to_time.substring(0,2))
+    // for (let t = start ; t < end ; t++)
+    // {
+    //     availableTimes.push(t)  
+    // }
 
     return (
         <Card

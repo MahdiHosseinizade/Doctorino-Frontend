@@ -130,7 +130,9 @@ const Profile = (props) => {
                         fontSize: 20,
                       }}
                     >
-                      متخصص {props.doctor?.specialties.name}
+                      {/* متخصص {props.doctor?.specialties.name} */}
+                      <br /><br />
+
                     </Typography>
                   </Grid>
                 </Grid>

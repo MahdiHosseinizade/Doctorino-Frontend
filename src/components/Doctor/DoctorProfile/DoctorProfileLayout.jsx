@@ -7,14 +7,16 @@ import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import NavBar from "../../NavBar/newNavBar"
+import { Schedule } from "@mui/icons-material";
 
 export default function DoctorProfileLayout() {
 
     const { id } = useParams();
     const [doctor, setDoctor] = useState();
+    const [scheduleTime, setScheduleTime] = useState();
     const [loading, setLoading] = useState(true);
 
-    function fetchData() {
+    function fetchData1() {
         axios.get(`http://188.121.113.74/api/doctor/${id}/`)
             .then(res => {
                 setDoctor(res.data);
@@ -24,13 +26,24 @@ export default function DoctorProfileLayout() {
         setLoading(false);
     }
 
+    function fetchData2() {
+        axios.get(`http://188.121.113.74/api/doctor/workday/${id}/`)
+            .then(res => {
+                setScheduleTime(res.data);
+            })
+            .catch(err => console.log(err))
+
+        setLoading(false);
+    }
+
     useEffect(() => {
 
         if (loading) {
-            fetchData();
+            fetchData1();
+            fetchData2();
         }
 
-    }, [loading, doctor])
+    }, [loading, doctor, scheduleTime])
 
     return (
         <Container>
@@ -71,7 +84,7 @@ export default function DoctorProfileLayout() {
                         boxSizing: " border-box"
                     }}
                 >
-                    <ScheduleTime />
+                    <ScheduleTime scheduleTime={scheduleTime}/>
                 </Grid>
             </Grid>
         </Container >
