@@ -104,6 +104,14 @@ export default function DoctorProfileCompletion() {
   const API = useAxios();
   const [count, setCount] = useState(0);
 
+  // function handleCities() {
+  //   cities.map((city) => {
+  //     if (city.province_id === provinceInfo.id) {
+  //       setCitiesList([...citiesList, city]);
+  //     }
+  //   })
+  // }
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
