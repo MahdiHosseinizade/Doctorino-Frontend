@@ -22,6 +22,17 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import AuthContext from "../../../../context/AuthContext";
+import {makeStyles} from "@mui/styles";
+
+const useStyles = makeStyles({
+  list: {
+    marginTop: "10px",
+  },
+  drawer: {
+    // width: "240px",
+    marginTop: "20px",
+  },
+});
 
 const widthDraw = 240;
 
@@ -74,15 +85,16 @@ const Drawer = styled(MuiDrawer, {
 export default function SideBar() {
   const history = useHistory();
   const location = useLocation();
+  const classes = useStyles();
 
   const { logOut } = useContext(AuthContext);
 
   const menuItems = [
-    {
-      text: "داشبورد",
-      path: "/doctor-panel/dashboard",
-      icon: <AddHomeIcon color="f4f4f4" />,
-    },
+    // {
+    //   text: "داشبورد",
+    //   path: "/doctor-panel/dashboard",
+    //   icon: <AddHomeIcon color="f4f4f4" />,
+    // },
     {
       text: "پروفایل",
       path: "/doctor-panel/doctor-profile",
@@ -132,10 +144,11 @@ export default function SideBar() {
         open={open}
         onMouseOver={handleDrawerOpen}
         onMouseOut={handleDrawerClose}
+        // className={classes.drawer}
       >
-        <DrawerHeader />
+        <DrawerHeader className={classes.drawer}/>
         <Divider />
-        <List>
+        <List className={classes.list}>
           {menuItems.map((item, index) => (
             <ListItem
               key={index}

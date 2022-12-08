@@ -116,7 +116,7 @@ export default function DoctorProfileCompletion() {
   const { user } = useContext(AuthContext);
   const { authTokens } = useContext(AuthContext);
   const API = useAxios();
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0);
 
   // function handleCities() {
   //   cities.map((city) => {

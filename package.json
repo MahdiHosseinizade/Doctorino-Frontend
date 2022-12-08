@@ -13,6 +13,7 @@
     "@mui/material": "^5.10.12",
     "@mui/styled-engine-sc": "^5.10.6",
     "@mui/styles": "^5.10.15",
+    "@mui/x-date-pickers": "^5.0.9",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
