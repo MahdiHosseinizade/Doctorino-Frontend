@@ -102,6 +102,7 @@ export default function DoctorProfileCompletion() {
   const { user } = useContext(AuthContext);
   const { authTokens } = useContext(AuthContext);
   const API = useAxios();
+  const [count, setCount] = useState(0);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
