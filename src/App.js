@@ -13,9 +13,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './assets/theme/defaultTheme';
 import { AuthProvider } from './context/AuthContext';
 
-
-import Doctors from './components/Doctor/DoctorProfile/Doctors';
 import Profile from './components/Doctor/DoctorProfile/Profile';
+
 
 const cacheRtl = createCache({
   key: 'muirtl',
