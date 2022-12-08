@@ -33,8 +33,8 @@ const steps = [
 ];
 
 const availableTimes = [
-    "15", "15:30",  "16", "16:30", "17", "17:30", "18", "18:30", "19", "19:30",
-    "20", "20:30", "21", "21:30", "22", "22:30", "23", "23:30", 
+    "15", "15:30", "16", "16:30", "17", "17:30", "18", "18:30", "19", "19:30",
+    "20", "20:30", "21", "21:30", "22", "22:30", "23", "23:30",
 ]
 
 export default function ScheduleTime() {
@@ -83,7 +83,7 @@ export default function ScheduleTime() {
                             height: "auto",
                             justifyContent: "center",
                         }}
-                        mb = {1}
+                        mb={1}
                     >
                         <Typography> {steps[activeStep]}</Typography>
                     </Stack>
@@ -125,23 +125,32 @@ export default function ScheduleTime() {
                         />
                     </Stack>
                 </Grid>
-                <hr style={{width: "100%", color: "black",}}/>
+                <hr style={{ width: "100%", color: "black", }} />
                 <Grid item>
                     <Stack>
                         <Box
-                        sx={{
+                            sx={{
 
-                        }}>
-                        <Grid container spacing={1}>
-                        {availableTimes.map((time) => 
-                        (
-                            <Grid item xs={6} sm={4} md={3} lg={2} >
-                                <button><Typography textAlign="center">{time}</Typography></button>
-                            </Grid>
-                        ))}
+                            }}>
+                            <Grid container spacing={1}>
+                                {availableTimes.map((time) =>
+                                (
+                                    <Grid item xs={6} sm={4} md={3} lg={2} >
+                                        <button><Typography textAlign="center">{time}</Typography></button>
+                                    </Grid>
+                                ))}
                             </Grid>
                         </Box>
                     </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                    <br />
+                    <Button sx={{
+                        width: "100%",
+                        backgroundColor: "primary"
+                    }}>
+                        رزرو کنید
+                    </Button>
                 </Grid>
             </Grid>
         </Card>
