@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// import { toast } from "react-toastify";
+import axios from "axios";
+import { toast } from "react-toastify";
 // import { useFormik } from "formik";
 // import * as Yup from "yup";
 import { makeStyles } from "@mui/styles";
@@ -29,7 +29,6 @@ const useStyles = makeStyles({
     "&:hover": {
       backgroundColor: "#2563eb",
     },
-    
   },
   formHeader: {
     marginBottom: "1rem",
@@ -60,17 +59,42 @@ const useStyles = makeStyles({
 });
 
 const formValues = {
-  firstName: "",
-  lastName: "",
-  idNumber: "",
-  medicalSystemCode: "",
-  phoneNumber: "",
-  officeNumber: "",
-  education: "",
-  specialty: "",
-  province: "",
   city: "",
-  officeAddress: "",
+  clinic_address: "",
+  education: "",
+  gender: 2,
+  id: 0,
+  image: null,
+  is_active: false,
+  license_proof: null,
+  // location: {
+  //   type: "",
+  //   coordinates: [0, 0],
+  // },
+  work_periods: [],
+  description: null,
+  medical_system_number: "",
+
+  // user: {
+  //   email: "",
+  //   first_name: "",
+  //   id: 0,
+  //   last_name: "",
+  //   username: null,
+  // },
+
+  // User Info
+  first_name: "",
+  email: "",
+  last_name: "",
+  username: "",
+  inner_id: 0,
+
+  national_code: "",
+  office_number: "",
+  phone_number: "",
+  specialties: 0,
+  province: "",
 };
 
 export default function DoctorProfileCompletion() {
@@ -79,9 +103,11 @@ export default function DoctorProfileCompletion() {
   const [values, setValues] = useState({ ...formValues });
   const [errors, setErrors] = useState({ ...formValues });
   const [loading, setLoading] = useState(true);
+  const [availableSpecilaities, setAvailableSpecilaities] = useState([]);
   const { user } = useContext(AuthContext);
   const { authTokens } = useContext(AuthContext);
   const API = useAxios();
+  const [count, setCount] = useState(0);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -95,38 +121,54 @@ export default function DoctorProfileCompletion() {
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
-    if ("firstName" in fieldValues)
-      temp.firstName = fieldValues.firstName ? "" : "نام خود را وارد کنید.";
-    if ("lastName" in fieldValues)
-      temp.lastName = fieldValues.lastName
+    console.log("in validate func: ", fieldValues);
+    console.log("user firstname: ", fieldValues.user["first_name"]);
+    console.log("temp", temp.user);
+    // if ("user" in fieldValues){
+    //   if ("first_name" in fieldValues.user)
+    //     temp.user.first_name = fieldValues.user.first_name ? "" : "نام خود را وارد کنید.";
+    //   if ("last_name" in fieldValues.user)
+    //     temp.user.last_name = fieldValues.user.last_name
+    //       ? ""
+    //       : "نام خانوادگی خود را وارد کنید.";
+    // // }
+    if ("first_name" in fieldValues)
+      temp.first_name = fieldValues.first_name ? "" : "نام خود را وارد کنید.";
+    if ("last_name" in fieldValues)
+      temp.last_name = fieldValues.last_name
         ? ""
         : "نام خانوادگی خود را وارد کنید.";
-    if ("idNumber" in fieldValues)
-      temp.idNumber = fieldValues.idNumber ? "" : "وارد کردن کد ملی الزامیست.";
-    if ("medicalSystemCode" in fieldValues)
-      temp.medicalSystemCode = fieldValues.medicalSystemCode
+
+    if ("national_code" in fieldValues)
+      temp.national_code = fieldValues.national_code
+        ? ""
+        : "وارد کردن کد ملی الزامیست.";
+    if ("medical_system_number" in fieldValues)
+      temp.medical_system_number = fieldValues.medical_system_number
         ? ""
         : "وارد کردن کد نظام پزشکی الزامیست.";
-    if ("phoneNumber" in fieldValues)
-      temp.phoneNumber = fieldValues.phoneNumber
+    if ("phone_number" in fieldValues)
+      temp.phone_number = fieldValues.phone_number
         ? ""
         : "شماره موبایل خود را وارد کنید.";
-    if ("officeNumber" in fieldValues)
-      temp.officeNumber = fieldValues.officeNumber
+    if ("office_number" in fieldValues)
+      temp.office_number = fieldValues.office_number
         ? ""
         : "وارد کردن شماره مطب الزامیست.";
     if ("education" in fieldValues)
       temp.education = fieldValues.education ? "" : "تحصیلات خود را مشخص کنید.";
-    if ("specialty" in fieldValues)
-      temp.specialty = fieldValues.specialty ? "" : "تخصص خود را مشخص کنید.";
+    if ("specialties" in fieldValues)
+      temp.specialties = fieldValues.specialties
+        ? []
+        : "تخصص خود را مشخص کنید.";
     if ("province" in fieldValues)
       temp.province = fieldValues.province
         ? ""
         : "استان مورد نظر را انتخاب کنید.";
     if ("city" in fieldValues)
       temp.city = fieldValues.city ? "" : "شهر مورد نظر را انتخاب کنید.";
-    if ("officeAddress" in fieldValues)
-      temp.officeAddress = fieldValues.officeAddress
+    if ("clinic_address" in fieldValues)
+      temp.clinic_address = fieldValues.clinic_address
         ? ""
         : "وارد کردن آدرس مطب ضروری است.";
 
@@ -144,13 +186,32 @@ export default function DoctorProfileCompletion() {
       ...temp,
     });
 
-    if (fieldValues === values)
-      return Object.values(temp).every((x) => x === "");
+    console.log("This is the fieldValues: ", fieldValues);
+    if (fieldValues === values) {
+      console.log("going out of validate func:");
+      // return Object.values(temp).every((x) => x === "");
+      return true;
+    }
   };
 
   useEffect(() => {
     function fetchData() {
-      console.log("this the user's id before anything goes wrong: ", user.user_id);
+      console.log(
+        "this the user's id before anything goes wrong: ",
+        user.user_id
+      );
+      API.get(`http://188.121.113.74/api/doctor/specialties/`, {
+        headers: {
+          Authorization: `Bearer ${authTokens.access}`,
+        },
+      })
+        .then((response) => {
+          console.log("this is the response of specialties", response.data);
+          setAvailableSpecilaities(response.data);
+        })
+        .catch((error) => {
+          console.log("this is the error of specialties", error);
+        });
       API.get(
         // `http://127.0.0.1:8000/api/doctor/user_id_to_doctor_id/${user.user_id}/`,
         `/api/doctor/user_id_to_doctor_id/${user.user_id}/`,
@@ -163,27 +224,40 @@ export default function DoctorProfileCompletion() {
         .then((response) => {
           console.log("this is the response of doctor id", response.data);
           // API.get(`http://127.0.0.1:8000/api/doctor/${response.data.id}/`, {
-            API.get(`/api/doctor/${response.data.id}/`, {
-          headers: {
+          API.get(`/api/doctor/${response.data.id}/`, {
+            headers: {
               Authorization: `Bearer ${authTokens.access}`,
             },
           })
             .then((response) => {
               console.log("the response of doctor", response.data);
-              setValues({ ...response.data });
-              // setValues({
-              //   firstName: response.data.user.first_name,
-              //   lastName: response.data.user.last_name,
-              //   idNumber: response.data.idNumber,
-              //   medicalSystemCode: response.data.medicalSystemCode,
-              //   phoneNumber: response.data.phoneNumber,
-              //   officeNumber: response.data.officeNumber,
-              //   education: response.data.education,
-              //   specialty: response.data.specialty,
-              //   province: response.data.province,
-              //   city: response.data.city,
-              //   officeAddress: response.data.officeAddress,
-              // })
+              // setValues({ ...response.data });
+              setValues({
+                ...response.data,
+                first_name: response.data.user.first_name,
+                last_name: response.data.user.last_name,
+                email: response.data.user.email,
+                username: response.data.user.username,
+                inner_id: response.data.user.id,
+                // user: {
+                //   first_name: response.data.user.first_name,
+                //   last_name: response.data.user.last_name,
+                //   email: response.data.user.email,
+                //   id: response.data.user.id,
+                // },
+                id: response.data.id,
+                national_code: response.data.national_code,
+                medical_system_number: response.data.medical_system_number,
+                phone_number: response.data.phone_number,
+                office_number: response.data.office_number,
+                education: response.data.education,
+                specialties: response.data.specialties.id,
+                province: response.data.province,
+                city: response.data.city,
+                clinic_address: response.data.clinic_address,
+                work_periods: response.data.work_periods,
+                description: response.data.description,
+              });
               console.log("this is the values of doctor", values);
               setLoading(false);
             })
@@ -209,10 +283,78 @@ export default function DoctorProfileCompletion() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("in handle submit.");
     if (validate()) {
-      console.log(values);
-      console.log("button clicked");
-      console.log("this is the user's id: ", user.user_id);
+      // console.log(values);
+      // console.log("button clicked");
+      // console.log("this is the user's id: ", user.user_id);
+      console.log("in validate in handle submit.");
+      console.log("Values before changing: ", values);
+
+      // API.put(`/api/doctor/${values.id}/`, values, {
+      //   headers: {
+      //     Authorization: `Bearer ${authTokens.access}`,
+      //   },
+      // })
+
+      axios
+        // .put(`http://188.121.113.74/api/doctor/${values.id}/`, values)
+        .put(
+          `http://188.121.113.74/api/doctor/${values.id}/`,
+          {
+            ...values,
+            id: values.id,
+            user: {
+              first_name: values.first_name,
+              last_name: values.last_name,
+              username: values.username,
+              id: values.inner_id,
+              email: values.email,
+            },
+            specialties: values.specialties,
+            license_proof: null,
+            medical_system_number: values.medical_system_number,
+            is_active: true,
+            national_code: values.national_code,
+            gender: 2,
+            province: values.province,
+            city: values.city,
+            clinic_address: values.clinic_address,
+            image: null,
+            phone_number: values.phone_number,
+            office_number: values.office_number,
+            education: values.education,
+            // location: {
+            //   type: "",
+            //   coordinates: [0, 0],
+            // },
+
+            // User Info
+            // first_name: "",
+            // email: "",
+            // last_name: "",
+            // username: "",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authTokens.access}`,
+            },
+          }
+        )
+        .then((response) => {
+          toast.success(`تکمیل اطلاعات با موفقیت انجام شد.`, {
+            position: "top-right",
+            autoClose: 2000,
+          });
+        })
+        .catch((error) => {
+          toast.error("مشکلی پیش آمده است", {
+            position: "top-right",
+            autoClose: 2000,
+          });
+        });
+      console.log("Values after changing: ", values);
+      setLoading(true);
     }
   };
 
@@ -237,39 +379,39 @@ export default function DoctorProfileCompletion() {
             <TextField
               label="نام"
               variant="outlined"
-              name="firstName"
+              name="first_name"
               type="text"
-              value={values.firstName}
+              value={values.first_name}
               onChange={handleInputChange}
               fullWidth
-              error={errors.firstName ? true : false}
-              helperText={errors.firstName ? errors.firstName : null}
+              error={errors.first_name ? true : false}
+              helperText={errors.first_name ? errors.first_name : null}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
               variant="outlined"
               label="نام خانوادگی"
-              name="lastName"
+              name="last_name"
               type="text"
-              value={values.lastName}
+              value={values.last_name}
               fullWidth
               onChange={handleInputChange}
-              error={errors.lastName ? true : false}
-              helperText={errors.lastName ? errors.lastName : null}
+              error={errors.last_name ? true : false}
+              helperText={errors.last_name ? errors.last_name : null}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
               variant="outlined"
               label="کد ملی"
-              name="idNumber"
+              name="national_code"
               type="text"
-              value={values.idNumber}
+              value={values.national_code}
               onChange={handleInputChange}
               fullWidth
-              error={errors.idNumber ? true : false}
-              helperText={errors.idNumber ? errors.idNumber : null}
+              error={errors.national_code ? true : false}
+              helperText={errors.national_code ? errors.national_code : null}
             />
           </Grid>
 
@@ -277,14 +419,16 @@ export default function DoctorProfileCompletion() {
             <TextField
               variant="outlined"
               label="کد نظام پزشکی"
-              name="medicalSystemCode"
+              name="medical_system_number"
               type="text"
-              value={values.medicalSystemCode}
+              value={values.medical_system_number}
               onChange={handleInputChange}
               fullWidth
-              error={errors.medicalSystemCode ? true : false}
+              error={errors.medical_system_number ? true : false}
               helperText={
-                errors.medicalSystemCode ? errors.medicalSystemCode : null
+                errors.medical_system_number
+                  ? errors.medical_system_number
+                  : null
               }
             />
           </Grid>
@@ -293,13 +437,13 @@ export default function DoctorProfileCompletion() {
             <TextField
               variant="outlined"
               label="شماره موبایل"
-              name="phoneNumber"
+              name="phone_number"
               type="text"
-              value={values.phoneNumber}
+              value={values.phone_number}
               onChange={handleInputChange}
               fullWidth
-              error={errors.phoneNumber ? true : false}
-              helperText={errors.phoneNumber ? errors.phoneNumber : null}
+              error={errors.phone_number ? true : false}
+              helperText={errors.phone_number ? errors.phone_number : null}
             />
           </Grid>
 
@@ -307,13 +451,13 @@ export default function DoctorProfileCompletion() {
             <TextField
               variant="outlined"
               label="شماره تلفن مطب"
-              name="officeNumber"
+              name="office_number"
               type="text"
-              value={values.officeNumber}
+              value={values.office_number}
               onChange={handleInputChange}
               fullWidth
-              error={errors.officeNumber ? true : false}
-              helperText={errors.officeNumber ? errors.officeNumber : null}
+              error={errors.office_number ? true : false}
+              helperText={errors.office_number ? errors.office_number : null}
             />
           </Grid>
 
@@ -349,13 +493,16 @@ export default function DoctorProfileCompletion() {
               <InputLabel>تخصص</InputLabel>
               <Select
                 label="تخصص"
-                name="specialty"
-                value={values.specialty}
+                name="specialties"
+                value={values.specialties}
                 onChange={handleInputChange}
-                error={errors.specialty ? true : false}
-                helperText={errors.specialty ? errors.specialty : null}
+                error={errors.specialties ? true : false}
+                helperText={errors.specialties ? errors.specialties : null}
               >
-                <MenuItem value={1}>آسیب شناسی</MenuItem>
+                {availableSpecilaities.map((specialty) => (
+                  <MenuItem value={specialty.id}>{specialty.name}</MenuItem>
+                ))}
+                {/* <MenuItem value={1}>آسیب شناسی</MenuItem>
                 <MenuItem value={2}>جراحی کودکان</MenuItem>
                 <MenuItem value={3}>سونوگرافی</MenuItem>
                 <MenuItem value={4}>ارتوپدی کودکان</MenuItem>
@@ -364,7 +511,7 @@ export default function DoctorProfileCompletion() {
                 <MenuItem value={7}>جراحی سرطان</MenuItem>
                 <MenuItem value={8}>زنان، زایمان و نازایی</MenuItem>
                 <MenuItem value={9}>بهداشت خانواده</MenuItem>
-                <MenuItem value={10}>سایر</MenuItem>
+                <MenuItem value={10}>سایر</MenuItem> */}
               </Select>
             </FormControl>
           </Grid>
@@ -430,12 +577,12 @@ export default function DoctorProfileCompletion() {
               // }}
               variant="outlined"
               label="آدرس مطب"
-              name="officeAddress"
+              name="clinic_address"
               type="text"
-              value={values.officeAddress}
+              value={values.clinic_address}
               onChange={handleInputChange}
-              error={errors.officeAddress ? true : false}
-              helperText={errors.officeAddress ? errors.officeAddress : null}
+              error={errors.clinic_address ? true : false}
+              helperText={errors.clinic_address ? errors.clinic_address : null}
               multiline
               rows={2}
               fullWidth
@@ -456,10 +603,9 @@ export default function DoctorProfileCompletion() {
             >
               ذخیره اطلاعات
             </Button> */}
-            <button 
-            className={classes.button}
-            type="submit"
-            >ذخیره اطلاعات</button>
+            <button className={classes.button} type="submit">
+              ذخیره اطلاعات
+            </button>
           </Grid>
         </Grid>
       </Container>
