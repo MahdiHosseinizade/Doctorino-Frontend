@@ -15,6 +15,8 @@ import theme from "../../../../assets/theme/defaultTheme";
 export default function DoctorCard({ doctor }) {
   const history = useHistory();
 
+  console.log(doctor)
+
   return (
     <Card
       sx={{
@@ -23,7 +25,6 @@ export default function DoctorCard({ doctor }) {
         display: "flex",
         borderRadius: "10px",
         maxWidth: "80%",
-        maxHeight: "220px",
       }}
     >
       <Grid container>
@@ -32,17 +33,17 @@ export default function DoctorCard({ doctor }) {
             <CardMedia
               component="img"
               sx={{
-                width: 200,
-                height: 220,
+                width: "100%",
+                height: "100%",
                 padding: "10px",
                 borderRadius: "20px",
               }}
-              image={doctor.profileImage}
+              image={doctor?.image}
               alt="profile-picture"
             />
           </a>
         </Grid>
-        <Grid item md={9}>
+        <Grid item md={6}>
           <Box
             sx={{
               display: "flex",
@@ -75,29 +76,18 @@ export default function DoctorCard({ doctor }) {
                       display: "inline",
                     }}
                   >
-                    دکتر {doctor.firstName} {doctor.lastName}
+                    دکتر {doctor?.user.first_name} {doctor?.user.last_name}
                   </Typography>
                 </a>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    width: "150px",
-                    float: "right",
-                  }}
-                  onClick={() => history.push("/doctor/" + doctor.firstName + "-" + doctor.lastName)}
-                >
-                  مشاهده اطلاعات
-                </Button>
               </Box>
 
-              <Rating
+              {/* <Rating
                 size="small"
                 name="doctorRating"
-                value={doctor.rating}
+                value={doctor?.rating}
                 readOnly
               />
-              <hr width="100%" />
+              <hr width="100%" /> */}
               <Typography
                 component="div"
                 variant="subtitle1"
@@ -109,11 +99,32 @@ export default function DoctorCard({ doctor }) {
                   overflow: "hidden",
                 }}
               >
-                آدرس مطب: {doctor.province}، {doctor.city}،{" "}
-                {doctor.officeAddress}
+                آدرس مطب: {doctor?.province}، {doctor?.city}،{" "}
+                {doctor?.clinic_address}
               </Typography>
             </CardContent>
           </Box>
+        </Grid>
+        <Grid item md={3} sm={12} xs={12} sx={{
+          padding: "5px",
+          pr: 2,
+          py: 2,
+          display: 'flex',
+          flexDirection: "column",
+          justifyContent: "end",
+        }}>
+
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              borderRadius: "5px",
+            }}
+            onClick={() => history.push("/list-of-doctors")}
+          >
+            رزرو
+          </Button>
+
         </Grid>
       </Grid>
     </Card>

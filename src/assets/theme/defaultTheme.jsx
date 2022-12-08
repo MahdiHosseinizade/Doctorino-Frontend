@@ -4,6 +4,18 @@ import IranYekan from "../fonts/iranyekanwebregular(fanum).woff2"
 const theme = createTheme({
     palette: {
         mode: 'light',
+        secondary: {
+            main: "#32cd32",
+            light: "#c1f0c1",
+            dark: "#196719",
+            contrastText: '#fff',
+        },
+        primary: {
+            light: "#b3d9ff",
+            main: "#0080ff",
+            dark: "#004d99",
+            contrastText: '#fff',
+        }
     },
     typography: {
         fontFamily: IranYekan,

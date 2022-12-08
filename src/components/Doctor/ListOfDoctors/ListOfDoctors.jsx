@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import DoctorCard from "./components/DoctorCard";
 import NavBar from "../../NavBar/newNavBar";
 import { makeStyles } from "@mui/styles";
+import { baseURL } from '../../../utils/useAxios';
 
 const useStyles = makeStyles({
   container: {
@@ -18,10 +19,13 @@ export default function Doctors() {
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    // fetch("http://localhost:8000/doctors") 
-    fetch("http://127.0.0.1:8000/api/doctor/")
+    fetch(`${baseURL}/api/doctor/`) 
+    // fetch("http://127.0.0.1:8000/api/doctor/")
       .then((res) => res.json())
-      .then((data) => setDoctors(data));
+      .then((data) => {
+        setDoctors(data);
+        console.log(doctors)
+      });
   }, []);
 
   return (
