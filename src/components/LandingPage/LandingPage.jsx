@@ -69,6 +69,11 @@ export default function LandingPage() {
       toast.error(err.response.data.message);
     })
   }
+
+  const searchDoctorNameHandler = () =>{
+    const findDoctor = resDoctor.filter((item) => item.name === input)
+    setResDoctor(findDoctor);
+  }
   
 
 
