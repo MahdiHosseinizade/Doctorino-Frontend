@@ -4,7 +4,9 @@ import { toast } from "react-toastify";
 // import { useFormik } from "formik";
 // import * as Yup from "yup";
 import { makeStyles } from "@mui/styles";
-import { provinces, educations, specialties } from "./Information";
+// import { provinces } from "./LocationInfo/Information";
+import provinces from "./LocationInfo/Provinces";
+import cities from "./LocationInfo/Cities";
 import AuthContext from "../../../../context/AuthContext";
 import { useContext } from "react";
 import useAxios from "../../../../utils/useAxios";
@@ -93,9 +95,14 @@ const formValues = {
   national_code: "",
   office_number: "",
   phone_number: "",
-  specialties: 0,
+  specialties: "",
   province: "",
 };
+
+const provinceValues = {
+  id: 0, 
+  name: ""
+}
 
 export default function DoctorProfileCompletion() {
   const history = useHistory();
@@ -104,10 +111,20 @@ export default function DoctorProfileCompletion() {
   const [errors, setErrors] = useState({ ...formValues });
   const [loading, setLoading] = useState(true);
   const [availableSpecilaities, setAvailableSpecilaities] = useState([]);
+  const [provinceInfo, setProvinceInfo] = useState({ ...provinceValues });
+  const [citiesList, setCitiesList] = useState([]);
   const { user } = useContext(AuthContext);
   const { authTokens } = useContext(AuthContext);
   const API = useAxios();
   const [count, setCount] = useState(0);
+
+  // function handleCities() {
+  //   cities.map((city) => {
+  //     if (city.province_id === provinceInfo.id) {
+  //       setCitiesList([...citiesList, city]);
+  //     }
+  //   })
+  // }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -115,6 +132,13 @@ export default function DoctorProfileCompletion() {
       ...values,
       [name]: value,
     });
+    if (name === "province") {
+      setProvinceInfo({
+        ...provinceInfo,
+        id: value,
+      })
+      // handleCities();
+    }
     // if (validateOnChange)
     //     validate({ [name]: value })
   };
@@ -159,7 +183,7 @@ export default function DoctorProfileCompletion() {
       temp.education = fieldValues.education ? "" : "تحصیلات خود را مشخص کنید.";
     if ("specialties" in fieldValues)
       temp.specialties = fieldValues.specialties
-        ? []
+        ? ""
         : "تخصص خود را مشخص کنید.";
     if ("province" in fieldValues)
       temp.province = fieldValues.province
@@ -195,6 +219,14 @@ export default function DoctorProfileCompletion() {
   };
 
   useEffect(() => {
+    function handleCities() {
+      cities.map((city) => {
+        if (city.province_id === provinceInfo.id) {
+          setCitiesList([...citiesList, city]);
+        }
+      })
+    }
+
     function fetchData() {
       console.log(
         "this the user's id before anything goes wrong: ",
@@ -251,7 +283,7 @@ export default function DoctorProfileCompletion() {
                 phone_number: response.data.phone_number,
                 office_number: response.data.office_number,
                 education: response.data.education,
-                specialties: response.data.specialties.id,
+                specialties: response.data.specialties[0].id,
                 province: response.data.province,
                 city: response.data.city,
                 clinic_address: response.data.clinic_address,
@@ -270,6 +302,9 @@ export default function DoctorProfileCompletion() {
         });
     }
 
+    handleCities();
+
+
     if (loading) {
       fetchData();
     }
@@ -279,7 +314,7 @@ export default function DoctorProfileCompletion() {
     }, 200000);
 
     return () => clearInterval(id);
-  }, [loading, API, authTokens.access, user.user_id, values]);
+  }, [loading, API, authTokens.access, user.user_id, values, provinceInfo, citiesList]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -565,7 +600,28 @@ export default function DoctorProfileCompletion() {
                 error={errors.city ? true : false}
                 helperText={errors.city ? errors.city : null}
               >
-                <MenuItem value={1}>تهران</MenuItem>
+                {cities.filter((city) => city.province_id === provinceInfo.id).map((city) => (
+                  <MenuItem value={city.id}>{city.name}</MenuItem>
+                ))}
+                {/* {cities.map((city) => (
+                  
+                  <MenuItem value={city.id}>{city.name}</MenuItem>
+                ))} */}
+                {/* {citiesList.map((city) => {
+                  <MenuItem value={city.id}>{city.name}</MenuItem>
+                })} */}
+                {/* {cities.map((city) => (
+                  if (city.province_id === provinceInfo.id) {
+                    <MenuItem value={city.id}>{city.name}</MenuItem>
+                  }
+                )) */}
+                {/* {cities.map((city) => {
+                  if (city.province_id === provinceInfo.id) {
+                    <MenuItem value={city.id}>{city.name}</MenuItem>
+                  }
+                })} */}
+
+                {/* <MenuItem value={1}>تهران</MenuItem> */}
               </Select>
             </FormControl>
           </Grid>
