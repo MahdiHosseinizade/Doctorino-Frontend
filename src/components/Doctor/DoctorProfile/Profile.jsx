@@ -131,8 +131,14 @@ const Profile = (props) => {
                       }}
                     >
                       {/* متخصص {props.doctor?.specialties.name} */}
-                      <br /><br />
 
+                      متخصص {props.doctor?.specialties.map(({id, name}, index) => {
+                        if (index === props.doctor?.specialties.length - 1) {
+                          return name
+                        } else {
+                          return name + " و "
+                        }
+                      })}
                     </Typography>
                   </Grid>
                 </Grid>
