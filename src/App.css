@@ -5,11 +5,6 @@ body{
   background-color: #dbeafe68;
 }
 
-.leaflet-container {
-  width: 100vw;
-  height: 100vh;
-}
-
 .container {
   /* text-align: center; */
   display: flex;

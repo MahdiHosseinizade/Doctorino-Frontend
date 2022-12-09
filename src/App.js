@@ -13,8 +13,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './assets/theme/defaultTheme';
 import { AuthProvider } from './context/AuthContext';
 
-import Profile from './components/Doctor/DoctorProfile/Profile';
-
 
 const cacheRtl = createCache({
   key: 'muirtl',
@@ -34,13 +32,9 @@ const App = () => {
         <BrowserRouter>
           <AuthProvider>
             <Switch>
-              <Route path={`/doctor/:id`} component={Profile} />
-
               {routes.map((route, index) => (
                 route.private ? <PrivateSwitch key={index} {...route} /> : <Route key={index} {...route} />
               ))}
-
-
             </Switch>
           </AuthProvider>
         </BrowserRouter>
