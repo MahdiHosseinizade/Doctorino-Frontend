@@ -1,5 +1,6 @@
 
 
+
 .signUpPage{
     width: 100%;
     height: 100vh;
@@ -15,22 +16,14 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     width: 700px;
-    min-height: 500px;
+    height: 500px;
     background-color: rgb(245, 246, 248);
     box-sizing: border-box;
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    /* display:grid; */
-    /* padding-right: 30px;
-    padding-top:20px; */
+    display:grid;
     grid-template-rows: 1fr 1fr;
     place-items: center;
-    max-height: 600px;
 
 
 }
@@ -78,7 +71,7 @@ button{
     cursor: pointer;
     width: 100%;
     margin-bottom: 10px;
-    margin-top: 15px;
+    margin-top: 15 px;
     font-size: 16px;
 }
 
@@ -185,15 +178,14 @@ button:disabled{
     display: flex;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 10px;
-    min-height: 500px;
+    height: 500px;
     width: 900px ;
-    max-height: 600px;
 }
 
 @media screen and (max-width: 768px){  
     .signUpBox{
         width: 100%;
-        /* height: 100%; */
+        height: 100%;
         display: flex;
         flex-direction: column-reverse;
         justify-content: center;
@@ -202,7 +194,7 @@ button:disabled{
     }
     .signUpBoxForm{
         width: 100%;
-        /* height: 100%; */
+        height: 100%;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
         border-top-left-radius: 10px;
