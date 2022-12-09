@@ -12,6 +12,7 @@ import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './assets/theme/defaultTheme';
 import { AuthProvider } from './context/AuthContext';
+import DoctorProfileLayout from "./components/Doctor/DoctorProfile/DoctorProfileLayout";
 
 
 <<<<<<< HEAD
@@ -46,7 +47,7 @@ const App = () => {
               <Route path={`/doctor/:id`} component={Profile} />
 
               {routes.map((route, index) => (
-                route.private ? <PrivateSwitch key={index} {...route} /> : <Route key={index} {...route} />
+                route.private ? <Route key={index} {...route} /> : <Route key={index} {...route} />
               ))}
 
 

@@ -9,11 +9,27 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import theme from "../../../../assets/theme/defaultTheme";
+import {makeStyles} from "@mui/styles";
+
+const useStyles = makeStyles({
+  card: {
+    m: 2,
+    backgroundColor: "#efefef",
+    display: "flex",
+    borderRadius: "10px",
+    maxWidth: "80%",
+    maxHeight: "220px",
+  },
+});
 
 export default function DoctorCard({ doctor }) {
   const history = useHistory();
+
+  console.log(doctor)
+  const {url} = useRouteMatch();
+  const classes = useStyles();
 
   return (
     <Card
@@ -23,26 +39,27 @@ export default function DoctorCard({ doctor }) {
         display: "flex",
         borderRadius: "10px",
         maxWidth: "80%",
-        maxHeight: "220px",
+        maxHeight: "85%",
       }}
+      // className={classes.card}
     >
       <Grid container>
         <Grid item md={3}>
-          <a href="/list-of-doctors">
+          <a href={`${url}/${doctor.id}`}>
             <CardMedia
               component="img"
               sx={{
-                width: 200,
-                height: 220,
+                width: "85%",
+                height: "90%",
                 padding: "10px",
                 borderRadius: "20px",
               }}
-              image={doctor.profileImage}
+              image={doctor.image}
               alt="profile-picture"
             />
           </a>
         </Grid>
-        <Grid item md={9}>
+        <Grid item md={9} sm={8} xs={12}>
           <Box
             sx={{
               display: "flex",
@@ -66,7 +83,7 @@ export default function DoctorCard({ doctor }) {
                     color: theme.palette.text.primary,
                     textDecoration: "none",
                   }}
-                  href="/list-of-doctors"
+                  href={`${url}/${doctor.id}`}
                 >
                   <Typography
                     component="div"
@@ -75,7 +92,7 @@ export default function DoctorCard({ doctor }) {
                       display: "inline",
                     }}
                   >
-                    دکتر {doctor.firstName} {doctor.lastName}
+                    دکتر {doctor.user.first_name} {doctor.user.last_name}
                   </Typography>
                 </a>
                 <Button
@@ -88,19 +105,19 @@ export default function DoctorCard({ doctor }) {
 <<<<<<< HEAD
                   onClick={() => history.push("/doctor/" + doctor.firstName + "-" + doctor.lastName)}
 =======
-                  onClick={() => history.push("/doctor/" + doctor.id)}
+                  onClick={() => history.push(`${url}/` + doctor.id)}
 >>>>>>> 0a6b197821002573a23f63dacc443c6e98893e34
                 >
                   مشاهده اطلاعات
                 </Button>
               </Box>
 
-              <Rating
+              {/* <Rating
                 size="small"
                 name="doctorRating"
                 value={doctor.rating}
                 readOnly
-              />
+              /> */}
               <hr width="100%" />
               <Typography
                 component="div"
@@ -113,8 +130,9 @@ export default function DoctorCard({ doctor }) {
                   overflow: "hidden",
                 }}
               >
-                آدرس مطب: {doctor.province}، {doctor.city}،{" "}
-                {doctor.officeAddress}
+                آدرس مطب: 
+                {doctor.province}، {doctor.city}،{" "}
+                {doctor.clinic_address}
               </Typography>
             </CardContent>
           </Box>
