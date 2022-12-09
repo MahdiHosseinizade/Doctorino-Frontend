@@ -9,6 +9,7 @@ import { MdPlace } from "react-icons/md";
 import Map from "./Map";
 import axios from "axios";
 import { toast } from "react-toastify";
+import DoctorSwiper from "./DoctorSwiper";
 
 const useStyles = makeStyles({
   root: {
@@ -126,6 +127,7 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
+      <DoctorSwiper />
     </>
   );
 }
