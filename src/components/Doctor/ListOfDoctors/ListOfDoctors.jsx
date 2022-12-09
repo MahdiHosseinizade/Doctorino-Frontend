@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import DoctorCard from "./components/DoctorCard";
 import NavBar from "../../NavBar/newNavBar";
 import { makeStyles } from "@mui/styles";
-import { baseURL } from '../../../utils/useAxios';
 
 const useStyles = makeStyles({
   container: {
@@ -19,13 +18,13 @@ export default function Doctors() {
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    fetch(`${baseURL}/api/doctor/`) 
+    // fetch("http://localhost:8000/doctors") 
     // fetch("http://127.0.0.1:8000/api/doctor/")
+    fetch("http://188.121.113.74/api/doctor/")
       .then((res) => res.json())
       .then((data) => {
-        setDoctors(data);
-        console.log(doctors)
-      });
+        console.log("this is the data to be replaced in doctor values: ", data)
+        setDoctors(data)});
   }, []);
 
   return (

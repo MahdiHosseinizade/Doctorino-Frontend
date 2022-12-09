@@ -8,6 +8,19 @@ import { useContext } from "react";
 import AuthContext from '../../../context/AuthContext';
 
 const baseURL = "http://188.121.113.74"
+import { Grid, TextField } from "@mui/material";
+import styled from "@emotion/styled";
+// import useHistory from "react-router-dom";
+
+const STextField = styled(TextField)({
+  "& .MuiFilledInput-root": {
+    background: "#fefefe",
+  },
+  "& .MuiOutlinedInput-root": {
+    background: "#fefefe",
+  },
+  spellCheck: false,
+});
 
 const formValue = {
     name: "",
@@ -28,6 +41,8 @@ const validationSchema = Yup.object({
 
 
 const Hotelregister = () => {
+  // const history = useHistory();
+  const [user, setUser] = useState([]);
 
     const { loginUser } = useContext(AuthContext);
 
@@ -111,9 +126,7 @@ const Hotelregister = () => {
             /> */}
             <STextField
               fullWidth
-              error={
-                formik.errors["last_name"] && formik.touched["last_name"]
-              }
+              error={formik.errors["last_name"] && formik.touched["last_name"]}
               variant="outlined"
               label="نام خانوادگی"
               name="last_name"
@@ -127,18 +140,20 @@ const Hotelregister = () => {
             />
           </Grid>
           <Grid item md={12} xs={12}>
-          <STextField
-                  // id="first_name"
-                  fullWidth
-                  error={
-                    formik.errors["email"] && formik.touched["email"] 
-                  }
-                  variant="outlined"
-                  label="ایمیل"
-                  name="email"
-                  type="email"
-                  helperText={ formik.errors["email"] && formik.touched["email"] && formik.errors["email"]}
-                  {...formik.getFieldProps("email")}                  
+            <STextField
+              // id="first_name"
+              fullWidth
+              error={formik.errors["email"] && formik.touched["email"]}
+              variant="outlined"
+              label="ایمیل"
+              name="email"
+              type="email"
+              helperText={
+                formik.errors["email"] &&
+                formik.touched["email"] &&
+                formik.errors["email"]
+              }
+              {...formik.getFieldProps("email")}
             />
             {/* <Input label="ایمیل" name="email" formik={formik} type="email" /> */}
           </Grid>
@@ -150,17 +165,19 @@ const Hotelregister = () => {
               type="password"
             /> */}
             <STextField
-                  // id="first_name"
-                  fullWidth
-                  error={
-                    formik.errors["pass"] && formik.touched["pass"] 
-                  }
-                  variant="outlined"
-                  label="کلمه عبور"
-                  name="pass"
-                  type="password"
-                  helperText={ formik.errors["pass"] && formik.touched["pass"] && formik.errors["pass"]}
-                  {...formik.getFieldProps("pass")}                  
+              // id="first_name"
+              fullWidth
+              error={formik.errors["pass"] && formik.touched["pass"]}
+              variant="outlined"
+              label="کلمه عبور"
+              name="pass"
+              type="password"
+              helperText={
+                formik.errors["pass"] &&
+                formik.touched["pass"] &&
+                formik.errors["pass"]
+              }
+              {...formik.getFieldProps("pass")}
             />
           </Grid>
           <Grid item md={6} xs={6}>
@@ -171,16 +188,18 @@ const Hotelregister = () => {
               type="password"
             /> */}
             <STextField
-                fullWidth
-                error={
-                    formik.errors["rPass"] && formik.touched["rPass"] 
-                  }
-                  variant="outlined"
-                  label="تکرار کلمه عبور"
-                  name="tPass"
-                  type="password"
-                  helperText={ formik.errors["rPass"] && formik.touched["rPass"] && formik.errors["rPass"]}
-                  {...formik.getFieldProps("rPass")}  
+              fullWidth
+              error={formik.errors["rPass"] && formik.touched["rPass"]}
+              variant="outlined"
+              label="تکرار کلمه عبور"
+              name="tPass"
+              type="password"
+              helperText={
+                formik.errors["rPass"] &&
+                formik.touched["rPass"] &&
+                formik.errors["rPass"]
+              }
+              {...formik.getFieldProps("rPass")}
             />
           </Grid>
           <br />

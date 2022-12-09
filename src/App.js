@@ -14,8 +14,6 @@ import theme from './assets/theme/defaultTheme';
 import { AuthProvider } from './context/AuthContext';
 import DoctorProfileLayout from "./components/Doctor/DoctorProfile/DoctorProfileLayout";
 
-import Profile from './components/Doctor/DoctorProfile/Profile';
-
 
 const cacheRtl = createCache({
   key: 'muirtl',
@@ -40,7 +38,6 @@ const App = () => {
               {routes.map((route, index) => (
                 route.private ? <Route key={index} {...route} /> : <Route key={index} {...route} />
               ))}
-
             </Switch>
           </AuthProvider>
         </BrowserRouter>
