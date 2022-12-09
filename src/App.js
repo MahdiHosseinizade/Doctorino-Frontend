@@ -15,12 +15,8 @@ import { AuthProvider } from './context/AuthContext';
 import DoctorProfileLayout from "./components/Doctor/DoctorProfile/DoctorProfileLayout";
 
 
-<<<<<<< HEAD
-=======
-import Doctors from './components/Doctor/DoctorProfile/Doctors';
 import Profile from './components/Doctor/DoctorProfile/Profile';
 
->>>>>>> 0a6b197821002573a23f63dacc443c6e98893e34
 const cacheRtl = createCache({
   key: 'muirtl',
   stylisPlugins: [prefixer, rtlPlugin],
@@ -39,19 +35,13 @@ const App = () => {
         <BrowserRouter>
           <AuthProvider>
             <Switch>
-<<<<<<< HEAD
+              <Route path={`/list-of-doctors/:id`} component={DoctorProfileLayout} />
+
               {routes.map((route, index) => (
                 route.private ? <PrivateSwitch key={index} {...route} /> : <Route key={index} {...route} />
               ))}
-=======
-              <Route path={`/doctor/:id`} component={Profile} />
-
-              {routes.map((route, index) => (
-                route.private ? <Route key={index} {...route} /> : <Route key={index} {...route} />
-              ))}
 
 
->>>>>>> 0a6b197821002573a23f63dacc443c6e98893e34
             </Switch>
           </AuthProvider>
         </BrowserRouter>
