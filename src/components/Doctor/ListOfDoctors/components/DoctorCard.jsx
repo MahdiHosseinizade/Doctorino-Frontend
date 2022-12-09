@@ -9,13 +9,14 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import theme from "../../../../assets/theme/defaultTheme";
 
 export default function DoctorCard({ doctor }) {
   const history = useHistory();
 
   console.log(doctor)
+  const {url} = useRouteMatch();
 
   return (
     <Card
@@ -29,7 +30,7 @@ export default function DoctorCard({ doctor }) {
     >
       <Grid container>
         <Grid item md={3}>
-          <a href="/list-of-doctors">
+          <a href={`${url}/${doctor.id}`}>
             <CardMedia
               component="img"
               sx={{
@@ -67,7 +68,7 @@ export default function DoctorCard({ doctor }) {
                     color: theme.palette.text.primary,
                     textDecoration: "none",
                   }}
-                  href="/list-of-doctors"
+                  href={`${url}/${doctor.id}`}
                 >
                   <Typography
                     component="div"
@@ -79,6 +80,17 @@ export default function DoctorCard({ doctor }) {
                     دکتر {doctor?.user.first_name} {doctor?.user.last_name}
                   </Typography>
                 </a>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    width: "150px",
+                    float: "right",
+                  }}
+                  onClick={() => history.push(`${url}/` + doctor.id)}
+                >
+                  مشاهده اطلاعات
+                </Button>
               </Box>
 
               {/* <Rating

@@ -1,47 +1,84 @@
 import { useFormik } from "formik";
-import { useState } from "react";
 import * as Yup from "yup";
 import Input from "../../common/Input";
-import { Grid, TextField } from "@mui/material";
-import styled from "@emotion/styled";
+import { Grid } from "@mui/material";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useContext } from "react";
+import AuthContext from '../../../context/AuthContext';
 
-const STextField = styled(TextField)({
-    "& .MuiFilledInput-root": {
-        background: "#fefefe"
-    },
-    "& .MuiOutlinedInput-root": {
-        background: "#fefefe"
-    },
-    spellCheck: false,
-  })
+const baseURL = "http://188.121.113.74"
 
 const formValue = {
-  name: "",
-  family: "",
-  email: "",
-  pass: "",
-  rPass: "",
-};
+    name: "",
+    family: "",
+    email: "",
+    pass: "",
+    rPass: "",
+}
 
 const validationSchema = Yup.object({
-  name: Yup.string().required("نام ضروری است"),
-  family: Yup.string().required("نام خانوادگی ضروری است"),
-  email: Yup.string().email("ایمیل معتبر نیست").required("ایمیل ضروری است"),
-  pass: Yup.string().required("کلمه عبور ضروری است"),
-  rPass: Yup.string()
-    .required("تکرار کلمه عبور ضروری است")
-    .oneOf([Yup.ref("pass"), null], "کلمه عبور همخوانی ندارد"),
-});
+    name: Yup.string().required("نام ضروری است"),
+    family: Yup.string().required("نام خانوادگی ضروری است"),
+    email: Yup.string().email("ایمیل معتبر نیست").required("ایمیل ضروری است"),
+    pass: Yup.string().required("کلمه عبور ضروری است"),
+    rPass: Yup.string().required("تکرار کلمه عبور ضروری است")
+        .oneOf([Yup.ref("pass"), null], "کلمه عبور همخوانی ندارد"),
+})
+
 
 const Hotelregister = () => {
-  const [user, setUser] = useState([]);
 
-  const formik = useFormik({
-    initialValues: formValue,
-    onSubmit: (values) => setUser([...user, values]),
-    validationSchema: validationSchema,
-  });
+    const { loginUser } = useContext(AuthContext);
 
+    function posthotelHandler(hotel) {
+
+        axios.post(
+            `${baseURL}/api/hotel/owner/new/`,
+            {
+                "user" : {
+                    "password": hotel.pass,
+                    "email": hotel.email,
+                    "first_name": hotel.name,
+                    "last_name": hotel.family,
+                    "is_hotel_owner": true
+                }
+            }
+        )
+            .then((res) => {
+                toast.success(
+                    `ثبت نام ${res.data.user.first_name} ${res.data.user.last_name} با موفقیت انجام شد`,
+                    {
+                        position: "top-right",
+                        autoClose: 2000,
+                    }
+                )
+                loginUser(hotel.email, hotel.pass);
+            })
+            .catch(
+                (err) => {
+                    console.log(err);
+                    toast.error(
+                        'مشکلی پیش آمده است',
+                        {
+                            position: "top-right",
+                            autoClose: 2000,
+                        }
+                    )
+                }
+            );
+    }
+
+
+    const formik = useFormik({
+        initialValues: formValue,
+        onSubmit: (values) => {
+            posthotelHandler(values);
+        },
+        validationSchema: validationSchema
+    })
+
+<<<<<<< HEAD
   return (
     <div>
       <form onSubmit={formik.handleSubmit} method="post">
@@ -158,5 +195,35 @@ const Hotelregister = () => {
     </div>
   );
 };
+=======
+    return (
+        <div>
+            <form onSubmit={formik.handleSubmit}>
+                <Grid container spacing={1}>
+                    <Grid item md={6} xs={6}>
+                        <Input label="نام" name="name" formik={formik} type="text" />
+                    </Grid>
+                    <Grid item md={6} xs={6}>
+                        <Input label="نام خانوادگی" name="family" formik={formik} type="text" />
+                    </Grid>
+                    <Grid item md={12} xs={12}>
+                        <Input label="ایمیل" name="email" formik={formik} type="email" />
+                    </Grid>
+                    <Grid item md={6} xs={6}>
+                        <Input label="رمز عبور" name="pass" formik={formik} type="password" />
+                    </Grid>
+                    <Grid item md={6} xs={6}>
+                        <Input label="تکرار رمز عبور" name="rPass" formik={formik} type="password" />
+                    </Grid>
+                    <br />
+                    <Grid item md={12} xs={12}>
+                        <button disabled={!((formik.isValid) && (formik.dirty))} type="submit">ثبت نام</button>
+                    </Grid>
+                </Grid>
+            </form>
+        </div>
+    );
+}
+>>>>>>> feature/v1.0.0/doctor-profile-front
 
 export default Hotelregister;
