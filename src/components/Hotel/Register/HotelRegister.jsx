@@ -78,10 +78,9 @@ const Hotelregister = () => {
         validationSchema: validationSchema
     })
 
-<<<<<<< HEAD
   return (
     <div>
-      <form onSubmit={formik.handleSubmit} method="post">
+      <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={1}>
           <Grid item md={6} xs={6}>
             <STextField
@@ -195,35 +194,5 @@ const Hotelregister = () => {
     </div>
   );
 };
-=======
-    return (
-        <div>
-            <form onSubmit={formik.handleSubmit}>
-                <Grid container spacing={1}>
-                    <Grid item md={6} xs={6}>
-                        <Input label="نام" name="name" formik={formik} type="text" />
-                    </Grid>
-                    <Grid item md={6} xs={6}>
-                        <Input label="نام خانوادگی" name="family" formik={formik} type="text" />
-                    </Grid>
-                    <Grid item md={12} xs={12}>
-                        <Input label="ایمیل" name="email" formik={formik} type="email" />
-                    </Grid>
-                    <Grid item md={6} xs={6}>
-                        <Input label="رمز عبور" name="pass" formik={formik} type="password" />
-                    </Grid>
-                    <Grid item md={6} xs={6}>
-                        <Input label="تکرار رمز عبور" name="rPass" formik={formik} type="password" />
-                    </Grid>
-                    <br />
-                    <Grid item md={12} xs={12}>
-                        <button disabled={!((formik.isValid) && (formik.dirty))} type="submit">ثبت نام</button>
-                    </Grid>
-                </Grid>
-            </form>
-        </div>
-    );
-}
->>>>>>> feature/v1.0.0/doctor-profile-front
 
 export default Hotelregister;
