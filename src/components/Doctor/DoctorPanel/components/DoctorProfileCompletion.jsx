@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-// import { useFormik } from "formik";
-// import * as Yup from "yup";
 import { makeStyles } from "@mui/styles";
-// import { provinces } from "./LocationInfo/Information";
 import provinces from "./LocationInfo/Provinces";
 import cities from "./LocationInfo/Cities";
 import AuthContext from "../../../../context/AuthContext";
 import { useContext } from "react";
 import useAxios from "../../../../utils/useAxios";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import {
   Container,
   Grid,
-  Box,
   TextField,
-  Button,
   FormControl,
   InputLabel,
   Select,
@@ -52,7 +47,6 @@ const useStyles = makeStyles({
     height: "87%",
     border: "1px solid black",
     borderRadius: "10px",
-    // padding: "20px",
     paddingTop: "1.5rem",
     paddingBottom: "0.1rem",
     "& .MuiTextField-root": { m: 0 },
@@ -76,14 +70,6 @@ const formValues = {
   work_periods: [],
   description: null,
   medical_system_number: "",
-
-  // user: {
-  //   email: "",
-  //   first_name: "",
-  //   id: 0,
-  //   last_name: "",
-  //   username: null,
-  // },
 
   // User Info
   first_name: "",
@@ -116,15 +102,6 @@ export default function DoctorProfileCompletion() {
   const { user } = useContext(AuthContext);
   const { authTokens } = useContext(AuthContext);
   const API = useAxios();
-  // const [count, setCount] = useState(0);
-
-  // function handleCities() {
-  //   cities.map((city) => {
-  //     if (city.province_id === provinceInfo.id) {
-  //       setCitiesList([...citiesList, city]);
-  //     }
-  //   })
-  // }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -137,10 +114,7 @@ export default function DoctorProfileCompletion() {
         ...provinceInfo,
         id: value,
       })
-      // handleCities();
     }
-    // if (validateOnChange)
-    //     validate({ [name]: value })
   };
 
   const validate = (fieldValues = values) => {
@@ -148,14 +122,6 @@ export default function DoctorProfileCompletion() {
     console.log("in validate func: ", fieldValues);
     console.log("user firstname: ", fieldValues.user["first_name"]);
     console.log("temp", temp.user);
-    // if ("user" in fieldValues){
-    //   if ("first_name" in fieldValues.user)
-    //     temp.user.first_name = fieldValues.user.first_name ? "" : "نام خود را وارد کنید.";
-    //   if ("last_name" in fieldValues.user)
-    //     temp.user.last_name = fieldValues.user.last_name
-    //       ? ""
-    //       : "نام خانوادگی خود را وارد کنید.";
-    // // }
     if ("first_name" in fieldValues)
       temp.first_name = fieldValues.first_name ? "" : "نام خود را وارد کنید.";
     if ("last_name" in fieldValues)
@@ -245,7 +211,6 @@ export default function DoctorProfileCompletion() {
           console.log("this is the error of specialties", error);
         });
       API.get(
-        // `http://127.0.0.1:8000/api/doctor/user_id_to_doctor_id/${user.user_id}/`,
         `/api/doctor/user_id_to_doctor_id/${user.user_id}/`,
         {
           headers: {
@@ -255,7 +220,6 @@ export default function DoctorProfileCompletion() {
       )
         .then((response) => {
           console.log("this is the response of doctor id", response.data);
-          // API.get(`http://127.0.0.1:8000/api/doctor/${response.data.id}/`, {
           API.get(`/api/doctor/${response.data.id}/`, {
             headers: {
               Authorization: `Bearer ${authTokens.access}`,
@@ -263,7 +227,6 @@ export default function DoctorProfileCompletion() {
           })
             .then((response) => {
               console.log("the response of doctor", response.data);
-              // setValues({ ...response.data });
               setValues({
                 ...response.data,
                 first_name: response.data.user.first_name,
@@ -271,12 +234,6 @@ export default function DoctorProfileCompletion() {
                 email: response.data.user.email,
                 username: response.data.user.username,
                 inner_id: response.data.user.id,
-                // user: {
-                //   first_name: response.data.user.first_name,
-                //   last_name: response.data.user.last_name,
-                //   email: response.data.user.email,
-                //   id: response.data.user.id,
-                // },
                 id: response.data.id,
                 national_code: response.data.national_code,
                 medical_system_number: response.data.medical_system_number,
@@ -320,20 +277,7 @@ export default function DoctorProfileCompletion() {
     e.preventDefault();
     console.log("in handle submit.");
     if (validate()) {
-      // console.log(values);
-      // console.log("button clicked");
-      // console.log("this is the user's id: ", user.user_id);
-      console.log("in validate in handle submit.");
-      console.log("Values before changing: ", values);
-
-      // API.put(`/api/doctor/${values.id}/`, values, {
-      //   headers: {
-      //     Authorization: `Bearer ${authTokens.access}`,
-      //   },
-      // })
-
       axios
-        // .put(`http://188.121.113.74/api/doctor/${values.id}/`, values)
         .put(
           `http://188.121.113.74/api/doctor/${values.id}/`,
           {
@@ -363,12 +307,6 @@ export default function DoctorProfileCompletion() {
             //   type: "",
             //   coordinates: [0, 0],
             // },
-
-            // User Info
-            // first_name: "",
-            // email: "",
-            // last_name: "",
-            // username: "",
           },
           {
             headers: {
@@ -537,16 +475,6 @@ export default function DoctorProfileCompletion() {
                 {availableSpecilaities.map((specialty) => (
                   <MenuItem value={specialty.id}>{specialty.name}</MenuItem>
                 ))}
-                {/* <MenuItem value={1}>آسیب شناسی</MenuItem>
-                <MenuItem value={2}>جراحی کودکان</MenuItem>
-                <MenuItem value={3}>سونوگرافی</MenuItem>
-                <MenuItem value={4}>ارتوپدی کودکان</MenuItem>
-                <MenuItem value={5}>نفرولوژی</MenuItem>
-                <MenuItem value={6}>جراحی سر و گردن</MenuItem>
-                <MenuItem value={7}>جراحی سرطان</MenuItem>
-                <MenuItem value={8}>زنان، زایمان و نازایی</MenuItem>
-                <MenuItem value={9}>بهداشت خانواده</MenuItem>
-                <MenuItem value={10}>سایر</MenuItem> */}
               </Select>
             </FormControl>
           </Grid>
@@ -555,23 +483,6 @@ export default function DoctorProfileCompletion() {
             <FormControl fullWidth>
               <InputLabel>استان</InputLabel>
               <Select
-                // onChange={(e) => {
-                //   setDoctor({
-                //     ...doctor,
-                //     province: provinces.find((p) => {
-                //       if (p.id === e.target.value) {
-                //         return p.name;
-                //       }
-                //     })["name"],
-                //   });
-                // }}
-                // onChange={(e) => {
-                //   setDoctor({
-                //     ...doctor,
-                //     province: provinces.find((p) => p.id === e.target.value),
-                //   });
-                // }}
-
                 name="province"
                 label="استان"
                 value={values.province}
@@ -590,9 +501,6 @@ export default function DoctorProfileCompletion() {
             <FormControl fullWidth>
               <InputLabel>شهر</InputLabel>
               <Select
-                // onChange={(e) => {
-                //   setDoctor({ ...doctor, city: e.target.value });
-                // }}
                 label="شهر"
                 name="city"
                 value={values.city}
@@ -603,34 +511,12 @@ export default function DoctorProfileCompletion() {
                 {cities.filter((city) => city.province_id === provinceInfo.id).map((city) => (
                   <MenuItem value={city.id}>{city.name}</MenuItem>
                 ))}
-                {/* {cities.map((city) => (
-                  
-                  <MenuItem value={city.id}>{city.name}</MenuItem>
-                ))} */}
-                {/* {citiesList.map((city) => {
-                  <MenuItem value={city.id}>{city.name}</MenuItem>
-                })} */}
-                {/* {cities.map((city) => (
-                  if (city.province_id === provinceInfo.id) {
-                    <MenuItem value={city.id}>{city.name}</MenuItem>
-                  }
-                )) */}
-                {/* {cities.map((city) => {
-                  if (city.province_id === provinceInfo.id) {
-                    <MenuItem value={city.id}>{city.name}</MenuItem>
-                  }
-                })} */}
-
-                {/* <MenuItem value={1}>تهران</MenuItem> */}
               </Select>
             </FormControl>
           </Grid>
 
           <Grid item xs={12} md={12}>
             <TextField
-              // onChange={(e) => {
-              //   setDoctor({ ...doctor, address: e.target.value });
-              // }}
               variant="outlined"
               label="آدرس مطب"
               name="clinic_address"
@@ -646,19 +532,6 @@ export default function DoctorProfileCompletion() {
           </Grid>
 
           <Grid item md={12} xs={12}>
-            {/* <Button
-              className={classes.button}
-              type="submit"
-              variant="contained"
-              // onClick={formik.handleSubmit}
-              // onClick={(values, e) => {
-              //   // e.preventDefault();
-              //   setDoctor({ ...values });
-              //   // history.push("/doctor-panel");
-              // }}
-            >
-              ذخیره اطلاعات
-            </Button> */}
             <button className={classes.button} type="submit">
               ذخیره اطلاعات
             </button>
