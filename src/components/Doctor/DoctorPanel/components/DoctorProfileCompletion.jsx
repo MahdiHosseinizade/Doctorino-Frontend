@@ -105,7 +105,7 @@ const provinceValues = {
 }
 
 export default function DoctorProfileCompletion() {
-  const history = useHistory();
+  // const history = useHistory();
   const classes = useStyles();
   const [values, setValues] = useState({ ...formValues });
   const [errors, setErrors] = useState({ ...formValues });

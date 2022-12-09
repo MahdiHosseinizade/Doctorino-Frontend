@@ -22,7 +22,9 @@ export default function Doctors() {
     // fetch("http://127.0.0.1:8000/api/doctor/")
     fetch("http://188.121.113.74/api/doctor/")
       .then((res) => res.json())
-      .then((data) => setDoctors(data));
+      .then((data) => {
+        console.log("this is the data to be replaced in doctor values: ", data)
+        setDoctors(data)});
   }, []);
 
   return (

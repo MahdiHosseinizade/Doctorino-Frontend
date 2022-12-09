@@ -106,20 +106,21 @@ export default function SideBar() {
       icon: <MenuIcon color="f4f4f4" />,
     },
     {
-      text: "مدیریت نوبت ها",
-      path: "/doctor-panel/appointment-reports",
+      // text: "مدیریت نوبت ها",
+      text: "مدیریت زمان نوبت دهی",
+      path: "/doctor-panel/appointments-management",
       icon: <SummarizeIcon color="f4f4f4" />,
     },
-    {
-      text: "امور مالی",
-      path: "/doctor-panel/finance-issues",
-      icon: <AccountBalanceIcon color="f4f4f4" />,
-    },
-    {
-      text: "تغییر رمزعبور",
-      path: "/doctor-panel/change-password",
-      icon: <PasswordIcon color="f4f4f4" />,
-    },
+    // {
+    //   text: "امور مالی",
+    //   path: "/doctor-panel/finance-issues",
+    //   icon: <AccountBalanceIcon color="f4f4f4" />,
+    // },
+    // {
+    //   text: "تغییر رمزعبور",
+    //   path: "/doctor-panel/change-password",
+    //   icon: <PasswordIcon color="f4f4f4" />,
+    // },
     // {
     //   text: "خروج",
     //   path: "/",
