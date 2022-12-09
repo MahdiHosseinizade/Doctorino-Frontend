@@ -2,7 +2,7 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 // import useMap from 'https://cdn.esm.sh/react-leaflet/hooks'
 import { useState, useEffect } from "react";
 // import { useMap } from 'https://cdn.esm.sh/react-leaflet/hooks'
-import L from "leaflet";
+// import L from "leaflet";
 
 const Test = () => {
   // const [position, setPosition] = useState([37.699739, 51.338097]);
