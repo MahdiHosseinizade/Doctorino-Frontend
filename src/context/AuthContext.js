@@ -44,7 +44,10 @@ export const AuthProvider = ({ children }) => {
         autoClose: 2000,
       });
     } else {
-      alert("Something went wrong!");
+      toast.error("وارد نشدید", {
+        position: "top-right",
+        autoClose: 2000
+      })
     }
   };
 
