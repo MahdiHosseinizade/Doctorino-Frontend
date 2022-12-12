@@ -23,6 +23,7 @@ import useAxios from '../../../../utils/useAxios';
 import AuthContext from '../../../../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { baseURL } from '../../../../utils/useAxios';
 
 
 const STextField = styled(TextField)({
@@ -71,13 +72,22 @@ export default function HotelProfileCompletion() {
     const [stars, setStars] = useState();
     const [availableFeatures, setAvailableFeatures] = useState([]);
     const [features, setFeatures] = React.useState([]);
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState();
+    const [loading, setLoading] = useState(true);
+
+    function handleImage(e) {
+        // save the image to the state
+        setFile(e.target.files[0]);
+    }
 
     useEffect(() => {
-        axios.get("http://127.0.0.1:8000/api/hotel/feature/")
-            .then(res => setAvailableFeatures(res.data))
-            .catch(err => console.log(err));
-    }, [])
+        if (loading) {
+            axios.get(`${baseURL}/api/hotel/feature/`)
+                .then(res => setAvailableFeatures(res.data))
+                .catch(err => console.log(err));
+            setLoading(false);
+        }
+    }, [loading, features])
 
     const handleFeatures = (event) => {
         const {
@@ -101,25 +111,28 @@ export default function HotelProfileCompletion() {
 
     function postHotel(hotel) {
 
-        // const formData = new FormData();
-        // formData.append('file', file);
+        let formData = new FormData();
 
-        // console.log(formData.get('file'));
+        formData.append('hotel_name', hotel.hotel_name);
+        formData.append('stars', hotel.stars);
+        formData.append('address', hotel.address);
+        formData.append('feature', features);
+        formData.append('phone_number', hotel.phone_number);
+        formData.append('description', hotel.hotel_description);
+        formData.append('trade_code', hotel.trade_code);
+        formData.append('cover_image', file);
+
+        // debug bad request error
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1])
+        }
 
         api.post('/api/hotel/new/',
-            {
-                "hotel_name": hotel.hotel_name,
-                "stars": hotel.stars,
-                "address": hotel.address,
-                "features": features,
-                "hotel_description": hotel.description,
-                "trade_code": hotel.trade_code,
-
-                // "cover_image": formData
-            },
+            formData,
             {
                 headers:
                 {
+                    'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${authTokens.access}`
                 }
             }
@@ -128,7 +141,7 @@ export default function HotelProfileCompletion() {
                 position: "top-right",
                 autoClose: 2000,
             }))
-            .catch(err => toast.success('مشکلی پیش آمده', {
+            .catch(err => toast.error('مشکلی پیش آمده', {
                 position: "top-right",
                 autoClose: 2000,
             }))
@@ -177,7 +190,7 @@ export default function HotelProfileCompletion() {
                             label="نام هتل"
                             name='hotel_name'
                             type="text"
-                            helperText={formik.errors["hotel_name"]}
+                            helperText={formik.touched["hotel_name"] && formik.errors["hotel_name"]}
                             {...formik.getFieldProps('hotel_name')}
                         />
                     </Grid>
@@ -291,6 +304,22 @@ export default function HotelProfileCompletion() {
                                 name='rules'
                                 style={{ display: 'none' }}
                                 onChange={(e) => handle(e)}
+                            />
+                        </Button>
+                    </Grid>
+                    <Grid item md={12} xs={12}>
+                        <Button
+                            fullWidth
+                            variant="outlined"
+                            component="label"
+                        >
+                            {"تصویر هتل"}
+
+                            <input
+                                type="file"
+                                name='cover_image'
+                                style={{ display: 'none' }}
+                                onChange={(e) => handleImage(e)}
                             />
                         </Button>
                     </Grid>

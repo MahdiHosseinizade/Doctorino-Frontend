@@ -81,7 +81,9 @@ export default function HotelProfileCompletion() {
           Authorization: `Bearer ${authTokens.access}`,
         },
       })
-      .then((res) => setAvailableHotels(res.data))
+      .then((res) => {
+        setAvailableHotels(res.data)
+      })
       .catch((err) => console.error(err));
 
     api
@@ -221,7 +223,7 @@ export default function HotelProfileCompletion() {
                                     <ListItemText primary={"انتخاب نشده"} />
                                 </MenuItem> */}
 
-                {availableHotels.map(
+                {availableHotels?.map(
                   ({ id, hotel_name }, ind) =>
                     ind > 0 && (
                       <MenuItem key={id} value={id}>
