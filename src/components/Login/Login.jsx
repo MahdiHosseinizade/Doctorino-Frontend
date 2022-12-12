@@ -11,6 +11,7 @@ import styled from "@emotion/styled";
 import { TextField } from "@mui/material";
 import AuthContext from "../../context/AuthContext";
 import { useContext } from "react";
+import { baseURL } from '../../utils/useAxios';
 
 const value = {
   email: "",
@@ -72,7 +73,7 @@ const Login = ({ history }) => {
   const postuserHandler = (user) => {
     axios
       // .post("http://127.0.0.1:8000/api/auth/token/", {
-        .post("http://188.121.113.74/api/auth/token/", {
+      .post(`${baseURL}/api/auth/token/`, {
         password: user.password,
         email: user.email,
       })
