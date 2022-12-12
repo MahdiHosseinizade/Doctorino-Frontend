@@ -1,0 +1,89 @@
+.searchBar{
+    margin-bottom: 60px;
+    background-image: url('https://www.finds.ir/img/2020081384124649.jpg');
+    width: 60vw;
+    height: 60vh;
+    padding: 10px;
+    font-size: 16px;
+    outline: none;
+    border-radius: 10px;
+    z-index: -1;
+}
+
+.search{
+    width: 100%;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 4px;
+    /* margin: 0; */
+    /* margin: 0 auto; */
+}
+
+.searchIcon{
+    height: 32px;
+    margin: 4px;
+    background-color: #556a85;
+    display: flex;
+}
+.placeIcon{
+    display: flex;
+    height: 32px;
+    margin: 0;
+    text-align: center;
+    background-color: #556a85;
+}
+.place{
+    cursor: pointer;
+    min-width: max-content;
+    display: flex;
+    justify-content: center;
+    border: none;
+    margin: 4px;
+}
+.place h6{
+    min-width: max-content;
+    display: flex;
+    margin: 2px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.searchDoctor{
+    margin : 0;
+    border: 1px solid #ccc;
+    font-family: 'IranYekan';
+}
+.searchDoctor::placeholder{
+    font-family: 'IranYekan';
+}
+
+.IconSelect{
+    display: flex;
+}
+.selectScale{
+    font-family: 'IranYekan';
+    font-size: 12px;
+    height: 30px;
+    margin-top: 5px;
+    border-radius: 10px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+.item{
+    background-color: darkgray;
+    width: 600px;
+    height: 500px;
+    /* center the page */
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 10px;
+    padding: 10px;
+}
