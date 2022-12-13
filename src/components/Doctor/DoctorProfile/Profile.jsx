@@ -131,7 +131,6 @@ const Profile = (props) => {
                       }}
                     >
                       {props.doctor?.education} {props.doctor?.specialties.map((name) => (name.name))}
-                      {console.log(props.doctor?.specialties.map((name) => (name.name)))}
                       <br /><br />
 
                     </Typography>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Container,
     Card,
@@ -7,6 +7,11 @@ import {
     Button,
     Grid,
     Stack,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
 } from "@mui/material"
 import { useTheme } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
@@ -14,6 +19,8 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import axios from 'axios';
 import { useParams } from "react-router-dom";
+import AuthContext from '../../../context/AuthContext';
+
 
 
 const steps = [
@@ -51,18 +58,27 @@ const availableTimes = [
 
 
 export default function ScheduleTime(props) {
+    const { user } = useContext(AuthContext);
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
+
     const maxSteps = steps.length;
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
-
+    const [open, setOpen] = React.useState(false);
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     // const [times, setTimes] = useState([]);
 
@@ -92,6 +108,35 @@ export default function ScheduleTime(props) {
     // {
     //     availableTimes.push(t)  
     // }
+
+    function ReservePopUp() {
+        return (
+            <div>
+                <DialogContent>
+                    <DialogContentText
+                        id="alert-dialog-description"
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>
+                        جهت رزرو نهایی نوبت برای دکتر {}، {} در زمان {} تایید نهایی رزرو را انتخاب کنید
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} autoFocus>
+                        تایید نهایی رزرو
+                    </Button>
+                </DialogActions>
+            </div>
+        );
+    }
+
+    function logInPopUp() {
+        return (
+            <p>log cos</p>
+        );
+    }
+
 
     return (
         <Card
@@ -191,11 +236,42 @@ export default function ScheduleTime(props) {
                     <Button sx={{
                         width: "100%",
                         backgroundColor: "primary"
-                    }}>
+                    }}
+                        onClick={handleClickOpen}
+                    >
                         رزرو کنید
                     </Button>
+
                 </Grid>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        <Typography sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>{"رزرو نهایی"}</Typography>
+                    </DialogTitle>
+                    {!user && ReservePopUp()} {/* null */}
+                    {user && logInPopUp()} {/* user */}
+                    {/* <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Description
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Disagree</Button>
+                    <Button onClick={handleClose} autoFocus>
+                        Agree
+                    </Button>
+                </DialogActions> */}
+                </Dialog>
+
             </Grid>
+
         </Card>
     );
 }

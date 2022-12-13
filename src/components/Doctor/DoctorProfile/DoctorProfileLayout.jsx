@@ -27,7 +27,7 @@ export default function DoctorProfileLayout() {
     }
 
     function fetchData2() {
-        axios.get(`http://188.121.113.74/api/doctor/workday/${id}/`)
+        axios.get(`http://188.121.113.74/api/doctor/${id}/workday`)
             .then(res => {
                 setScheduleTime(res.data);
             })
@@ -43,7 +43,10 @@ export default function DoctorProfileLayout() {
             fetchData2();
         }
 
-    }, [loading, doctor, scheduleTime])
+    }, [loading, doctor, scheduleTime]);
+
+    // console.log(doctor);
+    console.log(scheduleTime);
 
     return (
         <Container>
