@@ -2,6 +2,7 @@ import { Container, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import HotelCard from './components/HotelCard';
+import { baseURL } from '../../../utils/useAxios';
 
 function Hotels(prop) {
     const [hotels, setHotels] = useState([]);
@@ -12,7 +13,7 @@ function Hotels(prop) {
 
 
     let getHotels = async () => {
-        let response = await axios.get('http://127.0.0.1:8000/api/hotel/')
+        let response = await axios.get(`${baseURL}/api/hotel/`)
 
         if (response.status === 200) {
             setHotels(response.data)
