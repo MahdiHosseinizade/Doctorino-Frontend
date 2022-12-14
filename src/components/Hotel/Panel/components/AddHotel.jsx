@@ -118,9 +118,12 @@ export default function HotelProfileCompletion() {
         formData.append('address', hotel.address);
         formData.append('feature', features);
         formData.append('phone_number', hotel.phone_number);
-        formData.append('description', hotel.hotel_description);
+        formData.append('rules', hotel.rules);
         formData.append('trade_code', hotel.trade_code);
-        formData.append('cover_image', file);
+        
+        if (file) {
+            formData.append('cover_image', file);
+        }
 
         // debug bad request error
         for (var pair of formData.entries()) {
@@ -130,6 +133,13 @@ export default function HotelProfileCompletion() {
         api.post('/api/hotel/new/',
             formData,
             {
+                // set the type of the request to multipart/form-data
+                // so that the server can handle the request properly
+                // features: array of integers
+                // cover_image: image file
+                // stars: integer
+                // other fields: string
+
                 headers:
                 {
                     'Content-Type': 'multipart/form-data',
@@ -233,15 +243,18 @@ export default function HotelProfileCompletion() {
                     <Grid item xs={12} md={12}>
                         <STextField
                             fullWidth
-                            error={formik.errors["hotel_description"] && formik.touched["hotel_description"]}
-                            variant='outlined'
-                            label="توضیحات"
-                            name="hotel_description"
+                            error={
+                                formik.errors["rules"] &&
+                                formik.touched["rules"]
+                            }
+                            variant="outlined"
+                            label="قوانین هتل"
+                            name="rules"
                             type="text"
-                            helperText={formik.errors["hotel_description"]}
+                            helperText={formik.touched["rules"] && formik.errors["rules"]}
                             multiline
                             rows={4}
-                            {...formik.getFieldProps('hotel_description')}
+                            {...formik.getFieldProps("rules")}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>

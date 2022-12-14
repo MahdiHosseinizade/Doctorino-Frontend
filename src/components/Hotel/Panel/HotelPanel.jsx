@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import HotelProfileCompletion from './components/HotelProfileCompletion';
+import HotelProfileCompletion from './components/HotelProfileCompletion/HotelProfileCompletion';
 import Dashboard from './components/Dashboard';
 import ManagerProfile from './components/ManagerProfile';
 import BookingReport from './components/BookingReport';
