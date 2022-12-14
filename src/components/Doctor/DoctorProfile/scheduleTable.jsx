@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from "react-router-dom";
 import {
     Container,
     Card,
@@ -45,20 +46,12 @@ const availableTimes = [
     "20", "20:30", "21", "21:30", "22", "22:30", "23", "23:30",
 ]
 
-// doctor	
-// '1'
-// day	
-// '0'
-// from_time	
-// '15'
-// to_time	
-// '20'
-// _save	
-// 'Save'
 
 
 export default function ScheduleTime(props) {
-    const { user } = useContext(AuthContext);
+    // let { user } = useContext(AuthContext);
+    var user = null;    //testing
+    const history = useHistory();
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
 
@@ -119,7 +112,8 @@ export default function ScheduleTime(props) {
                             display: "flex",
                             justifyContent: "center",
                         }}>
-                        جهت رزرو نهایی نوبت برای دکتر {}، {} در زمان {} تایید نهایی رزرو را انتخاب کنید
+                        جهت رزرو نهایی نوبت برای دکتر { }، { } در زمان { } ، لطفا روی <span>&nbsp;<b>تایید نهایی رزرو</b>&nbsp;</span> کلیک کنید
+                        {console.log(props?.scheduleTime[0])}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -133,7 +127,34 @@ export default function ScheduleTime(props) {
 
     function logInPopUp() {
         return (
-            <p>log cos</p>
+            <div>
+                <DialogContent>
+                    <DialogContentText
+                        id="alert-dialog-description"
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>
+                        جهت ثبت نهایی نوبت ابتدا باید به دکترینو وارد شوید
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => {
+                            history.push("/login");
+                        }}
+                    >
+                        &nbsp;ورود
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            history.push("/signup");
+                        }}
+                    >
+                        &nbsp;&nbsp;&nbsp;عضویت
+                    </Button>
+                </DialogActions>
+            </div>
         );
     }
 
@@ -255,8 +276,8 @@ export default function ScheduleTime(props) {
                             justifyContent: "center",
                         }}>{"رزرو نهایی"}</Typography>
                     </DialogTitle>
-                    {!user && ReservePopUp()} {/* null */}
-                    {user && logInPopUp()} {/* user */}
+                    {user && ReservePopUp()} {/* null */}
+                    {!user && logInPopUp()} {/* user */}
                     {/* <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         Description
