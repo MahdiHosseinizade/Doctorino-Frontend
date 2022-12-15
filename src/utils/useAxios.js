@@ -4,9 +4,8 @@ import dayjs from 'dayjs'
 import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 
-// const baseURL = 'http://127.0.0.1:8000'
-export const baseURL = 'http://188.121.113.74'
 
+export const baseURL = 'http://188.121.113.74'
 
 const useAxios = () => {
     const { authTokens, setUser, setAuthTokens, logOut } = useContext(AuthContext)
@@ -32,18 +31,11 @@ const useAxios = () => {
         if (response.status === 401) {
             logOut();
         } else {
-            localStorage.setItem('authTokens', JSON.stringify(response.data))
-
-            setAuthTokens((perv) => ({
-                refresh: perv.refresh,
-                access: response.data.access,
-            }))
-
             authTokens.access = response.data.access;
 
             setUser(jwt_decode(response.data.access))
 
-            req.headers.Authorization = `${response.data.access}`
+            req.headers.Authorization = `Bearer ${response.data.access}`
             
             localStorage.setItem('authTokens', JSON.stringify(authTokens));
             
