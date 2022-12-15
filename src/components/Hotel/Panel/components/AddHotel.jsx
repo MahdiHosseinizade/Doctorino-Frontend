@@ -112,34 +112,18 @@ export default function HotelProfileCompletion() {
     function postHotel(hotel) {
 
         let formData = new FormData();
-
+        
         formData.append('hotel_name', hotel.hotel_name);
-        formData.append('stars', hotel.stars);
         formData.append('address', hotel.address);
-        formData.append('feature', features);
-        formData.append('phone_number', hotel.phone_number);
-        formData.append('rules', hotel.rules);
-        formData.append('trade_code', hotel.trade_code);
+        formData.append('stars', hotel.stars);
         
         if (file) {
             formData.append('cover_image', file);
         }
 
-        // debug bad request error
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1])
-        }
-
         api.post('/api/hotel/new/',
             formData,
             {
-                // set the type of the request to multipart/form-data
-                // so that the server can handle the request properly
-                // features: array of integers
-                // cover_image: image file
-                // stars: integer
-                // other fields: string
-
                 headers:
                 {
                     'Content-Type': 'multipart/form-data',
@@ -147,10 +131,12 @@ export default function HotelProfileCompletion() {
                 }
             }
         )
-            .then(res => toast.success('هتل با موفقیت ایجاد شد', {
-                position: "top-right",
-                autoClose: 2000,
-            }))
+            .then(res => {
+                toast.success("هتل با موفقیت ایجاد شد", {
+                    position: "top-right",
+                    autoClose: 2000,
+                })
+            })
             .catch(err => toast.error('مشکلی پیش آمده', {
                 position: "top-right",
                 autoClose: 2000,
@@ -297,28 +283,6 @@ export default function HotelProfileCompletion() {
                                 <MenuItem value={5}>پنج ستاره</MenuItem>
                             </SSelect>
                         </FormControl>
-                    </Grid>
-                    <Grid item md={12} xs={12}>
-                        <Button
-                            fullWidth
-                            variant="outlined"
-                            component="label"
-                        // {...formik.getFieldProps('rules')}
-                        >
-                            {"فایل قوانین هتل"}
-                            {/* <Input
-                                style={{ display: 'none' }}
-                                name="rules"
-                                type="file"
-                                {...formik.getFieldProps('rules')}
-                            /> */}
-                            <input
-                                type="file"
-                                name='rules'
-                                style={{ display: 'none' }}
-                                onChange={(e) => handle(e)}
-                            />
-                        </Button>
                     </Grid>
                     <Grid item md={12} xs={12}>
                         <Button
