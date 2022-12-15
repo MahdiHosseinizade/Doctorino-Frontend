@@ -120,15 +120,12 @@ export default function HotelProfileCompletion() {
 
   const handleHotels = (event) => {
 
-    console.log("here");
-
     let hotel_id = event.target.value;
 
     setHotel(hotel_id);
 
     api.get(`/api/hotel/${hotel_id}/`)
       .then(res => {
-        console.log(res.data);
         const {
           hotel_name,
           hotel_description,
@@ -155,8 +152,8 @@ export default function HotelProfileCompletion() {
           formik.setFieldValue("rules", rules);
         }
         if (features) {
+          setFeatures(features.map(feat => feat.id));
           formik.setFieldValue("features", features);
-          setFeatures(features);
         }
         if (trade_code) {
           formik.setFieldValue("trade_code", trade_code);

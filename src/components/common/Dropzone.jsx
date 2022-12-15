@@ -10,13 +10,17 @@ const baseStyle = {
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    height: "300px",
+    height: "240px",
     padding: "5px",
-    border: "2px dashed #c5a401",
+    borderStyle: "dashed",
+    borderWidth: "2px",
+    borderColor: "#c5a401",
     borderRadius: "10px",
-    // fill all the space that is available
-    flex: 1
 };
+
+const fileDialogActiveStyle = {
+    borderColor: 'yellow'
+}
 
 const focusedStyle = {
     borderColor: '#2196f3'
@@ -38,24 +42,27 @@ function Dropzone(props) {
     const {
         getRootProps,
         getInputProps,
+        isFileDialogActive,
         isFocused,
         isDragAccept,
-        isDragReject
+        isDragReject,
     } = useDropzone({ accept: { 'image/*': [] } });
 
     const style = useMemo(() => ({
         ...baseStyle,
         ...(isFocused ? focusedStyle : {}),
         ...(isDragAccept ? acceptStyle : {}),
-        ...(isDragReject ? rejectStyle : {})
+        ...(isDragReject ? rejectStyle : {}),
+        ...(isFileDialogActive ? fileDialogActiveStyle : {})
     }), [
         isFocused,
         isDragAccept,
-        isDragReject
+        isDragReject,
+        isFileDialogActive,
     ]);
     return (
         <Box className="dropzone-container">
-            <div {...getRootProps({ style: style, className: "dropzone" })}>
+            <div {...getRootProps({ style: style, className: 'dropzone'})}>
                 <input {...getInputProps()} />
                 {props.image && !props.image.includes("default") ?
                     <img src={props.image} className="dropzone-image" /> :
