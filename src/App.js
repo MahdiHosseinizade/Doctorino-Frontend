@@ -34,7 +34,6 @@ const App = () => {
           <AuthProvider>
             <Switch>
               <Route path={`/list-of-doctors/:id`} component={DoctorProfileLayout} />
-
               {routes.map((route, index) => (
                 route.private ? <Route key={index} {...route} /> : <Route key={index} {...route} />
               ))}
