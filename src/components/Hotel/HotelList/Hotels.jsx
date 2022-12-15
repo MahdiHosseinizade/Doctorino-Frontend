@@ -12,13 +12,12 @@ function Hotels(prop) {
 
 
     let getHotels = async () => {
-        let response = await axios.get('http://127.0.0.1:8000/api/hotel/')
-
+        let response = await axios.get('http://188.121.113.74/api/hotel/')
         if (response.status === 200) {
             setHotels(response.data)
             console.log(response.data)
         } else {
-            alert("Something went wrong")
+            console.log('error')
         }
     }
 
