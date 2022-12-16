@@ -22,7 +22,7 @@ const routes = [
 
   { path: "/signup", component: SignUpPage },
 
-  { path: "/hotel-panel", component: HotelPanel, private: true },
+  { path: "/hotel-panel", component: HotelPanel, private: false },
   { path: '/hotels', component: Hotels },
 
   { path: "/doctor-panel", component: DoctorPanel, private: true },

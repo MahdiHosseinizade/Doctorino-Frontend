@@ -65,6 +65,7 @@ export default function PanelLayout({ children }) {
     <div>
       <CssBaseline />
       <Box
+        mt = {10}
         sx={{
           position: "static",
           top: "0",
@@ -80,7 +81,7 @@ export default function PanelLayout({ children }) {
         <NavBar />
       </Box>
 
-      <Box sx={{ width: "100%", position: "sticky", display: "flex", justifyContent: "center"}}>
+      <Box  sx={{ width: "100%", position: "sticky", display: "flex", justifyContent: "center"}}>
         <SideBar />
         <Box
           sx={{
@@ -92,6 +93,7 @@ export default function PanelLayout({ children }) {
           {children}
         </Box>
       </Box>
+      <br/><br/><br/>
     </div>
   );
 }
