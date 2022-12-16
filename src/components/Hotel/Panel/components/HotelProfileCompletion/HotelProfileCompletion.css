@@ -1,13 +1,16 @@
 /* change the icon of the mouse to finger when mouse is over the dropzone */
 .dropzone:hover {
     cursor: pointer;
-    border: 20px dashed #00b5ad;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #00b5ad;
 }
 
 .dropzone-image {
     width: 100%;
     height: 100%;
     border-radius: 10px;
+    border-color: #2196f3;
 }
 
 .dropzone-caption {
