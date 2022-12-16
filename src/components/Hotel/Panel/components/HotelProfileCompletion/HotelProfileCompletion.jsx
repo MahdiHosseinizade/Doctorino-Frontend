@@ -23,7 +23,6 @@ import { useEffect } from "react";
 import AuthContext from "../../../../../context/AuthContext";
 import { toast } from "react-toastify";
 import Dropzone from '../../../../common/Dropzone';
-import ImageSwiper from './components/ImagesSwiper';
 import './HotelProfileCompletion.css';
 
 const STextField = styled(TextField)({
@@ -303,29 +302,15 @@ export default function HotelProfileCompletion() {
           justifyContent: { xs: "center", md: "flex-start" },
           alignItems: { xs: "center", md: "flex-start" },
         }}>
-          <Grid item md={4}>
+          <Grid item md={4} xs={12}>
             <Grid container>
-              <Grid item md={12} xs={12}>
-                <Box sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                  component="div"
-                >
-                </Box>
-              </Grid>
               <Grid item md={12} xs={12}>
                 {/* drop zone */}
                 <Dropzone image={coverImage} />
               </Grid>
-              <Grid item md={12}>
-                {/* images swiper */}
-
-              </Grid>
             </Grid>
           </Grid>
-          <Grid item md={8}>
+          <Grid item md={8} xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={12}>
                 <FormControl fullWidth>

@@ -10,7 +10,7 @@ const baseStyle = {
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    height: "240px",
+    height: "100%",
     padding: "5px",
     borderStyle: "dashed",
     borderWidth: "2px",
@@ -19,25 +19,33 @@ const baseStyle = {
 };
 
 const fileDialogActiveStyle = {
-    borderColor: 'yellow'
+    borderColor: '#000',
+    borderWidth: '4px',
 }
 
 const focusedStyle = {
-    borderColor: '#2196f3'
+    borderColor: '#2196f3',
+    borderWidth: '4px',
 };
 
 const acceptStyle = {
-    borderColor: '#00e676'
+    borderColor: '#00e676',
+    borderWidth: '4px',
 };
 
 const rejectStyle = {
-    borderColor: '#ff1744'
+    borderColor: '#ff1744',
+    borderWidth: '4px',
 };
 
 
-function Dropzone(props) {
+function Dropzone({ CssBaseLine, handleFile, imageToShow, ...props}) {
 
-    // const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+    const onDrop = (acceptedFiles) => {
+        if (handleFile) {
+            handleFile(acceptedFiles);
+        }
+    }
 
     const {
         getRootProps,
@@ -46,27 +54,34 @@ function Dropzone(props) {
         isFocused,
         isDragAccept,
         isDragReject,
-    } = useDropzone({ accept: { 'image/*': [] } });
+    } = useDropzone({ accept: { 'image/*': [] }, onDrop, multiple: false });
 
     const style = useMemo(() => ({
-        ...baseStyle,
         ...(isFocused ? focusedStyle : {}),
         ...(isDragAccept ? acceptStyle : {}),
         ...(isDragReject ? rejectStyle : {}),
-        ...(isFileDialogActive ? fileDialogActiveStyle : {})
+        ...(isFileDialogActive ? fileDialogActiveStyle : {}),
     }), [
         isFocused,
         isDragAccept,
         isDragReject,
         isFileDialogActive,
     ]);
+
+    if (!CssBaseLine) {
+        style = { ...style, ...baseStyle }
+    }
+
+
     return (
         <Box className="dropzone-container">
-            <div {...getRootProps({ style: style, className: 'dropzone'})}>
+            <div {...getRootProps({ style: style, className: 'dropzone' })}>
                 <input {...getInputProps()} />
-                {props.image && !props.image.includes("default") ?
-                    <img src={props.image} className="dropzone-image" /> :
-                    <CloudUploadIcon color="primary" fontSize='large'/>
+                {imageToShow && !imageToShow.includes("default") ?
+
+                    <img src={imageToShow} className="dropzone-image" /> :
+
+                    <CloudUploadIcon color="primary" fontSize='large' />
                 }
             </div>
         </Box>
