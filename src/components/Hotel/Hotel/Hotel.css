@@ -36,9 +36,18 @@
 .features_hotel{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
     font-weight: lighter;
     font-size: small;
-    padding: 10px;
+    padding: 5px;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+
+.features_icon{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 6px;
 }

@@ -9,30 +9,13 @@ import { Box } from "@mui/system";
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { Star } from "@mui/icons-material";
-
-
-// const useStyles = makeStyles({
-//     container: {
-//       marginTop: "69px",
-//       paddingTop: "30px",
-//     },
-//     card: {
-//       display: 'fix',
-//       paddingInline: "13px",
-//       marginBottom: "20px",
-//     },
-//     doctor_image: {
-//       width: "100%",
-//       height: "100%",
-//       margin: "20px",
-//       border: "7px solid #ccc",
-//       borderRadius: "250px",
-//       maxHeight: "250px",
-//       maxWidth: "250px",
-//       position: "static",
-//       display: "inline-table",
-//     }
-//   });
+import {MdPool} from 'react-icons/md';
+import {CgGym} from 'react-icons/cg';
+import {MdDinnerDining} from 'react-icons/md';
+import {BiCoffeeTogo,BiWifi} from 'react-icons/bi';
+import {FaChild} from 'react-icons/fa';
+import {RiBilliardsFill} from 'react-icons/ri';
+import {AiFillSafetyCertificate} from 'react-icons/ai';
 
 const useStyles = makeStyles({
   container: {
@@ -82,6 +65,19 @@ const Hotel = () => {
       })
       .catch((err) => console.log(err));
   };
+  // I want to implement features of hotel with icons
+  
+  
+  const iconsFeatures = [
+    {icon : <MdPool/>, title: "استخر"},
+    {icon : <CgGym/>, title:"سالن بدن سازی"},
+    {icon : <MdDinnerDining/>, title: "سلف سرویس"},
+    {icon : <BiCoffeeTogo/>, title: "کافی شاپ"},
+    {icon : <FaChild/>, title: "اتاق کودک"},
+    {icon : <BiWifi/>, title: "وای فای رایگان"},
+    {icon : <RiBilliardsFill/>, title: "سالن بیلیارد"},
+    {icon : <AiFillSafetyCertificate/>, title: "صندوق امانت"},
+  ] 
 
   return (
     <Container className={classes.container}>
@@ -93,12 +89,15 @@ const Hotel = () => {
             lg={6}
             sx={{
               display: "flex",
-              position: "sticky",
+              // position: "sticky",
+              top: "0",
+              alignItems: "center",
               justifyContent: "center",
               marginTop: "20px",
             }}
           >
             <CardMedia
+              // sx={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px",marginRight: "20px"}}
               component="img"
               className={classes.hotel_image}
               image={hotel?.cover_image}
@@ -157,8 +156,14 @@ const Hotel = () => {
                         {console.log(hotel?.features)}
                         {hotel?.features && hotel?.features.map((item,index) =>{
                             return(
-                                <p className="features_hotel" key={index}>{item.title}</p>
-                                
+                              iconsFeatures.map((icon,index) =>{
+                                if(item.title === icon.title){
+                                  return(
+                                    <p className="features_hotel" key={index}><div className="features_icon">{icon.icon}</div> {item.title}</p>
+                                  )
+                                }
+                              })
+                                // <p className="features_hotel" key={index}>{item.title}</p>
                             )
                         })}
                     </Typography>
