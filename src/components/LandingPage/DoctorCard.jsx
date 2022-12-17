@@ -35,7 +35,6 @@ export default function DoctorCard({ doctor }) {
   const history = useHistory();
   const classes = useStyles();
 
-  console.log(doctor)
 
   return (
     <Card
