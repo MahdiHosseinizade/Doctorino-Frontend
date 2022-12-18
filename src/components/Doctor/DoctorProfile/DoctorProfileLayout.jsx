@@ -30,6 +30,7 @@ export default function DoctorProfileLayout() {
         axios.get(`http://188.121.113.74/api/doctor/${id}/workday/?`)
             .then(res => {
                 setScheduleTime(res.data);
+                // console.log("fetchdata2" , scheduleTime)
             })
             .catch(err => console.log(err))
 
@@ -86,6 +87,7 @@ export default function DoctorProfileLayout() {
                     }}
                 >
                     <ScheduleTime scheduleTime={[scheduleTime, doctor]}/>
+                    {console.log(doctor?.id)}
                 </Grid>
             </Grid>
         </Container >

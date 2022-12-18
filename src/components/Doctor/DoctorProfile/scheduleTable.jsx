@@ -49,6 +49,8 @@ const availableTimes = [
 
 
 export default function ScheduleTime(props) {
+
+
     // let { user } = useContext(AuthContext);
     var user = null;    //testing
     const history = useHistory();
