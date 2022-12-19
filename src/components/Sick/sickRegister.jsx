@@ -8,6 +8,7 @@ import { Grid, TextField } from "@mui/material";
 import "./sickRegister.css";
 import { toast } from "react-toastify";
 import styled from "@emotion/styled";
+import { baseURL } from '../../utils/useAxios';
 
 const value = {
   first_name: "",
@@ -60,7 +61,7 @@ const SickRegister = () => {
   const postsickHandler = (user) => {
     // post Header in Body Request
     axios
-      .post("http://127.0.0.1:8000/api/auth/new-user/", user)
+      .post(`${baseURL}/api/auth/new-user/`, user)
       .then((res) => {
         setUser(res.data);
         toast.success("ثبت نام با موفقیت انجام شد", {

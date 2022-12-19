@@ -15,8 +15,13 @@ import NotFound from "./pages/NotFoundPage";
 import scheduleTable from "./components/Doctor/DoctorProfile/scheduleTable";
 import drLayout from "./components/Doctor/DoctorProfile/DoctorProfileLayout";
 
+import SickPanel from './components/Sick/Panel/SickPanel';
+
 
 const routes = [
+
+  { path: "/sick-panel", component: SickPanel, private: true },
+
   { path: "/schedule-table", component: scheduleTable },
   { path: "/doctor-layout", component: drLayout},
 
