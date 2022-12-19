@@ -86,7 +86,7 @@ export default function DoctorProfileLayout() {
                         boxSizing: " border-box"
                     }}
                 >
-                    <ScheduleTime scheduleTime={[scheduleTime, doctor]}/>
+                    <ScheduleTime args={[scheduleTime, doctor]}/>
                     {console.log(doctor?.id)}
                 </Grid>
             </Grid>

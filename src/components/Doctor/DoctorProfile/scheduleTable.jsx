@@ -14,13 +14,19 @@ import {
     DialogContentText,
     DialogTitle
 } from "@mui/material"
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useTheme } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import axios from 'axios';
 import { useParams } from "react-router-dom";
 import AuthContext from '../../../context/AuthContext';
+import { styled } from '@mui/system';
+import useAxios from '../../../../utils/useAxios';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { baseURL } from '../../../../utils/useAxios';
 
 
 
@@ -47,12 +53,34 @@ const availableTimes = [
 ]
 
 
+const formValue = {
+    date_reserved: "",
+    from_time: "",
+    to_time: "",
+    patient_name: "",
+    national_code: "",
+    patient: "",
+    doctor: "",
+}
+
+const validationSchema = Yup.object({
+    date_reserved: Yup.string().required(""),
+    from_time: Yup.string().required(""),
+    to_time: Yup.string().required(""),
+    patient_name: Yup.string().required(""),
+    national_code: Yup.string().required(""),
+    patient: Yup.string().required(""),
+    doctor: Yup.string().required(""),
+})
+
 
 export default function ScheduleTime(props) {
-
-
     // let { user } = useContext(AuthContext);
-    var user = null;    //testing
+    // var user = {objName: "rezo"};    //testing
+
+    let { user, authTokens, logoutUser } = useContext(AuthContext);
+    let api = useAxios();
+
     const history = useHistory();
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
@@ -73,36 +101,10 @@ export default function ScheduleTime(props) {
 
     const handleClose = () => {
         setOpen(false);
+        
     };
 
-    // const [times, setTimes] = useState([]);
 
-    // useEffect(() => {
-    //     getTimes()
-    // }, [])
-
-    // const { id } = useParams();
-    // let getTimes = async () => {
-    //     let response = await axios.put(`http://188.121.113.74/api/doctor/workday/${id}`)
-
-    //     if (response.status === 200) {
-    //         setTimes(response.data)
-    //         console.log(response.data)
-    //     } else {
-    //         alert("Something went wrong")
-    //     }
-    // }
-
-    // console.log(props.scheduleTime["from_time"].substring(0,2))
-    // console.log(props.scheduleTime.from_time.substring(0,2))
-    // let availableTimes = []
-    // let start = Number(props.scheduleTime.from_time.substring(0,2));
-    // let end = Number(props.scheduleTime.to_time.substring(0,2));
-    // console.log(props.scheduleTime.from_time.substring(0,2), props.scheduleTime.to_time.substring(0,2))
-    // for (let t = start ; t < end ; t++)
-    // {
-    //     availableTimes.push(t)  
-    // }
 
     function ReservePopUp() {
         return (
@@ -114,8 +116,9 @@ export default function ScheduleTime(props) {
                             display: "flex",
                             justifyContent: "center",
                         }}>
-                        جهت رزرو نهایی نوبت برای دکتر { }، { } در زمان { } ، لطفا روی <span>&nbsp;<b>تایید نهایی رزرو</b>&nbsp;</span> کلیک کنید
-                        {console.log(props?.scheduleTime[0])}
+                        {/* جهت رزرو نهایی نوبت برای دکتر { }، { } در زمان { } ، لطفا روی <span>&nbsp;<b>تایید نهایی رزرو</b>&nbsp;</span> کلیک کنید */}
+                        {/* {console.log(props?.scheduleTime[0])} */}
+                        جهت ثبت نهایی نوبت پزشک خود لطفا روی <span>&nbsp;<b>تایید نهایی رزرو</b>&nbsp;</span> کلیک کنید 
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -137,7 +140,7 @@ export default function ScheduleTime(props) {
                             display: "flex",
                             justifyContent: "center",
                         }}>
-                        جهت ثبت نهایی نوبت ابتدا باید به دکترینو وارد شوید
+                        جهت ثبت نهایی نوبت خود ابتدا باید به دکترینو وارد شوید
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -159,6 +162,49 @@ export default function ScheduleTime(props) {
             </div>
         );
     }
+
+
+    // const formik = useFormik({
+    //     initialValues: formValue,
+    //     onSubmit: (values) => postTime(values),
+    //     validationSchema: validationSchema,
+    // })
+
+
+    // const [timeObj, setTimeObj] = useState();
+
+
+
+    function postTime(hotel) {
+
+        let formData = new FormData();
+        
+        formData.append('hotel_name', hotel.hotel_name);
+        formData.append('address', hotel.address);
+        formData.append('stars', hotel.stars);
+
+        api.post('/api/doctor/appointment//new/',
+            formData,
+            {
+                headers:
+                {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${authTokens.access}`
+                }
+            }
+        )
+            .then(res => {
+                toast.success("نوبت با موفقیت ایجاد شد", {
+                    position: "top-right",
+                    autoClose: 2000,
+                })
+            })
+            .catch(err => toast.error('مشکلی در رزرو نهایی پیش آمده', {
+                position: "top-right",
+                autoClose: 2000,
+            }))
+    }
+
 
 
     return (
@@ -280,17 +326,6 @@ export default function ScheduleTime(props) {
                     </DialogTitle>
                     {user && ReservePopUp()} {/* null */}
                     {!user && logInPopUp()} {/* user */}
-                    {/* <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Description
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Disagree</Button>
-                    <Button onClick={handleClose} autoFocus>
-                        Agree
-                    </Button>
-                </DialogActions> */}
                 </Dialog>
 
             </Grid>
