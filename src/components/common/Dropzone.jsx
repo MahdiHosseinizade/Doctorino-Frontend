@@ -56,7 +56,7 @@ function Dropzone({ CssBaseLine, handleFile, imageToShow, ...props}) {
         isDragReject,
     } = useDropzone({ accept: { 'image/*': [] }, onDrop, multiple: false });
 
-    const style = useMemo(() => ({
+    let style = useMemo(() => ({
         ...(isFocused ? focusedStyle : {}),
         ...(isDragAccept ? acceptStyle : {}),
         ...(isDragReject ? rejectStyle : {}),
