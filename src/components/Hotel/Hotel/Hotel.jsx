@@ -23,9 +23,14 @@ const useStyles = makeStyles({
     paddingTop: "30px",
   },
   card: {
-    display: "fix",
+    // display: "fix",
+    width: "100%",
+    height: "200px",
+    position: "relative",
+    display: "flex",
+    flexDirection: "row",
     paddingInline: "13px",
-    marginBottom: "20px",
+    marginBottom: "40px",
   },
   card2: {
     width: "600px",
@@ -34,16 +39,23 @@ const useStyles = makeStyles({
     paddingInline: "13px",
     marginBottom: "20px",
   },
+  card3: {
+    width: "600px",
+    height: "150px",
+    display: "fix",
+    paddingInline: "13px",
+    marginBottom: "20px",
+  },
   hotel_image: {
-    width: "100%",
-    height: "100%",
-    margin: "20px",
-    border: "7px solid #ccc",
-    borderRadius: "250px",
+    position: "absolute",
+    right: "5px", 
+    width: "90%",
+    height: "90%",
+    marginBottom: "30px",
+    border: "2px solid #ccc",
+    borderRadius: "10%",
     maxHeight: "250px",
     maxWidth: "250px",
-    position: "static",
-    display: "inline-table",
   },
 });
 const Hotel = () => {
@@ -153,7 +165,7 @@ const Hotel = () => {
             <Grid container spacing={3.5}>
                 <Grid item xs={12} md={6}>
                     <Typography noWrap variant="subtitle2" sx={{ fontSize: "18px", display: "inline" }}>
-                        {console.log(hotel?.features)}
+                        {/* {console.log(hotel?.features)} */}
                         {hotel?.features && hotel?.features.map((item,index) =>{
                             return(
                               iconsFeatures.map((icon,index) =>{
@@ -173,6 +185,20 @@ const Hotel = () => {
         </CardContent>
       </div>
         
+      </Card>
+      <Card className={classes.card3} >
+        <div>
+          <h2 className="h2_emkanat" >قوانین  هتل</h2>
+          <CardContent>
+            <Grid container spacing={3.5}>
+              <Grid item xs={12} md={6}>
+                <Typography noWrap variant="subtitle2" sx={{ fontSize: "18px", display: "inline" }}>
+                  <p className="hotel_rules">{hotel?.rules}</p>
+                </Typography>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </div>
       </Card>
     </Container>
   );
