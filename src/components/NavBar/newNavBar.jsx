@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { Box } from "@mui/material";
 import { AppBar } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,8 +12,13 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/LocalHospitalTwoTone";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Link, useHistory } from "react-router-dom";
+import AuthContext from '../../context/AuthContext';
+
 
 const NavBar = () => {
+  let { user, authTokens, logoutUser } = useContext(AuthContext);
+  // console.log(user);
+
   const history = useHistory();
   const pages = ["نوبت دهی مطب", "مشاوره پزشکی", "مراکز درمانی"];
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -174,7 +179,7 @@ const NavBar = () => {
           {/*///////////////////////*/}
           <Box
             sx={{
-              display: "flex",
+              display: 'flex',
               flexDirection: "column",
               alignItems: "center",
               size: "medium",
@@ -183,12 +188,14 @@ const NavBar = () => {
               },
             }}
           >
+
             <ButtonGroup
               variant="text"
               size="medium"
               aria-label="text button group"
               sx={{
                 padding: "4px  3px 2px 0px",
+                display: ` ${user ? 'none' : 'flex'}`,
               }}
             >
               <Button
@@ -206,7 +213,27 @@ const NavBar = () => {
                 &nbsp;&nbsp;&nbsp;عضویت
               </Button>
             </ButtonGroup>
+
+            <Button
+              // onClick={() => {
+              //   history.push("/something");   // USER PANEL
+              // }}
+              variant="text"
+              size="medium"
+              aria-label="text button group"
+              sx={{
+                border : 1,
+                margin: "4px  15px 2px 0px",
+                display: ` ${!user ? 'none' : 'flex'}`,
+              }}
+            >
+              پنل کاربری
+            </Button>
+
           </Box>
+
+
+
         </Toolbar>
       </Container>
     </AppBar>
