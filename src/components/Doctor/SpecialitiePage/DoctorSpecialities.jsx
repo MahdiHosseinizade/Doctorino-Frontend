@@ -1,6 +1,19 @@
+import { makeStyles } from "@mui/styles";
+import { Container,Grid } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
+import NavBar from "../../NavBar/newNavBar";
+import DoctorCard from "../../LandingPage/DoctorCard";
+
+const useStyles = makeStyles({
+    container: {
+      marginTop: "100px",
+    },
+    navBar: {
+      marginBottom: "100px",
+    },
+  });
 
 const DoctorSpecialitie = () => {
     const [specialities, setSpecialities] = useState([]);
@@ -65,17 +78,20 @@ const DoctorSpecialitie = () => {
     }
     console.log('flag' , flag);
     
-
+    const classes = useStyles();
     return (
-        <div>
-            {findDoctor.map((item) => {
-                return (
-                    <div>
-                        <h1>{item.user.first_name}</h1>
-                    </div>
-                )
-            })}
-        </div>
+        <Container>
+            <Grid className={classes.navBar}>
+                <NavBar />
+            </Grid>
+            <Grid container className={classes.container} sx={{ m: 3 }}>
+            {findDoctor.map((doctor, index) => (
+                <Grid item key={index} xs={12} md={12} lg={12} xl={12}>
+                    <DoctorCard doctor={doctor} />
+                </Grid>
+            ))}
+            </Grid>
+        </Container>
     );
 }
  
