@@ -51,6 +51,7 @@ const availableTimes = [
 
 
 export default function ScheduleTime(props) {
+    console.log(props?.scheduleTime[0])
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
     const maxSteps = steps.length;
