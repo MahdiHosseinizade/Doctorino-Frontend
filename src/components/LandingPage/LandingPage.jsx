@@ -39,8 +39,9 @@ export default function LandingPage() {
   const classes = useStyles();
 
   useEffect(() => {
+    console.log("The logged in user: ", user);
     getdoctor();
-  }, []);
+  }, [user]);
 
   const getdoctor = async () => {
     try {
