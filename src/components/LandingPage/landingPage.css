@@ -105,6 +105,7 @@
     /* margin: 0 auto; */
 }
 .ZarebinIcon{
+    cursor: pointer;
     width: 36px;
     height: 36px;
     color: #ffffff;
