@@ -11,6 +11,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import DoctorSwiper from "./DoctorSwiper";
 import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { useFormik } from "formik";
 
 const cities = [
   // cities in persian
@@ -55,8 +56,17 @@ export default function LandingPage() {
   const [map, setMap] = useState(false);
   // console.log(specialitie);
 
-  const { user } = useContext(AuthContext);
-  const classes = useStyles();
+  const formik = useFormik({
+    initialValues: {
+      city: "",
+      specialities: "",
+     },
+     onsubmit: (values) => {
+        console.log(values)
+     }
+     
+  })
+  // console.log(formik.values)
 
   useEffect(() => {
     getSpecialites();
@@ -150,10 +160,14 @@ export default function LandingPage() {
                   id="demo-simple-select"
                   // value={age}
                   label="Age"
+                  // use fomik
+                  name="city"
+                  // onChange={formik.handleChange}
+                  {...formik.getFieldProps("city")}
                   // onChange={handleChange}
                 >
                   {cities.map((item) => (
-                    <MenuItem value={item.value}>{item.label}</MenuItem>
+                    <MenuItem  name value={item.value}>{item.label}</MenuItem>
                    ))}
                 </Select>
               </FormControl>
@@ -167,7 +181,9 @@ export default function LandingPage() {
                 onChange={inputHandler}
                 type="text"
                 className="scaleInput"
+                name="specialities"
                 placeholder="تخصص مورد نظرخود را وارد کنید "
+                {...formik.getFieldProps("specialities")}
               />
             </div>
             <div className="ZareBin">
