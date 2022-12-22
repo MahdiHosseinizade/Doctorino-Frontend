@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Card, CardContent, CardMedia, Grid, Rating, Typography } from '@mui/material';
+import { Chip, Box, Button, ButtonGroup, Card, CardContent, CardMedia, Grid, Rating, Typography } from '@mui/material';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import theme from '../../../../assets/theme/defaultTheme';
@@ -89,7 +89,7 @@ function HotelCard({ hotel }) {
                             </Typography>
                         </Box> */}
                         <br />
-                        <ButtonGroup sx={{
+                        {/* <ButtonGroup sx={{
                             flexWrap: "wrap",
                         }}>
                             {hotel.features.map(({ id, title }) => (
@@ -108,7 +108,14 @@ function HotelCard({ hotel }) {
                                     </Typography>
                                 </Box>
                             ))}
-                        </ButtonGroup>
+                        </ButtonGroup> */}
+
+                        <Box sx={{flexWrap: "wrap",}} >
+                            {hotel.features.map(({ id, title }) =>
+                            (
+                                <Chip variant="outlined" key={id} label={title} sx={{marginRight:'2px', marginBottom:'2px'}}/>
+                            ))}
+                        </Box>
                     </CardContent>
                 </Grid>
 
