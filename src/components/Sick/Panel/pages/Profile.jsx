@@ -67,8 +67,6 @@ const Profile = () => {
         .then(res => {
           setUsr(res.data);
 
-          console.log(res.data);
-
           if (res.data.first_name) {
             formik.setFieldValue("first_name", res.data.first_name);
           }
@@ -92,7 +90,6 @@ const Profile = () => {
           }
 
           if (res.data.gender) {
-            console.log('here')
             formik.setFieldValue("sex", res.data.gender)
           }
           setLoading(false);
@@ -109,7 +106,7 @@ const Profile = () => {
           "first_name": values.first_name,
           "last_name": values.last_name,
           "code_melli": values.social_number,
-          "birth_day": ["2013", "2017", "2000", "1980"][Math.floor(Math.random() * 4)] + "-" + (months.indexOf(values.birth_month) + 1) + "-" + values.birth_day,
+          "birth_day": ["2013", "2017", "2000", "1980"][Math.floor(Math.random() * 4)] + "-" + ((months.indexOf(values.birth_month) + 1) || "8") + "-" + values.birth_day,
           "gender": values.sex,
           "phone_number": values.phone_number,
         }
@@ -121,7 +118,14 @@ const Profile = () => {
           Authorization: `Bearer ${authTokens?.access}`
         }
       })
-        .then(res => console.log(res));
+        .then(res => toast.success('اطلاعات با موفقیت ثبت شد', {
+          position: "top-right",
+          autoClose: 2000,
+        }))
+        .catch(err => toast.error('خطایی رخ داده است', {
+          position: "top-right",
+          autoClose: 2000,
+        }))
     },
     validationSchema: validationSchema,
   });
