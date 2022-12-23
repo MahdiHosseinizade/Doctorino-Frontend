@@ -90,7 +90,9 @@ const Hotelregister = () => {
         onSubmit: (values) => {
             posthotelHandler(values);
         },
-        validationSchema: validationSchema
+        validationSchema: validationSchema,
+        validateOnMount: true,
+
     })
 
   return (
