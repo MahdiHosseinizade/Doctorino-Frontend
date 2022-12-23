@@ -59,6 +59,8 @@ const DoctorRegister = () => {
   const [doctorScale, setDoctorScale] = useState(null);
   const [error, setError] = useState("Ooops !!!!");
 
+  // var profilePicture = <img src="/src/assets/img/DoctorProfilePhoto.jpg" alt="Doctor"/>;
+  
   const history = useHistory();
   useEffect(() => {
     getdoctorScale();
@@ -103,6 +105,8 @@ const DoctorRegister = () => {
       },
       specialties: [parseFloat(doctor.scale)],
       medical_system_number: doctor.code.toString(),
+      // image: URL("../../../assets/img/DoctorProfilePhoto.jpg"),
+      // image: profilePicture,
       is_doctor: true,
     };
     postDoctorRegister(user)
