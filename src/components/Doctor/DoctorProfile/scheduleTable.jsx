@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useHistory } from "react-router-dom";
 import {
     Container,
     Card,
@@ -7,13 +8,26 @@ import {
     Button,
     Grid,
     Stack,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
 } from "@mui/material"
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useTheme } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import axios from 'axios';
 import { useParams } from "react-router-dom";
+import AuthContext from '../../../context/AuthContext';
+import { styled } from '@mui/system';
+import useAxios from '../../../../utils/useAxios';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { baseURL } from '../../../../utils/useAxios';
+
 
 
 const steps = [
@@ -38,60 +52,160 @@ const availableTimes = [
     "20", "20:30", "21", "21:30", "22", "22:30", "23", "23:30",
 ]
 
-// doctor	
-// '1'
-// day	
-// '0'
-// from_time	
-// '15'
-// to_time	
-// '20'
-// _save	
-// 'Save'
+
+const formValue = {
+    date_reserved: "",
+    from_time: "",
+    to_time: "",
+    patient_name: "",
+    national_code: "",
+    patient: "",
+    doctor: "",
+}
+
+const validationSchema = Yup.object({
+    date_reserved: Yup.string().required(""),
+    from_time: Yup.string().required(""),
+    to_time: Yup.string().required(""),
+    patient_name: Yup.string().required(""),
+    national_code: Yup.string().required(""),
+    patient: Yup.string().required(""),
+    doctor: Yup.string().required(""),
+})
 
 
 export default function ScheduleTime(props) {
+    // let { user } = useContext(AuthContext);
+    // var user = {objName: "rezo"};    //testing
+
+    let { user, authTokens, logoutUser } = useContext(AuthContext);
+    let api = useAxios();
+
+    const history = useHistory();
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
+
     const maxSteps = steps.length;
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
-
+    const [open, setOpen] = React.useState(false);
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
 
-    // const [times, setTimes] = useState([]);
+    const handleClose = () => {
+        setOpen(false);
+        
+    };
 
-    // useEffect(() => {
-    //     getTimes()
-    // }, [])
 
-    // const { id } = useParams();
-    // let getTimes = async () => {
-    //     let response = await axios.put(`http://188.121.113.74/api/doctor/workday/${id}`)
 
-    //     if (response.status === 200) {
-    //         setTimes(response.data)
-    //         console.log(response.data)
-    //     } else {
-    //         alert("Something went wrong")
-    //     }
-    // }
+    function ReservePopUp() {
+        return (
+            <div>
+                <DialogContent>
+                    <DialogContentText
+                        id="alert-dialog-description"
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>
+                        {/* جهت رزرو نهایی نوبت برای دکتر { }، { } در زمان { } ، لطفا روی <span>&nbsp;<b>تایید نهایی رزرو</b>&nbsp;</span> کلیک کنید */}
+                        {/* {console.log(props?.scheduleTime[0])} */}
+                        جهت ثبت نهایی نوبت پزشک خود لطفا روی <span>&nbsp;<b>تایید نهایی رزرو</b>&nbsp;</span> کلیک کنید 
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} autoFocus>
+                        تایید نهایی رزرو
+                    </Button>
+                </DialogActions>
+            </div>
+        );
+    }
 
-    // console.log(props.scheduleTime["from_time"].substring(0,2))
-    // console.log(props.scheduleTime.from_time.substring(0,2))
-    // let availableTimes = []
-    // let start = Number(props.scheduleTime.from_time.substring(0,2));
-    // let end = Number(props.scheduleTime.to_time.substring(0,2));
-    // console.log(props.scheduleTime.from_time.substring(0,2), props.scheduleTime.to_time.substring(0,2))
-    // for (let t = start ; t < end ; t++)
-    // {
-    //     availableTimes.push(t)  
-    // }
+    function logInPopUp() {
+        return (
+            <div>
+                <DialogContent>
+                    <DialogContentText
+                        id="alert-dialog-description"
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>
+                        جهت ثبت نهایی نوبت خود ابتدا باید به دکترینو وارد شوید
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => {
+                            history.push("/login");
+                        }}
+                    >
+                        &nbsp;ورود
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            history.push("/signup");
+                        }}
+                    >
+                        &nbsp;&nbsp;&nbsp;عضویت
+                    </Button>
+                </DialogActions>
+            </div>
+        );
+    }
+
+
+    // const formik = useFormik({
+    //     initialValues: formValue,
+    //     onSubmit: (values) => postTime(values),
+    //     validationSchema: validationSchema,
+    // })
+
+
+    // const [timeObj, setTimeObj] = useState();
+
+
+
+    function postTime(hotel) {
+
+        let formData = new FormData();
+        
+        formData.append('hotel_name', hotel.hotel_name);
+        formData.append('address', hotel.address);
+        formData.append('stars', hotel.stars);
+
+        api.post('/api/doctor/appointment//new/',
+            formData,
+            {
+                headers:
+                {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${authTokens.access}`
+                }
+            }
+        )
+            .then(res => {
+                toast.success("نوبت با موفقیت ایجاد شد", {
+                    position: "top-right",
+                    autoClose: 2000,
+                })
+            })
+            .catch(err => toast.error('مشکلی در رزرو نهایی پیش آمده', {
+                position: "top-right",
+                autoClose: 2000,
+            }))
+    }
+
+
 
     return (
         <Card
@@ -191,11 +305,31 @@ export default function ScheduleTime(props) {
                     <Button sx={{
                         width: "100%",
                         backgroundColor: "primary"
-                    }}>
+                    }}
+                        onClick={handleClickOpen}
+                    >
                         رزرو کنید
                     </Button>
+
                 </Grid>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        <Typography sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>{"رزرو نهایی"}</Typography>
+                    </DialogTitle>
+                    {user && ReservePopUp()} {/* null */}
+                    {!user && logInPopUp()} {/* user */}
+                </Dialog>
+
             </Grid>
+
         </Card>
     );
 }

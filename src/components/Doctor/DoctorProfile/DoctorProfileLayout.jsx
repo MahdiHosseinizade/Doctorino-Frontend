@@ -17,7 +17,7 @@ export default function DoctorProfileLayout() {
     const [loading, setLoading] = useState(true);
 
     function fetchData1() {
-        axios.get(`http://188.121.113.74/api/doctor/${id}/`)
+        axios.get(`http://188.121.113.74/api/doctor/${id}/?`)
             .then(res => {
                 setDoctor(res.data);
             })
@@ -27,15 +27,16 @@ export default function DoctorProfileLayout() {
     }
 
     function fetchData2() {
-        axios.get(`http://188.121.113.74/api/doctor/workday/${id}/`)
+        axios.get(`http://188.121.113.74/api/doctor/${id}/workday/?`)
             .then(res => {
                 setScheduleTime(res.data);
+                // console.log("fetchdata2" , scheduleTime)
             })
             .catch(err => console.log(err))
 
         setLoading(false);
     }
-
+    // console.log(`it's that -> ${"\n"} ${console.log(scheduleTime)}`)
     useEffect(() => {
 
         if (loading) {
@@ -43,7 +44,8 @@ export default function DoctorProfileLayout() {
             fetchData2();
         }
 
-    }, [loading, doctor, scheduleTime])
+    }, [loading, doctor, scheduleTime]);
+
 
     return (
         <Container>
@@ -84,7 +86,8 @@ export default function DoctorProfileLayout() {
                         boxSizing: " border-box"
                     }}
                 >
-                    <ScheduleTime scheduleTime={scheduleTime}/>
+                    <ScheduleTime args={[scheduleTime, doctor]}/>
+                    {console.log(doctor?.id)}
                 </Grid>
             </Grid>
         </Container >
