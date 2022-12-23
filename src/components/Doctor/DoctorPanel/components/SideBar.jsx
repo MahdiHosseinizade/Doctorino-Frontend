@@ -1,117 +1,3 @@
-// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-// import MenuIcon from "@mui/icons-material/Menu";
-// import AddHomeIcon from "@mui/icons-material/AddHome";
-// import LogoutIcon from "@mui/icons-material/Logout";
-// import PasswordIcon from "@mui/icons-material/Password";
-// import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-// import SummarizeIcon from "@mui/icons-material/Summarize";
-// import React from "react";
-// import { useHistory, useLocation } from "react-router-dom";
-// import {
-//   CssBaseline,
-//   Drawer,
-//   Typography,
-//   List,
-//   ListItem,
-//   ListItemIcon,
-//   ListItemText,
-//   Divider,
-// } from "@mui/material";
-
-// const widthDraw = 240;
-
-// export default function SideBar() {
-//   const history = useHistory();
-//   const location = useLocation();
-
-//   const menuItems = [
-//     {
-//       text: "داشبورد",
-//       path: "/doctor-panel/dashboard",
-//       icon: <AddHomeIcon color="f4f4f4" />,
-//     },
-//     {
-//       text: "پروفایل",
-//       path: "/doctor-panel/doctor-profile",
-//       icon: <AccountCircleIcon color="f4f4f4" />,
-//     },
-//     {
-//       text: "تکمیل پنل کاربری",
-//       path: "/doctor-panel/doctor-profile-completion",
-//       icon: <MenuIcon color="f4f4f4" />,
-//     },
-//     {
-//       text: "گزارش نوبت ها",
-//       path: "/doctor-panel/appointment-reports",
-//       icon: <SummarizeIcon color="f4f4f4" />,
-//     },
-//     {
-//       text: "امور مالی",
-//       path: "/doctor-panel/finance-issues",
-//       icon: <AccountBalanceIcon color="f4f4f4" />,
-//     },
-//     {
-//       text: "تغییر رمزعبور",
-//       path: "/doctor-panel/change-password",
-//       icon: <PasswordIcon color="f4f4f4" />,
-//     },
-//     {
-//       text: "خروج",
-//       path: "/",
-//       icon: <LogoutIcon color="f4f4f4" />,
-//     },
-//   ];
-
-//   return (
-//     <div>
-//       <CssBaseline />
-
-//       <Drawer
-//         sx={{
-//           width: widthDraw,
-//           flexShrink: 1,
-//           "& .MuiDrawer-paper": {
-//             width: widthDraw,
-//             boxSizing: "border-box",
-//           },
-//         }}
-//         variant="permanent"
-//       >
-//         <Divider>
-//           <Typography
-//             variant="h5"
-//             sx={{
-//               marginBottom: "10px",
-//               marginTop: "10px",
-//             }}
-//           >
-//             دکترینو
-//           </Typography>
-//         </Divider>
-
-//         {/* list of item in the drawer(sidebar) */}
-//         <Divider>
-//           <List>
-//             {menuItems.map((item, index) => (
-//               <ListItem
-//                 button
-//                 onClick={() => history.push(item.path)}
-//                 key={index}
-//                 sx={{
-//                   background:
-//                     location.pathname === item.path ? "#f4f4f4" : null,
-//                 }}
-//               >
-//                 <ListItemIcon>{item.icon}</ListItemIcon>
-//                 <ListItemText primary={item.text} />
-//               </ListItem>
-//             ))}
-//           </List>
-//         </Divider>
-//       </Drawer>
-//     </div>
-//   );
-// }
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -136,6 +22,17 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import AuthContext from "../../../../context/AuthContext";
+import {makeStyles} from "@mui/styles";
+
+const useStyles = makeStyles({
+  list: {
+    marginTop: "10px",
+  },
+  drawer: {
+    // width: "240px",
+    marginTop: "20px",
+  },
+});
 
 const widthDraw = 240;
 
@@ -188,15 +85,16 @@ const Drawer = styled(MuiDrawer, {
 export default function SideBar() {
   const history = useHistory();
   const location = useLocation();
+  const classes = useStyles();
 
   const { logOut } = useContext(AuthContext);
 
   const menuItems = [
-    {
-      text: "داشبورد",
-      path: "/doctor-panel/dashboard",
-      icon: <AddHomeIcon color="f4f4f4" />,
-    },
+    // {
+    //   text: "داشبورد",
+    //   path: "/doctor-panel/dashboard",
+    //   icon: <AddHomeIcon color="f4f4f4" />,
+    // },
     {
       text: "پروفایل",
       path: "/doctor-panel/doctor-profile",
@@ -208,25 +106,26 @@ export default function SideBar() {
       icon: <MenuIcon color="f4f4f4" />,
     },
     {
-      text: "گزارش نوبت ها",
-      path: "/doctor-panel/appointment-reports",
+      // text: "مدیریت نوبت ها",
+      text: "مدیریت زمان نوبت دهی",
+      path: "/doctor-panel/appointments-management",
       icon: <SummarizeIcon color="f4f4f4" />,
     },
-    {
-      text: "امور مالی",
-      path: "/doctor-panel/finance-issues",
-      icon: <AccountBalanceIcon color="f4f4f4" />,
-    },
-    {
-      text: "تغییر رمزعبور",
-      path: "/doctor-panel/change-password",
-      icon: <PasswordIcon color="f4f4f4" />,
-    },
-    {
-      text: "خروج",
-      path: "/",
-      icon: <LogoutIcon color="f4f4f4" />,
-    },
+    // {
+    //   text: "امور مالی",
+    //   path: "/doctor-panel/finance-issues",
+    //   icon: <AccountBalanceIcon color="f4f4f4" />,
+    // },
+    // {
+    //   text: "تغییر رمزعبور",
+    //   path: "/doctor-panel/change-password",
+    //   icon: <PasswordIcon color="f4f4f4" />,
+    // },
+    // {
+    //   text: "خروج",
+    //   path: "/",
+    //   icon: <LogoutIcon color="f4f4f4" />,
+    // },
   ];
 
   const [open, setOpen] = React.useState(false);
@@ -246,10 +145,11 @@ export default function SideBar() {
         open={open}
         onMouseOver={handleDrawerOpen}
         onMouseOut={handleDrawerClose}
+        // className={classes.drawer}
       >
-        <DrawerHeader />
+        <DrawerHeader className={classes.drawer}/>
         <Divider />
-        <List>
+        <List className={classes.list}>
           {menuItems.map((item, index) => (
             <ListItem
               key={index}

@@ -134,6 +134,8 @@ const Profile = (props) => {
                       {props.doctor?.education} {props.doctor?.specialties.map((name) => (name.name))}
                       <br /><br />
 
+                      {/* متخصص {props.doctor?.specialties.name} */}
+                      
                     </Typography>
                   </Grid>
                 </Grid>

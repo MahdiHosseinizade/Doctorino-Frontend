@@ -9,7 +9,7 @@ import Hotels from './components/Hotel/HotelList/Hotels';
 import DoctorPanel from "./components/Doctor/DoctorPanel/DoctorPanel";
 import ListOfDoctors from "./components/Doctor/ListOfDoctors/ListOfDoctors";
 
-import LandingPage from "./components/LandingPage/LandingPage";
+import LandingPage from "./components/LandingPage/LandingPage.jsx";
 import NotFound from "./pages/NotFoundPage";
 
 import scheduleTable from "./components/Doctor/DoctorProfile/scheduleTable";
