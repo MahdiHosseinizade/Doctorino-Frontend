@@ -1,6 +1,6 @@
 import { Box, Button, ButtonGroup, Card, CardContent, CardMedia, Grid, Rating, Typography } from '@mui/material';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import theme from '../../../../assets/theme/defaultTheme';
 
 
@@ -13,9 +13,11 @@ function HotelCard ({ hotel }) {
     return (
         <Card sx={{ m: 2, backgroundColor: "#efefef", display: "flex", borderRadius: "10px", maxWidth: "75%" }}>
             <Grid container>
+                {/* <Link to={`/hotel/${hotel.id}`}/> */}
                 <Grid item md={3} sm={5} xs={12}>
                     <a href='/hotels'>
                         <CardMedia
+                            // Link react router dom to hotel page
                             component="img"
                             sx={{ width: "100%", height: "100%", padding: "10px", borderRadius: "20px" }}
                             // image={hotel.id % 2 ? "https://cdn.britannica.com/96/115096-050-5AFDAF5D/Bellagio-Hotel-Casino-Las-Vegas.jpg": "https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg"}
@@ -121,12 +123,13 @@ function HotelCard ({ hotel }) {
                 }}>
 
                     <Button
+                        
                         variant="contained"
                         color="primary"
                         sx={{
                             borderRadius: "10px",
                         }}
-                        onClick={() => history.push("/hotels")}
+                        onClick={() => history.push(`/hotel/${hotel.id}`)}
                     >
                         رزرو
                     </Button>

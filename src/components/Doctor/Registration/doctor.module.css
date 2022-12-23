@@ -35,6 +35,13 @@
         padding: 4px 20px;
     }
 }
+.selecct_ScaleDoctor{
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3px 92px;
+}
 
 /* this selectScale same size with other input and have grid with each other */
 

@@ -4,7 +4,7 @@ import styles from "./doctor.module.css";
 import * as Yup from "yup";
 // import Select from 'react-select';
 import { useState } from "react";
-import { Grid, TextField, Typography } from "@mui/material";
+import { Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import getDoctorScale from "./services/getDoctorScale";
@@ -47,7 +47,6 @@ const validationSchema = Yup.object({
   passwordConfrim: Yup.string()
     .required("تایید کلمه عبور را وارد کنید")
     .oneOf([Yup.ref("password"), null], "کلمه عبور مطابقت ندارد"),
-  scale: Yup.string().required("تخصص را وارد کنید"),
   code: Yup.string().required("کد نظام پزشکی را وارد کنید"),
   first_name: Yup.string().required("نام را وارد کنید"),
   last_name: Yup.string().required("نام خانوادگی را وارد کنید"),
@@ -77,7 +76,7 @@ const DoctorRegister = () => {
     validationSchema: validationSchema,
     validateOnMount: true,
   });
-  // console.log(formik.values);
+  console.log(formik.values);
   const setScale = (e) => {
     // console.log(e);
     setscale(e.target.value);
@@ -294,7 +293,7 @@ const DoctorRegister = () => {
           </Grid>
           <Grid item md={6} xs={6}>
             {/* add placeholder to the select */}
-            <select
+            {/* <select
               onChange={(e) => setScale(e)}
               placeholder="تخصص"
               className={styles.selectDocotorOption}
@@ -306,7 +305,15 @@ const DoctorRegister = () => {
                 doctorScale.map((item) => (
                   <option value={item.id}>{item.name}</option>
                 ))}
-            </select>
+            </select> */}
+            <InputLabel id="scale_doctor" >تخصص</InputLabel>
+            <Select   onChange={(e) => setScale(e)} {...formik.getFieldProps("scale")} labelId="scale_doctor"   >
+              {doctorScale && doctorScale?.map((item) => {
+                return (
+                  <MenuItem value={item.id}>{item.name}</MenuItem>
+                )
+              })}
+            </Select>
           </Grid>
           <br />
           <Grid item md={12} xs={12}>

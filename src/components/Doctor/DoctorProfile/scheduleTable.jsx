@@ -75,6 +75,9 @@ const validationSchema = Yup.object({
 
 
 export default function ScheduleTime(props) {
+
+    console.log(props?.scheduleTime[0])
+
     // let { user } = useContext(AuthContext);
     // var user = {objName: "rezo"};    //testing
 
@@ -82,6 +85,7 @@ export default function ScheduleTime(props) {
     let api = useAxios();
 
     const history = useHistory();
+
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
 

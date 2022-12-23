@@ -20,7 +20,7 @@ function Hotels(prop) {
             setHotels(response.data)
             console.log(response.data)
         } else {
-            alert("Something went wrong")
+            console.log('error')
         }
     }
 
