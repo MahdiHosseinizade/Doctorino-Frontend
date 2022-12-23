@@ -5,6 +5,10 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Box, Button, Container, FormControl, Grid, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, TextField } from '@mui/material';
 import { styled } from '@mui/system';
+import AuthContext from '../../../../context/AuthContext';
+import { useContext } from 'react';
+import useAxios from '../../../../utils/useAxios';
+import { useEffect } from 'react';
 
 const STextField = styled(TextField)({
   "& .MuiFilledInput-root": {
@@ -25,11 +29,9 @@ const formValue = {
   last_name: "",
   father_name: "",
   sex: "",
-  identity_number: "", // shomare shenasname
   social_number: "", // code meli
   sex: "",
   phone_number: "", // شماره موبایل
-  email: "", // شماره تلفن ثابت
   birth_day: "",
   birth_year: "",
   birth_month: "",
@@ -39,11 +41,9 @@ const validationSchema = Yup.object({
   first_name: Yup.string(),
   last_name: Yup.string(),
   father_name: Yup.string(),
-  identity_number: Yup.string(),
   social_number: Yup.string(),
   sex: Yup.string(),
   phone_number: Yup.string(),
-  email: Yup.string(),
   birth_day: Yup.string(),
   birth_month: Yup.string(),
   birth_year: Yup.string(),
@@ -52,33 +52,95 @@ const validationSchema = Yup.object({
 
 const Profile = () => {
 
-  const [gender, setGender] = useState("");
+  const { authTokens, user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const [usr, setUsr] = useState(null);
+  const api = useAxios();
 
-  function handleGender(e) {
-    setGender(e.target.value);
-    formik.setFieldValue("sex", e.target.value);
-    console.log(formik.getFieldProps("sex"));
-  }
+  useEffect(() => {
+    if (loading) {
+      api.get(`/api/auth/new-user/${user.user_id}/`, {
+        headers: {
+          Authorization: `Bearer ${authTokens?.access}`
+        }
+      })
+        .then(res => {
+          setUsr(res.data);
+
+          console.log(res.data);
+
+          if (res.data.first_name) {
+            formik.setFieldValue("first_name", res.data.first_name);
+          }
+          if (res.data.last_name) {
+            formik.setFieldValue("last_name", res.data.last_name);
+          }
+          if (res.data.code_melli) {
+            formik.setFieldValue("social_number", res.data.code_melli);
+          }
+          if (res.data.birth_day) {
+            formik.setFieldValue("birth_day", parseInt(res.data.birth_day.split("-")[2]));
+          }
+          if (res.data.birth_month) {
+            formik.setFieldValue("birth_month", res.data.birth_day.split("-")[1]);
+          }
+          if (res.data.birth_year) {
+            formik.setFieldValue("birth_year", res.data.birth_day.split("-")[0]);
+          }
+          if (res.data.phone_number) {
+            formik.setFieldValue("phone_number", res.data.phone_number);
+          }
+
+          if (res.data.gender) {
+            console.log('here')
+            formik.setFieldValue("sex", res.data.gender)
+          }
+          setLoading(false);
+        })
+    }
+  }, [loading, usr])
 
   const formik = useFormik({
     initialValues: formValue,
-    onSubmit: (values) => { },
+    onSubmit: (values) => {
+      setUsr((prev) => (
+        {
+          ...prev,
+          "first_name": values.first_name,
+          "last_name": values.last_name,
+          "code_melli": values.social_number,
+          "birth_day": ["2013", "2017", "2000", "1980"][Math.floor(Math.random() * 4)] + "-" + (months.indexOf(values.birth_month) + 1) + "-" + values.birth_day,
+          "gender": values.sex,
+          "phone_number": values.phone_number,
+        }
+      ))
+
+      api.put(`/api/auth/new-user/${user.user_id}/`,
+        usr, {
+        headers: {
+          Authorization: `Bearer ${authTokens?.access}`
+        }
+      })
+        .then(res => console.log(res));
+    },
     validationSchema: validationSchema,
   });
 
-  // const day = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
   const days = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
   const months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"]
   const years = [
-    '1400','1399','1398','1397','1396','1395','1394','1393','1392','1391','1390','1389','1388','1387','1386','1385','1384',
-    '1383','1382','1381','1380','1379','1378','1377','1376','1375','1374','1373','1372','1371','1370','1369','1368','1367','1366','1365',
-    '1364','1363','1362','1361','1360','1359','1358','1357','1356','1355','1354','1353','1352','1351','1350','1349','1348','1347','1346','1345',
-    '1344','1343','1342','1341','1340','1339','1338','1337','1336','1335','1334','1333','1332','1331','1330','1329','1328','1327','1326','1325',
+    '1400', '1399', '1398', '1397', '1396', '1395', '1394', '1393', '1392', '1391', '1390', '1389', '1388', '1387', '1386', '1385', '1384',
+    '1383', '1382', '1381', '1380', '1379', '1378', '1377', '1376', '1375', '1374', '1373', '1372', '1371', '1370', '1369', '1368', '1367', '1366', '1365',
+    '1364', '1363', '1362', '1361', '1360', '1359', '1358', '1357', '1356', '1355', '1354', '1353', '1352', '1351', '1350', '1349', '1348', '1347', '1346', '1345',
+    '1344', '1343', '1342', '1341', '1340', '1339', '1338', '1337', '1336', '1335', '1334', '1333', '1332', '1331', '1330', '1329', '1328', '1327', '1326', '1325',
     '1324', '1323', '1322', '1321', '1320', '1319', '1318', '1317',
     '1316', '1315', '1314', '1313', '1312', '1311', '1310', '1309', '1308', '1307', '1306', '1305', '1304', '1303', '1302', '1301', '1300']
 
   return (
-    <Container>
+    <Container sx={{
+      mr: 10,
+      ml: 10
+    }}>
       <Box
         sx={{
           marginTop: "50px",
@@ -152,34 +214,14 @@ const Profile = () => {
                 {...formik.getFieldProps('sex')}
                 input={<OutlinedInput label="جنسیت" />}
               >
+                <MenuItem value={0}>
+                  <ListItemText primary="مذکر" />
+                </MenuItem>
                 <MenuItem value={1}>
                   <ListItemText primary="مونث" />
                 </MenuItem>
-                <MenuItem value={2}>
-                  <ListItemText primary="مذکر" />
-                </MenuItem>
-                <MenuItem value={3}>
-                  <ListItemText primary="سایر" />
-                </MenuItem>
               </SSelect>
             </FormControl>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <STextField
-              fullWidth
-              error={
-                formik.errors["identity_number"] && formik.touched["identity_number"]
-              }
-              variant="outlined"
-              label="شماره شناسنامه"
-              name="identity_number"
-              type="text"
-              helperText={
-                formik.touched["identity_number"] &&
-                formik.errors["identity_number"]
-              }
-              {...formik.getFieldProps("identity_number")}
-            />
           </Grid>
           <Grid item xs={12} md={6}>
             <STextField
@@ -196,23 +238,6 @@ const Profile = () => {
                 formik.errors["social_number"]
               }
               {...formik.getFieldProps("social_number")}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <STextField
-              fullWidth
-              error={
-                formik.errors["email"] && formik.touched["email"]
-              }
-              variant="outlined"
-              label="تلفن ثابت"
-              name="email"
-              type="text"
-              helperText={
-                formik.touched["email"] &&
-                formik.errors["email"]
-              }
-              {...formik.getFieldProps("email")}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -280,14 +305,10 @@ const Profile = () => {
               </SSelect>
             </FormControl>
           </Grid>
-          <Grid item md={12}>
-            <Button variant='outlined' onClick={() => {
-              console.log(formik.getFieldProps("birth_day"))
-              console.log(formik.getFieldProps("birth_month"))
-              console.log(formik.getFieldProps("birth_year"))
-            }}>
-              چاپ
-            </Button>
+          <Grid item md={12} sx={{
+            marginTop: 4,
+          }}>
+            <Button fullWidth variant="contained" color="primary" type="submit" disabled={!(formik.isValid)}>ذخیره</Button>
           </Grid>
         </Grid>
       </Box>
