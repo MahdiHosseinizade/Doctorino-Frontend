@@ -16,8 +16,15 @@ import {
   FormControl,
   InputLabel,
   Select,
+  // SSelect,
   MenuItem,
   Typography,
+  Checkbox,
+  ListItemText,
+  OutlinedInput,
+  Box,
+  AutoComplete,
+  Autocomplete,
 } from "@mui/material";
 
 const useStyles = makeStyles({
@@ -108,13 +115,13 @@ export default function DoctorProfileCompletion() {
   const { authTokens } = useContext(AuthContext);
   const API = useAxios();
 
-  // const handleSpecilaities = (e) => {
-  //   setAvailableSpecilaities([...availableSpecilaities, e.target.value]);
-  //   setValues({
-  //     ...values,
-  //     specialties: availableSpecilaities,
-  //   });
-  // };
+  const handleSpecilaities = (e) => {
+    setAvailableSpecilaities([...availableSpecilaities, e.target.value]);
+    setValues({
+      ...values,
+      specialties: availableSpecilaities,
+    });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -123,18 +130,26 @@ export default function DoctorProfileCompletion() {
       [name]: value,
     });
     if (name === "province") {
+      // setValues({
+      //   ...values,
+      //   [name]: value.name,
+      // });
+      // setProvinceInfo({
+      //   ...provinceInfo,
+      //   name: value.name,
+      //   id: value.id,
+      // });
       setProvinceInfo({
         ...provinceInfo,
+        // name: value,
         id: value,
-      });
+      })
     }
-    // else if (name === "specialties") {
-    //   console.log("in specialties if statement");
+    // if (name === "education") {
     //   setValues({
     //     ...values,
-    //     [name]: availableSpecilaities.map((item) => item.id === value),
+    //     [name]: innerText,
     //   });
-    //   console.log("values: ", values);
     // }
   };
 
@@ -220,6 +235,7 @@ export default function DoctorProfileCompletion() {
       // );
       // console.log("this is the user: ", user);
 
+
       // Fetching available specialties from the database
       API.get(`http://188.121.113.74/api/doctor/specialties/`, {
         headers: {
@@ -235,7 +251,6 @@ export default function DoctorProfileCompletion() {
           console.log("Error returned from fetching specialties: ", error);
         });
 
-      // Fetching user's information from the database
       API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
         headers: {
           Authorization: `Bearer ${authTokens.access}`,
@@ -250,26 +265,6 @@ export default function DoctorProfileCompletion() {
           })
             .then((response) => {
               console.log("the response of doctor", response.data);
-              setProvinceInfo({
-                ...provinceInfo,
-                id: provinces.filter((province) => {
-                  if (province.name === response.data.province) {
-                    return province.id;
-                  }
-                })[0]["id"],
-              });
-              const temp = educations.map((education) => {
-                if (education.name === response.data.education) {
-                  return education.id;
-                }
-              });
-              console.log("this is the temp in useEffect: ", temp);
-              const tempFind = educations.filter((education) => {
-                if (education.name === response.data.education) {
-                  return education.id;
-                }
-              })[0]["id"];
-              // console.log("this is the tempFind in useEffect: ", tempFind);
               setValues({
                 ...response.data,
                 first_name: response.data.user.first_name,
@@ -282,38 +277,13 @@ export default function DoctorProfileCompletion() {
                 medical_system_number: response.data.medical_system_number,
                 phone_number: response.data.phone_number,
                 office_number: response.data.office_number,
-                // education: response.data.education,
-                education: educations.filter((education) => {
-                  if (education.name === response.data.education) {
-                    return education.id;
-                  }
-                })[0]["id"],
-                // education: educations.find((education) => education.name === response.data.education),
-                // specialties: response.data.specialties[0].id,
-                specialties: availableSpecilaities.filter((specialty) => {
-                  if (specialty.name === response.data.specialties[0].name) {
-                    return specialty.id;
-                  }
-                })[0]["id"],
-                // specialties: availableSpecilaities.find((specialty) => specialty.name === response.data.specialties[0].name),
-                // province: response.data.province,
-                province: provinces.filter((province) => {
-                  if (province.name === response.data.province) {
-                    return province.id;
-                  }
-                })[0]["id"],
-                // province: provinces.find((province) => province.name === response.data.province),
-                // city: response.data.city,
-                city: cities.filter((city) => {
-                  if (city.name === response.data.city) {
-                    return city.id;
-                  }
-                })[0]["id"],
-                // city: cities.find((city) => city.name === response.data.city),
+                education: response.data.education,
+                specialties: response.data.specialties[0].id,
+                province: response.data.province,
+                city: response.data.city,
                 clinic_address: response.data.clinic_address,
                 work_periods: response.data.work_periods,
                 description: response.data.description,
-                // image: response.data.image,
               });
               // console.log("this is the response.data.province: ", response.data.province);
               // console.log("this is the response.data.province_name: ", response.data.province_name);
@@ -322,7 +292,6 @@ export default function DoctorProfileCompletion() {
               //   name: response.data.province_name,
               // });
               // console.log("this is the values of doctor", values);
-              handleCities();
               setLoading(false);
             })
             .catch((error) => {
@@ -333,6 +302,8 @@ export default function DoctorProfileCompletion() {
           console.log("Error from fetching doctor's ID: ", error);
         });
     }
+
+    handleCities();
 
     if (loading) {
       fetchData();
@@ -351,95 +322,59 @@ export default function DoctorProfileCompletion() {
     values,
     provinceInfo,
     citiesList,
-    availableSpecilaities,
+    
   ]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // console.log("in handle submit.");
     if (validate()) {
-      // console.log("values while in handle submit & validated: ", values);
-      // console.log("the list of education: ", educations);
-      // const temp = educations.map((education) => {
-      //   if (education.id === values.education) {
-      //     return education.name;
-      //   }
-      // })[values.education - 1];
-      // console.log("the temp: ", temp);
-
-      const sendingList = {
-        ...values,
-        id: values.id,
-        user: {
-          first_name: values.first_name,
-          last_name: values.last_name,
-          username: values.username,
-          id: values.inner_id,
-          email: values.email,
-        },
-        // specialties: values.specialties,
-        specialties: [
-          // {
-          //   id: values.specialties,
-          //   name: availableSpecilaities.map((specialty) => {
-          //     if (specialty.id === values.specialties) {
-          //       return specialty.name;
-          //     }
-          //   })[0],
-          // },
-          values.specialties,
-        ],
-        medical_system_number: Number(values.medical_system_number),
-        is_active: true,
-        gender: 2,
-        // province: values.province,
-        province: provinces.map((province) => {
-          if (province.id === values.province) {
-            console.log(
-              "this is the province in values while in if statement --------> ",
-              values.province
-            );
-            return province.name;
-          }
-        })[values.province - 1],
-        // city: values.city,
-        city: cities.map((city) => {
-          if (city.id === values.city) {
-            return city.name;
-          }
-        })[values.city - 1],
-        // image: values.image,
-        clinic_address: values.clinic_address,
-        // education: values.education,
-        education: educations.map((education) => {
-          if (education.id === values.education) {
-            return education.name;
-          }
-        })[values.education - 1],
-        national_code:
-          values.national_code.length === 10 ? values.national_code : "",
-        phone_number:
-          values.phone_number.length === 11 ? values.phone_number : "",
-        office_number:
-          values.office_number.length === 11 ? values.office_number : "",
-        // license_proof: null,
-        // location: {
-        //   type: "",
-        //   coordinates: [0, 0],
-        // },
-      };
-      console.log("sendingList: ", sendingList);
+      console.log("this is the values: ", values);
       axios
-        .put(`http://188.121.113.74/api/doctor/${values.id}/`, sendingList, {
-          headers: {
-            Authorization: `Bearer ${authTokens.access}`,
+        .put(
+          `http://188.121.113.74/api/doctor/${values.id}/`,
+          {
+            ...values,
+            id: values.id,
+            user: {
+              first_name: values.first_name,
+              last_name: values.last_name,
+              username: values.username,
+              id: values.inner_id,
+              email: values.email,
+            },
+            specialties: values.specialties,
+            medical_system_number: values.medical_system_number,
+            is_active: true,
+            gender: 2,
+            province: values.province,
+            city: values.city,
+            image: null,
+            clinic_address: values.clinic_address,
+            education: values.education,
+            national_code:
+              values.national_code.length === 10 ? values.national_code : "",
+            phone_number:
+              values.phone_number.length === 11 ? values.phone_number : "",
+            office_number:
+              values.office_number.length === 11 ? values.office_number : "",
+            // license_proof: null,
+            // location: {
+            //   type: "",
+            //   coordinates: [0, 0],
+            // },
           },
-        })
+          {
+            headers: {
+              Authorization: `Bearer ${authTokens.access}`,
+            },
+          }
+        )
         .then((response) => {
           toast.success(`تکمیل اطلاعات با موفقیت انجام شد.`, {
             position: "top-right",
             autoClose: 2000,
           });
-          console.log("the values are: ", values);
         })
         .catch((error) => {
           if (stringContainsNumber(values.first_name)) {
@@ -452,7 +387,8 @@ export default function DoctorProfileCompletion() {
               position: "top-right",
               autoClose: 2000,
             });
-          } else if (values.national_code.length !== 10) {
+          }
+          else if (values.national_code.length !== 10) {
             toast.error("کد ملی باید 10 رقم باشد", {
               position: "top-right",
               autoClose: 2000,
@@ -589,32 +525,110 @@ export default function DoctorProfileCompletion() {
           </Grid>
 
           <Grid item xs={12} md={6}>
+            {/* <Autocomplete
+              id="education-select"
+              // sx={{ height: 100 }}
+              options={educations}
+              autoHighlight
+              getOptionLabel={(option) => option}
+              value={values.education}
+              renderOption={(props, option) => (
+                <Box component="li" sx={{ "& > img": { mr: 2, flexShrink: 0 } }} {...props}>
+                {option.name}
+                </Box>
+              )}
+              onChange={(event, value) => {
+                setValues({
+                  ...values,
+                  education: value.name,
+                });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="تحصیلات پزشک"
+                  variant="outlined"
+                  fullWidth
+                  error={errors.education ? true : false}
+                  helperText={errors.education ? errors.education : null}
+                />
+              )}
+            /> */}
+
             <FormControl fullWidth>
               <InputLabel>تحصیلات پزشک</InputLabel>
               <Select
                 label="تحصیلات پزشک"
                 name="education"
                 value={values.education}
-                defaultValue={values.education}
                 onChange={handleInputChange}
                 error={errors.education ? true : false}
                 helperText={errors.education ? errors.education : null}
               >
-                {educations.map((education) => (
-                  <MenuItem value={education.id}>{education.name}</MenuItem>
-                ))}
+                {/* {educations.map((education) => (
+                  <MenuItem key={education.name} value={education.name}>
+                    {education.name}
+                  </MenuItem>
+                ))} */}
+                {/* <MenuItem key={1} value={"عمومی"}>عمومی</MenuItem>
+                <MenuItem key={2} value={"متخصص"}>متخصص</MenuItem>
+                <MenuItem key={3} value={"فوق تخصص"}>فوق تخصص</MenuItem>
+                <MenuItem key={4} value={"کارشناس"}>کارشناس</MenuItem>
+                <MenuItem key={5} value={"مشاور"}>مشاور</MenuItem>
+                <MenuItem key={6} value={"کارشناس ارشد"}>کارشناس ارشد</MenuItem>
+                <MenuItem key={7} value={"فلوشیپ"}>فلوشیپ</MenuItem>
+                <MenuItem key={8} value={"دکتر"}>دکترا</MenuItem>
+                <MenuItem key={9} value={"سایر"}>سایر</MenuItem> */}
+
+                <MenuItem value={1}>عمومی</MenuItem>
+                <MenuItem value={2}>متخصص</MenuItem>
+                <MenuItem value={3}>فوق تخصص</MenuItem>
+                <MenuItem value={4}>کارشناس</MenuItem>
+                <MenuItem value={5}>مشاور</MenuItem>
+                <MenuItem value={6}>کارشناس ارشد</MenuItem>
+                <MenuItem value={7}>فلوشیپ</MenuItem>
+                <MenuItem value={8}>دکترا</MenuItem>
+                <MenuItem value={9}>سایر</MenuItem>
               </Select>
             </FormControl>
           </Grid>
 
           <Grid item xs={12} md={6}>
+            {/* <FormControl fullWidth>
+              <InputLabel>تخصص</InputLabel>
+              <Select
+                // {...formik.getFieldProps("features")}
+                // renderValue={(selected) => selected.name.join(", ")}
+                // error={formik.errors["features"] && formik.touched["features"]}
+                multiple
+                name="specialties"
+                // value={values.specialties}
+                value={availableSpecilaities}
+                onChange={handleSpecilaities}
+                input={<OutlinedInput label="تخصص" />}
+                error={errors.specialties ? true : false}
+                helperText={errors.specialties ? errors.specialties : null}
+              > */}
+                {/* {availableSpecilaities.map(({ id, title }) => (
+                  <MenuItem key={id} value={id}>
+                    <Checkbox
+                      checked={availableSpecilaities.indexOf(id) > -1}
+                    />
+                    <ListItemText primary={title} />
+                  </MenuItem>
+                ))} */}
+                {/* {availableSpecilaities.map((specialty) => (
+                  <MenuItem value={specialty.id}>{specialty.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl> */}
+
             <FormControl fullWidth>
               <InputLabel>تخصص</InputLabel>
               <Select
                 label="تخصص"
                 name="specialties"
                 value={values.specialties}
-                defaultValue={values.specialties}
                 onChange={handleInputChange}
                 error={errors.specialties ? true : false}
                 helperText={errors.specialties ? errors.specialties : null}
@@ -633,14 +647,20 @@ export default function DoctorProfileCompletion() {
                 name="province"
                 label="استان"
                 value={values.province}
-                defaultValue={values.province}
                 onChange={handleInputChange}
                 error={errors.province ? true : false}
                 helperText={errors.province ? errors.province : null}
               >
                 {provinces.map((province) => (
-                  <MenuItem value={province.id}>{province.name}</MenuItem>
+                  <MenuItem value={province.id}>
+                    {province.name}
+                  </MenuItem>
                 ))}
+                {/* {provinces.map((province) => (
+                  <MenuItem key={province} value={province}>
+                    {province.name}
+                  </MenuItem>
+                ))} */}
               </Select>
             </FormControl>
           </Grid>
@@ -652,7 +672,6 @@ export default function DoctorProfileCompletion() {
                 label="شهر"
                 name="city"
                 value={values.city}
-                defaultValue={values.city}
                 onChange={handleInputChange}
                 error={errors.city ? true : false}
                 helperText={errors.city ? errors.city : null}
@@ -662,6 +681,13 @@ export default function DoctorProfileCompletion() {
                   .map((city) => (
                     <MenuItem value={city.id}>{city.name}</MenuItem>
                   ))}
+                {/* {cities
+                  .filter((city) => city.province_id === provinceInfo.id)
+                  .map((city) => (
+                    <MenuItem key={city.name} value={city.name}>
+                      {city.name}
+                    </MenuItem>
+                  ))} */}
               </Select>
             </FormControl>
           </Grid>
@@ -669,7 +695,7 @@ export default function DoctorProfileCompletion() {
           <Grid item xs={12} md={12}>
             <TextField
               variant="outlined"
-              label="آدرس کامل مطب"
+              label="آدرس مطب"
               name="clinic_address"
               type="text"
               value={values.clinic_address}

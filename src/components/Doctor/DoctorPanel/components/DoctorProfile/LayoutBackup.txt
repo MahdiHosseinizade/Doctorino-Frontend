@@ -1,0 +1,208 @@
+import React from "react";
+import { Container, CssBaseline, Grid } from "@mui/material";
+import DoctorProfile from "./Profile";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
+// import axios from "axios";
+import { useEffect } from "react";
+import AuthContext from "../../../../../context/AuthContext";
+import { useContext } from "react";
+import useAxios from "../../../../../utils/useAxios";
+import provinces from "../LocationInfo/Provinces";
+import cities from "../LocationInfo/Cities";
+import educations from "../EducationInfo/Education";
+
+const formValues = {
+  city: "",
+  clinic_address: "",
+  education: "",
+  gender: 2,
+  id: 0,
+  image: null,
+  is_active: false,
+  license_proof: null,
+  // location: {
+  //   type: "",
+  //   coordinates: [0, 0],
+  // },
+  work_periods: [],
+  description: null,
+  medical_system_number: "",
+
+  // User Info
+  first_name: "",
+  email: "",
+  last_name: "",
+  username: "",
+  inner_id: 0,
+
+  national_code: "",
+  office_number: "",
+  phone_number: "",
+  specialties: "",
+  province: "",
+};
+
+export default function DoctorProfileLayout() {
+  const { id } = useParams();
+  const [doctor, setDoctor] = useState({ ...formValues });
+  const [availableSpecilaities, setAvailableSpecilaities] = useState([]);
+  const { user } = useContext(AuthContext);
+  const { authTokens } = useContext(AuthContext);
+  const API = useAxios();
+
+  //   const [scheduleTime, setScheduleTime] = useState();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // function fetchData1() {
+    //   console.log("this is the id recieved: ", id);
+    //   axios
+    //     .get(`http://188.121.113.74/api/doctor/${id}/`)
+    //     .then((res) => {
+    //       setDoctor({ ...res.data });
+    //     })
+    //     .catch((err) => console.log(err));
+
+    //   setLoading(false);
+    // }
+
+    // function fetchData2() {
+    //   axios
+    //     .get(`http://188.121.113.74/api/doctor/workday/${id}/`)
+    //     .then((res) => {
+    //       setScheduleTime(res.data);
+    //     })
+    //     .catch((err) => console.log(err));
+
+    //   setLoading(false);
+    // }
+
+    function fetchData() {
+      // Fetching available specialties from the database
+      API.get(`http://188.121.113.74/api/doctor/specialties/`, {
+        headers: {
+          Authorization: `Bearer ${authTokens.access}`,
+        },
+      })
+        .then((response) => {
+          console.log("this is the response of specialties", response.data);
+          setAvailableSpecilaities(response.data);
+          // console.log("this is the available specialties: ", availableSpecilaities);
+        })
+        .catch((error) => {
+          console.log("Error returned from fetching specialties: ", error);
+        });
+
+      // Fetching doctor's information from the database
+      API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
+        headers: {
+          Authorization: `Bearer ${authTokens.access}`,
+        },
+      })
+        .then((response) => {
+          // console.log("this is the response of doctor id", response.data);
+          API.get(`/api/doctor/${response.data.id}/`, {
+            headers: {
+              Authorization: `Bearer ${authTokens.access}`,
+            },
+          })
+            .then((response) => {
+              console.log("the response of doctor", response.data);
+              // setProvinceInfo({
+              //   ...provinceInfo,
+              //   id: provinces.map((province) => {
+              //     if (province.name === response.data.province) {
+              //       return province.id;
+              //       }
+              //       })[0],
+
+              // });
+              setDoctor({
+                ...response.data,
+                first_name: response.data.user.first_name,
+                last_name: response.data.user.last_name,
+                email: response.data.user.email,
+                username: response.data.user.username,
+                inner_id: response.data.user.id,
+                id: response.data.id,
+                national_code: response.data.national_code,
+                medical_system_number: response.data.medical_system_number,
+                phone_number: response.data.phone_number,
+                office_number: response.data.office_number,
+                // education: response.data.education,
+                education: educations.filter((education) => {
+                  if (education.name === response.data.education) {
+                    return education.name;
+                  }
+                })[0]["name"],
+                // specialties: response.data.specialties[0].id,
+                specialties: availableSpecilaities.filter((specialty) => {
+                  if (specialty.name === response.data.specialties[0].name) {
+                    return specialty.name;
+                  }
+                })[0]["name"],
+                // province: response.data.province,
+                province: provinces.filter((province) => {
+                  if (province.name === response.data.province) {
+                    return province.name;
+                  }
+                })[0]["name"],
+                // city: response.data.city,
+                city: cities.filter((city) => {
+                  if (city.name === response.data.city) {
+                    return city.name;
+                  }
+                })[0]["name"],
+                clinic_address: response.data.clinic_address,
+                work_periods: response.data.work_periods,
+                description: response.data.description,
+              });
+              // console.log("this is the response.data.province: ", response.data.province);
+              // console.log("this is the response.data.province_name: ", response.data.province_name);
+              // setProvinceInfo({
+              //   id: response.data.province,
+              //   name: response.data.province_name,
+              // });
+              // console.log("this is the values of doctor", values);
+              setLoading(false);
+            })
+            .catch((error) => {
+              console.log("Error from fetching doctor's info: ", error);
+            });
+        })
+        .catch((error) => {
+          console.log("Error from fetching doctor's ID: ", error);
+        });
+    }
+
+    if (loading) {
+      fetchData();
+      //   fetchData2();
+      console.log("this is the doctor: ", doctor);
+    }
+
+    const id = setInterval(() => {
+      fetchData();
+    }, 200000);
+
+    return () => clearInterval(id);
+  }, [
+    loading,
+    doctor,
+    id,
+    user.user_id,
+    authTokens.access,
+    API,
+    availableSpecilaities,
+  ]);
+
+  return (
+    <Container>
+      <CssBaseline />
+      <Grid container spacing={4}>
+        <DoctorProfile doctor={doctor} loading={loading} authTokens={authTokens}/>
+      </Grid>
+    </Container>
+  );
+}
