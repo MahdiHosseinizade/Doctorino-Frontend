@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Container,
   Card,
@@ -21,8 +21,6 @@ import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import PhoneEnabledIcon from "@mui/icons-material/PhoneEnabled";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import axios from "axios";
-import {toast} from "react-toastify";
 
 // show the directory to the use with <basic breadcrums (mui)>
 
@@ -48,12 +46,8 @@ const useStyles = makeStyles({
     display: "inline-table",
   },
   button: {
-    backgroundColor: "#3b82f6",
-    marginRight: "2px",
-    contrastText: "#fff",
-    "&:hover": {
-      backgroundColor: "#2563eb",
-    },
+    paddingRight: "100px",
+    margin: "10px",
   },
 });
 
@@ -94,7 +88,6 @@ const Profile = (props) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [checked, setChecked] = React.useState(false);
-  const [errors, setErrors] = useState({ ...props.doctor });
 
   const handleProfilePhoto = (e) => {
     const file = e.target.files[0];
@@ -102,7 +95,7 @@ const Profile = (props) => {
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       // setProfilePhoto(reader.result);
-      props.doctor.setDoctor({
+      props.setDoctor({
         ...props.doctor,
         image: reader.result,
       });
@@ -111,7 +104,7 @@ const Profile = (props) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    props.doctor.setDoctor({
+    props.setDoctor({
       ...props.doctor,
       [name]: value,
     });
@@ -123,55 +116,6 @@ const Profile = (props) => {
 
   const thiredHandleChange = () => {
     setChecked((prev) => !prev);
-  };
-
-  const validate = (fieldValues = props.doctor) => {
-    let temp = { ...errors };
-    if ("description" in fieldValues)
-      temp.description = fieldValues.description
-        ? ""
-        : "وارد کردن این اطلاعات ضروری است.";
-    setErrors({
-      ...temp,
-    });
-
-    if (fieldValues === props.doctor) {
-      return true;
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      axios
-        .put(
-          `http://localhost:8000/api/doctor/${props.doctor.id}/`,
-          {
-            ...props.doctor,
-            description: props.doctor.description,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${props.authTokens.access}`,
-            },
-          }
-        )
-        .then((response) => {
-          toast.success(`تکمیل اطلاعات با موفقیت انجام شد.`, {
-            position: "top-right",
-            autoClose: 2000,
-          });
-
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error("مشکلی پیش آمده است", {
-            position: "top-right",
-            autoClose: 2000,
-          });
-        });
-      props.setLoading(false);
-    }
   };
 
   return (
@@ -323,14 +267,11 @@ const Profile = (props) => {
               /> */}
             </Tabs>
           </Box>
-
           <TabPanel value={value} index={0}>
-            <form
-              onSubmit={handleSubmit}
-              className={classes.box}
-              autoComplete="off"
-            >
-              {/* <Box
+            {/* <h4 style={{ marginBottom: "10px" }}>درباره پزشک</h4> */}
+            {/* info about doctor from back-end */}
+            <Box>
+              <Box
                 sx={{
                   "& > :not(style)": {
                     display: "flex",
@@ -340,8 +281,7 @@ const Profile = (props) => {
                     marginBottom: "10px",
                   },
                 }}
-              > */}
-              <Grid container spacing={2}>
+              >
                 <Grid item xs={12} md={12}>
                   <TextField
                     variant="outlined"
@@ -355,37 +295,63 @@ const Profile = (props) => {
                     //   errors.clinic_address ? errors.clinic_address : null
                     // }
                     multiline
-                    rows={4}
+                    rows={2}
                     fullWidth
                   />
                 </Grid>
-                {/* </Box> */}
-                {/* <Box sx={{ height: "auto" }}> */}
-                {/* how to mv it to left? */}
-                {/* <Grid item xs={12} md={12}>
-                  <FormControlLabel
-                    control={
-                      <Button
-                        className={classes.button}
-                        onClick={handleInputChange}
-                        variant="contained"
-                        label=""
-                      >
-                        ثبت تغییرات
-                      </Button>
-                    }
-                  />
-                </Grid> */}
-                <Grid item md={3} xs={12}>
-                  <button className={classes.button} type="submit">
-                    ذخیره اطلاعات
-                  </button>
-                </Grid>
-                {/* </Box> */}
-              </Grid>
-            </form>
-          </TabPanel>
+                {/* <div>
+                  <Collapse in={checked} collapsedSize={40}> */}
+                {/* example */}
 
+                {/* <p>{props?.description}</p> */}
+                {/* <p>
+                      <p>
+                        دکتر مژگان صیادی در سال 1379 موفق به دریافت مدرک دکترای
+                        پزشکی عمومی از دانشگاه علوم پزشکی شیراز شدند و سپس
+                        دکترای تخصصی زنان، زایمان و نازایی را در سال 1387 از
+                        دانشگاه علوم پزشکی شیراز اخذ نمودند. ایشان دارای فلوشیپ
+                        نازایی، IVF و لاپاراسکوپی از دانشگاه علوم پزشکی یزد می
+                        باشند.
+                      </p>
+
+                      <p>
+                        {" "}
+                        سوابق و افتخارات دکتر مژگان صیادی تدریس در دانشگاه بوشهر
+                        در سالهای 1387 تا 1391 استاد نمونه دانشگاه بوشهر در سال
+                        1390 سابقه نگارش و چاپ چندین مقاله در ISI مسئول بخش علمی
+                        بیمارستان شهریار عضو انجمن جراحان و متخصصین زنان، زایمان
+                        و نازایی ایران عضو انجمن متخصصین زنان و زایمان شیراز
+                      </p>
+
+                      <p>
+                        خدمات ارائه شده توسط دکتر مژگان صیادی تشخیص و درمان
+                        انواع نازایی (IVF,IUI) تعیین جنسیت (PGD)
+                      </p>
+                      <p>
+                        بیمارستان‌های همکار بیمارستان MRI شهر میر شهریار
+                        میرحسینی بعثت
+                      </p>
+                    </p>
+                  </Collapse>
+                </div> */}
+              </Box>
+              <Box sx={{ height: "auto" }}>
+                {/* how to mv it to left? */}
+                <FormControlLabel
+                  control={
+                    <Button
+                      className={classes.button}
+                      onClick={handleInputChange}
+                      variant="contained"
+                      label=""
+                    >
+                      ثبت تغییرات
+                    </Button>
+                  }
+                />
+              </Box>
+            </Box>
+          </TabPanel>
           <TabPanel value={value} index={1}>
             <h4 style={{ marginBottom: "15px" }}> شماره تماس</h4>
             <p>
