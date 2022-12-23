@@ -83,6 +83,7 @@ export default function DoctorCard({ doctor }) {
                   href={`/list-of-doctors/${doctor?.id}`}
                 >
                   <Typography
+                    noWrap
                     component="div"
                     variant="h6"
                     sx={{

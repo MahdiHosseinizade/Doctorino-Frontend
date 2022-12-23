@@ -50,6 +50,7 @@ const useStyles = makeStyles({
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
+  
 
   return (
     <div
@@ -130,15 +131,11 @@ const Profile = (props) => {
                         fontSize: 20,
                       }}
                     >
-                      {/* متخصص {props.doctor?.specialties.name} */}
+                      {props.doctor?.education} {props.doctor?.specialties.map((name) => (name.name))}
+                      <br /><br />
 
-                      متخصص {props.doctor?.specialties.map(({id, name}, index) => {
-                        if (index === props.doctor?.specialties.length - 1) {
-                          return name
-                        } else {
-                          return name + " و "
-                        }
-                      })}
+                      {/* متخصص {props.doctor?.specialties.name} */}
+                      
                     </Typography>
                   </Grid>
                 </Grid>
