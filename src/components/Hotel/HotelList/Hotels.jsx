@@ -10,7 +10,6 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 const cities = [
-    [0, "همه شهرها"],
     [1, "آذربایجان شرقی",],
     [2, "آذربایجان غربی",],
     [3, "اردبیل",],
@@ -46,17 +45,16 @@ const cities = [
 
 
 
-function Hotels({history, location, match, staticContext, props}) {
-    console.log("______________");console.log(history.length);console.log("______________");
-    const [province, setProvince] = useState('');
-    const [hotels, setHotels] = useState([]);
-    const [hotelNum, setHotelNum] = useState('');
+function Hotels({ history, location, match, staticContext, props }) {
+    let [province, setProvince] = useState(0);
+    let [hotels, setHotels] = useState([]);
+    let [hotelNum, setHotelNum] = useState(0);
+    let [city, setCity] = useState([]);
 
 
     const handleChange = (event) => {
-        setProvince(event.target.value);
-        setHotelNum(cities.filter( item => item[1] == province))
-        // console.log(hotelNum)
+        setCity(event.target.value);
+        console.log(city)
     };
 
     useEffect(() => {
@@ -82,30 +80,43 @@ function Hotels({history, location, match, staticContext, props}) {
                 <Grid item sx={{ m: 3 }}>
                     <Box noWrap ml={3} sx={{ marginBottom: '-50px' }}>
                         <Typography variant="p" color="initial" sx={{ fontWeight: 'bold' }}>
-                            لطفا ابتدا استان مورد نظر خود را انتخاب کنید 
-                            
-                            <FormControl  size="small" sx={{ minWidth: 250 , margin:"-10px 0px 0px 40px" } }>
+                            لطفا ابتدا استان مورد نظر خود را انتخاب کنید
+
+                            <FormControl size="small" sx={{ minWidth: 250, margin: "-10px 0px 0px 40px" }}>
                                 <InputLabel id="demo-simple-select-label">استان</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     value={province}
-                                    label="provinces"
+                                    label="province"
                                     onChange={handleChange}
                                 >
-                                    {cities.map(item => <MenuItem value={item[1]}>{item[1]}</MenuItem>)}
+
+                                    {cities.map(item => <MenuItem value={item}>{item[1]}</MenuItem>)}
                                 </Select>
                             </FormControl>
-                        </Typography>                 
+                        </Typography>
                     </Box>
                 </Grid>
                 <Grid item sx={{ m: 3 }}>
-                    {hotels.filter(hotel => hotel.city == hotelNum).map((hotel, index) => (
-                        <Grid item key={index} xs={12} md={12} lg={12} xl={12}>
-                            <HotelCard hotel={hotel} />
-                            {/* {console.log(hotel)} */}
-                        </Grid>
-                    ))}
+                    {hotels.filter(hotel => hotel.city === city['0']).map((hotel, index) => {
+                        return (
+                            <Grid item key={index} xs={12} md={12} lg={12} xl={12}>
+                                <HotelCard hotel={hotel} />
+                            </Grid>
+                        );
+                    })}
+                    {(hotels.filter(hotel => hotel.city === city['0']).length == 0) &&
+                        <h3 style={{
+                            position: 'fixed',
+                            top: '30%',
+                            left: '50%',
+                            fontSize: '30',
+                        }}>
+                            {/* <Grid item key={index} xs={12} md={12} lg={12} xl={12}> */}
+                            متاسفانه هتلی جهت نمایش وجود ندارد
+                            {/* </Grid> */}
+                        </h3>}
                 </Grid>
             </Grid>
         </Container>
