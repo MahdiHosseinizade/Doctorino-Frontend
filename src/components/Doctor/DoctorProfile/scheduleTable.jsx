@@ -164,26 +164,28 @@ export default function ScheduleTime(props) {
     }
 
 
-    // const formik = useFormik({
-    //     initialValues: formValue,
-    //     onSubmit: (values) => postTime(values),
-    //     validationSchema: validationSchema,
-    // })
+    const formik = useFormik({
+        initialValues: formValue,
+        onSubmit: (values) => postTime(values),
+        validationSchema: validationSchema,
+    })
 
-
-    // const [timeObj, setTimeObj] = useState();
-
-
+    formik = {...formik.getFieldProps('hotel_name')}
 
     function postTime(hotel) {
 
         let formData = new FormData();
         
-        formData.append('hotel_name', hotel.hotel_name);
-        formData.append('address', hotel.address);
-        formData.append('stars', hotel.stars);
+        formData.append('date_reserved', hotel.date_reserved);
+        formData.append('from_time', hotel.from_time);
+        formData.append('to_time', hotel.to_time);
+        formData.append('patient_name', hotel.patient_name);
+        formData.append('national_code', hotel.national_code);
+        formData.append('patient', hotel.patient);
+        formData.append('doctor', hotel.doctor);
 
-        api.post('/api/doctor/appointment//new/',
+
+        api.post('/api/doctor/appointment/new/',
             formData,
             {
                 headers:
@@ -209,17 +211,6 @@ export default function ScheduleTime(props) {
 
     return (
         <Card
-            // sx={{
-            //     display: 'flex',
-            //     alignItems: 'center',
-            //     pl: 2,
-            //     bgcolor: 'background.default',
-
-            //     // example
-            //     justifyContent: "center",
-            //     height: "auto",
-            //     width: "auto",
-            // }}
             sx={{
                 marginTop: "100px",
                 display: 'sticky',

@@ -7,7 +7,7 @@ import { makeStyles } from "@mui/styles";
 import { provinces, educations, specialties } from "./Information";
 import AuthContext from "../../../../context/AuthContext";
 import { useContext } from "react";
-import useAxios from "../../../../utils/useAxios";
+// import useAxios from "../../../../utils/useAxios";
 import { useHistory } from "react-router-dom";
 import {
   Container,
@@ -69,7 +69,7 @@ export default function DoctorProfileCompletion() {
   const { user } = useContext(AuthContext);
   const { authTokens } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const api = useAxios();
+  // const api = useAxios();
   const history = useHistory();
   const classes = useStyles();
   const [doctor, setDoctor] = useState({ ...formValue });
