@@ -46,7 +46,7 @@ const cities = [
 
 
 function Hotels({ history, location, match, staticContext, props }) {
-    let [province, setProvince] = useState(0);
+    // let [province, setProvince]= useState(0);
     let [hotels, setHotels] = useState([]);
     let [hotelNum, setHotelNum] = useState(0);
     let [city, setCity] = useState([]);
@@ -87,11 +87,10 @@ function Hotels({ history, location, match, staticContext, props }) {
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    value={province}
-                                    label="province"
+                                    value={city}
+                                    label="Province"
                                     onChange={handleChange}
                                 >
-
                                     {cities.map(item => <MenuItem value={item}>{item[1]}</MenuItem>)}
                                 </Select>
                             </FormControl>
