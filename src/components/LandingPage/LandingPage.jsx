@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 export default function LandingPage() {
   const [input, setInput] = useState("");
   const [resDoctor, setResDoctor] = useState([]);
-  console.log(resDoctor);
+  // console.log(resDoctor);
   const [search, setSearch] = useState({
     input: "",
     scale: 0,

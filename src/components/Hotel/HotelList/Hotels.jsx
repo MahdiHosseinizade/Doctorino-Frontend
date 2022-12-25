@@ -10,6 +10,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 const cities = [
+    [0, "همه شهرها"],
     [1, "آذربایجان شرقی",],
     [2, "آذربایجان غربی",],
     [3, "اردبیل",],
@@ -44,10 +45,9 @@ const cities = [
 ];
 
 
-const provinces =
-    ["تعیین نشده", "آذربایجان شرقی", "آذربایجان غربی", "اردبیل", "اصفهان", "البرز", "ایلام", "بوشهر", "تهران", "چهارمحال و بختیاری", "خراسان جنوبی", "خراسان رضوی", "خراسان شمالی", "خوزستان", "زنجان", "سمنان", "سیستان و بلوچستان", "فارس", "قزوین", "قم", "کردستان", "کرمان", "کرمانشاه", "کهگیلویه و بویراحمد", "گلستان", "لرستان", "گیلان", "مازندران", "مرکزی", "هرمزگان", "همدان", "یزد"];
 
-function Hotels(prop) {
+function Hotels({history, location, match, staticContext, props}) {
+    console.log("______________");console.log(history.length);console.log("______________");
     const [province, setProvince] = useState('');
     const [hotels, setHotels] = useState([]);
     const [hotelNum, setHotelNum] = useState('');
@@ -56,7 +56,7 @@ function Hotels(prop) {
     const handleChange = (event) => {
         setProvince(event.target.value);
         setHotelNum(cities.filter( item => item[1] == province))
-        console.log(hotelNum)
+        // console.log(hotelNum)
     };
 
     useEffect(() => {
@@ -96,17 +96,14 @@ function Hotels(prop) {
                                     {cities.map(item => <MenuItem value={item[1]}>{item[1]}</MenuItem>)}
                                 </Select>
                             </FormControl>
-                        
-                        </Typography>
-                        
+                        </Typography>                 
                     </Box>
                 </Grid>
                 <Grid item sx={{ m: 3 }}>
-                    {/* {let new_hotels = hotels.filter(hotel => hotel.city == )} */}
                     {hotels.filter(hotel => hotel.city == hotelNum).map((hotel, index) => (
                         <Grid item key={index} xs={12} md={12} lg={12} xl={12}>
                             <HotelCard hotel={hotel} />
-                            {console.log(hotel)}
+                            {/* {console.log(hotel)} */}
                         </Grid>
                     ))}
                 </Grid>
