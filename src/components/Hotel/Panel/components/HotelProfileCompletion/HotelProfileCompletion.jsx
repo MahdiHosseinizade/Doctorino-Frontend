@@ -24,14 +24,66 @@ import AuthContext from "../../../../../context/AuthContext";
 import { toast } from "react-toastify";
 import Dropzone from '../../../../common/Dropzone';
 import './HotelProfileCompletion.css';
+import theme from '../../../../../assets/theme/defaultTheme';
+import axios from 'axios';
+
+const SMenuItem = styled(MenuItem)({
+  "&:hover": {
+    backgroundColor: theme.palette.hotel.light,
+  },
+  // style when selected
+  "&.Mui-selected": {
+    backgroundColor: theme.palette.hotel.light,
+  },
+  "&.Mui-selected:hover": {
+    backgroundColor: "transparent",
+  }
+})
+
+const SFormControl = styled(FormControl)({
+  "& .MuiOutlinedInput-root": {
+    // set the color of the input when focused
+    "&:hover fieldset": {
+      borderColor: theme.palette.hotel.main,
+    }
+  },
+
+  // focused style
+  "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: theme.palette.hotel.main,
+    borderWidth: "1px",
+  },
+  // set the label color when focused
+  "& .MuiInputLabel-root": {
+    color: theme.palette.grey[500],
+  },
+  // style the dropdown icon
+  "& .MuiSelect-icon": {
+    color: theme.palette.hotel.contrastText,
+    backgroundColor: theme.palette.hotel.main,
+    borderRadius: "50%",
+  },
+});
 
 const STextField = styled(TextField)({
+
+  "& .MuiInputLabel-root": {
+    color: theme.palette.grey[500],
+  },
   "& .MuiFilledInput-root": {
-    background: "#fefefe",
+    background: theme.palette.background.paper,
   },
   "& .MuiOutlinedInput-root": {
     background: "#fefefe",
+    "&:hover fieldset": {
+      borderColor: theme.palette.hotel.main,
+    }
   },
+  // style when focused
+  "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: theme.palette.hotel.main,
+  },
+
   spellCheck: false,
 });
 
@@ -40,7 +92,7 @@ const SSelect = styled(Select)({
 });
 
 const formValue = {
-  // stars: "",
+  stars: "",
   hotel_name: "",
   phone_number: "",
   hotel_description: "",
@@ -52,7 +104,7 @@ const formValue = {
 };
 
 const validationSchema = Yup.object({
-  // stars: Yup.number(),
+  stars: Yup.number(),
   hotel_name: Yup.string(),
   phone_number: Yup.string(),
   hotel_description: Yup.string(),
@@ -68,7 +120,7 @@ export default function HotelProfileCompletion() {
 
   const [loading, setLoading] = useState(true);
   const [hotel, setHotel] = useState('');
-  // const [stars, setStars] = useState();
+  const [stars, setStars] = useState("");
   const [features, setFeatures] = useState([]);
   const [availableFeatures, setAvailableFeatures] = useState([]);
   const [availableHotels, setAvailableHotels] = useState([]);
@@ -104,7 +156,7 @@ export default function HotelProfileCompletion() {
 
     const id = setInterval(() => {
       fetchData();
-    }, 5000);
+    }, 500000);
 
     return () => clearInterval(id);
 
@@ -117,11 +169,16 @@ export default function HotelProfileCompletion() {
     formik.setFieldValue("features", feat);
   };
 
+  const handleStars = (event) => {
+    const value = event.target.value;
+    setStars(value);
+    formik.setFieldValue("stars", value);
+  }
+
   const handleHotels = (event) => {
 
     let hotel_id = event.target.value;
 
-    setHotel(hotel_id);
 
     api.get(`/api/hotel/${hotel_id}/`)
       .then(res => {
@@ -130,11 +187,15 @@ export default function HotelProfileCompletion() {
           hotel_description,
           address,
           rules,
-          features,
+          features: resievedFeats,
           trade_code,
+          cover_image,
+          stars,
         } = res.data;
 
         formik.resetForm();
+
+        setHotel(hotel_id);
 
         formik.setFieldValue("hotel_id", hotel_id);
 
@@ -150,15 +211,20 @@ export default function HotelProfileCompletion() {
         if (rules) {
           formik.setFieldValue("rules", rules);
         }
-        if (features) {
-          setFeatures(features.map(feat => feat.id));
+        if (resievedFeats) {
+          setFeatures(resievedFeats.map(feat => feat.id));
           formik.setFieldValue("features", features);
         }
         if (trade_code) {
           formik.setFieldValue("trade_code", trade_code);
         }
-        if (res.data.cover_image) {
-          setCoverImage(res.data.cover_image);
+        if (cover_image) {
+          setCoverImage(cover_image);
+        }
+        if (stars) {
+          console.log(stars);
+          setStars(stars);
+          formik.setFieldValue("stars", stars);
         }
       })
       .catch(err => console.error(err))
@@ -184,13 +250,8 @@ export default function HotelProfileCompletion() {
           autoClose: 2000,
         })
 
-        // reset the form
         formik.resetForm();
-
-        // reset the hotel id
         setLoading(true);
-        formik.setFieldValue("hotel_id", '');
-        setHotel('');
       })
       .catch(err => {
         toast.error("خطایی رخ داده است", {
@@ -203,6 +264,12 @@ export default function HotelProfileCompletion() {
   const formik = useFormik({
     initialValues: formValue,
 
+    onReset: () => {
+      setFeatures([]);
+      setCoverImage(null);
+      setHotel('');
+    },
+
     onSubmit: (values) => {
       if (!values.hotel_id) {
         toast.error("هتل انتخاب نشده است.", {
@@ -210,127 +277,159 @@ export default function HotelProfileCompletion() {
           autoClose: 2000,
         });
       } else {
-        let data = {};
+        const data = new URLSearchParams();
+        let formData = new FormData();
 
-        if (values.hotel_name) {
-          data["hotel_name"] = values.hotel_name;
-        }
-        if (values.trade_code) {
-          data["trade_code"] = values.trade_code;
-        }
-        // if (values.stars) {
-        //   data["stars"] = values.stars;
-        // }
-        if (values.hotel_description) {
-          data["hotel_description"] = values.hotel_description;
-        }
-        if (values.address) {
-          data["address"] = values.address;
-        }
-        if (features.length) {
-          data["features"] = features;
-        }
-        if (values.rules) {
-          data["rules"] = values.rules;
+        // formData.append("cover_image", values.cover_image, "cover_image.jpg");
+        formData.append("hotel_name", values.hotel_name);
+        formData.append("trade_code", values.trade_code);
+        formData.append("hotel_description", values.hotel_description);
+        formData.append("address", values.address);
+        formData.append("rules", values.rules);
+        formData.append("stars", values.stars);
+        console.log("values: ", values.cover_image)
+        console.log("coverImage: ", coverImage)
+
+        values.features.forEach(feat => {
+          formData.append("features", feat);
+        })
+
+        // add form data to url search params
+        for (var pair of formData.entries()) {
+          data.append(pair[0], pair[1]);
         }
 
-        api
-          .put(`/api/hotel/${values.hotel_id}/`, data, {
-            headers: {
-              Authorization: "Bearer " + authTokens.access,
-            },
+        // // .put(`/api/hotel/${values.hotel_id}/`, formData, {
+        api.put(`/api/hotel/${values.hotel_id}/`, data, {
+          headers: {
+            "Authorization": "Bearer " + authTokens?.access,
+          }
+        }).then(res => {
+          toast.success("هتل با موفقیت ویرایش شد", {
+            position: "top-right",
+            autoClose: 2000,
           })
-          .then((res) =>
-            toast.success(`تغیر هتل با موفقیت انجام شد`, {
-              position: "top-right",
-              autoClose: 2000,
-            })
-          )
-          .catch((err) =>
-            toast.error("مشکلی پیش آمده است", {
-              position: "top-right",
-              autoClose: 2000,
-            })
-          );
+        }).catch(err => {
+          toast.error("خطایی رخ داده است", {
+            position: "top-right",
+            autoClose: 2000,
+          })
+        })
+        // axios.post("https://cors-anywhere.herokuapp.com/postman-echo.com/post/", formData, {
+        //   headers: {
+        //     'Content-Type': 'multipart/form-data',
+        //     'x-requested-with': 'XMLHttpRequest',
+        //   },
+        // })
+        //   .then((res) => {
+        //     console.log(res.data.form);
+        //     toast.success(`تغیر هتل با موفقیت انجام شد`, {
+        //       position: "top-right",
+        //       autoClose: 2000,
+        //     })
+        //   }
+        //   )
+        //   .catch((err) => {
+        //     console.log(err)
+        //     toast.error("مشکلی پیش آمده است", {
+        //       position: "top-right",
+        //       autoClose: 2000,
+        //     })
+        //   }
+          // );
 
+        formik.resetForm();
         setLoading(true);
       }
     },
     validationSchema: validationSchema,
   });
 
-  function handleCoverImage(e) {
-    let file = e.target.files[0];
-    setCoverImage(file);
+  function handleCoverImage(files) {
+    let file = files[0];
+
+    setCoverImage(URL.createObjectURL(file));
+
+    formik.setFieldValue("cover_image", file);
   }
 
   return (
     <Container>
-      <Box
-        sx={{
-          marginTop: "100px",
-          bgcolor: "rgb(245, 246, 248)",
-          border: "1px solid #ccc",
-          marginBottom: "50px",
-          borderRadius: "10px",
-          padding: "20px",
-          "& .MuiTextField-root": { m: 0.5 },
-          boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
-        }}
-        onSubmit={formik.handleSubmit}
-        component="form"
-      >
-        <Typography
-          sx={{
-            textAlign: "center",
-            margin: "10px",
-          }}
-          variant="h5"
-        >
-          تکمیل اطلاعات هتل
-        </Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Box sx={{
+            marginTop: { xs: "10px", md: "10px" },
+            borderRadius: "10px",
+            padding: 1,
+          }}>
+            <SFormControl fullWidth>
+              <InputLabel>هتل ها</InputLabel>
+              <SSelect
+                value={hotel}
+                label="هتل ها"
+                onChange={handleHotels}
+                error={formik.errors["hotel_id"] && formik.touched["hotel_id"]}
+              >
+                {availableHotels?.map(
+                  ({ id, hotel_name }, ind) =>
+                    ind >= 0 && (
+                      <SMenuItem key={id} value={id}>
+                        <ListItemText primary={hotel_name} />
+                      </SMenuItem>
+                    )
+                )}
+              </SSelect>
+            </SFormControl>
 
-        <hr width="100%"
-          style={{
-            backgroundColor: "#000",
-            marginBottom: "1rem",
-            marginTop: "1rem",
-          }}
-        />
-        <Grid container spacing={2} sx={{
-          display: "flex",
-          justifyContent: { xs: "center", md: "flex-start" },
-          alignItems: { xs: "center", md: "flex-start" },
-        }}>
-          <Grid item md={4} xs={12}>
-            <Grid container>
-              <Grid item md={12} xs={12}>
-                {/* drop zone */}
-                <Dropzone image={coverImage} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item md={8} xs={12}>
+            <Box component="img" src={coverImage ? coverImage : "https://media.radissonhotels.net/image/metropolitan-hotel-sofia-a-member-of-radisson-individuals/exteriorview/16256-145921-f72742573_3xl.jpg?impolicy=Card&gravity=North"}
+              sx={{
+                width: "100%",
+                marginTop: 2,
+                height: { xs: "300px", md: "450px" },
+                objectFit: "fill",
+                borderRadius: "10px",
+                border: `5px solid ${theme.palette.hotel.main}`,
+              }}
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Box
+            sx={{
+              color: theme.palette.hotel.dark,
+              marginTop: { xs: "20px", md: "20px" },
+              bgcolor: "rgb(245, 246, 248)",
+              border: "1px solid #ccc",
+              marginBottom: "50px",
+              borderRadius: "10px",
+              padding: "20px",
+              "& .MuiTextField-root": { m: 0.5 },
+              boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+            }}
+            onSubmit={formik.handleSubmit}
+            component="form"
+          >
+            <Typography
+              sx={{
+                textAlign: "center",
+                margin: "10px",
+              }}
+              variant="h5"
+            >
+              تکمیل اطلاعات هتل
+            </Typography>
+
+            <hr width="100%"
+              style={{
+                backgroundColor: theme.palette.hotel.dark,
+                marginBottom: "1rem",
+                marginTop: "1rem",
+              }}
+            />
+
             <Grid container spacing={2}>
               <Grid item xs={12} md={12}>
-                <FormControl fullWidth>
-                  <InputLabel>هتل ها</InputLabel>
-                  <SSelect
-                    value={hotel}
-                    label="هتل ها"
-                    onChange={handleHotels}
-                    error={formik.errors["hotel_id"] && formik.touched["hotel_id"]}
-                  >
-                    {availableHotels?.map(
-                      ({ id, hotel_name }, ind) =>
-                        ind >= 0 && (
-                          <MenuItem key={id} value={id}>
-                            <ListItemText primary={hotel_name} />
-                          </MenuItem>
-                        )
-                    )}
-                  </SSelect>
-                </FormControl>
+                <Dropzone CssBaseLine={true} handleFile={handleCoverImage} iconColor={'hotel'} />
               </Grid>
               <Grid item xs={12} md={6}>
                 <STextField
@@ -338,7 +437,7 @@ export default function HotelProfileCompletion() {
                   error={
                     formik.errors["hotel_name"] && formik.touched["hotel_name"]
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="نام هتل"
                   name="hotel_name"
                   type="text"
@@ -352,7 +451,7 @@ export default function HotelProfileCompletion() {
                   error={
                     formik.errors["phone_number"] && formik.touched["phone_number"]
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="شماره تماس هتل"
                   name="phone_number"
                   type="text"
@@ -364,7 +463,7 @@ export default function HotelProfileCompletion() {
                 <STextField
                   fullWidth
                   error={formik.errors["address"] && formik.touched["address"]}
-                  variant="filled"
+                  variant="outlined"
                   label="آدرس هتل"
                   name="address"
                   type="text"
@@ -378,7 +477,7 @@ export default function HotelProfileCompletion() {
                   error={
                     formik.errors["trade_code"] && formik.touched["trade_code"]
                   }
-                  variant="filled"
+                  variant="outlined"
                   label="کد صنفی"
                   name="trade_code"
                   type="text"
@@ -420,8 +519,36 @@ export default function HotelProfileCompletion() {
                   {...formik.getFieldProps("rules")}
                 />
               </Grid>
-              <Grid item xs={12} md={12}>
-                <FormControl fullWidth>
+              <Grid item xs={12} md={6}>
+                <SFormControl fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      // set the color of the input
+                      "& fieldset": {
+
+                      },
+                      // set the color of the input when focused
+                      "&:hover fieldset": {
+                        borderColor: theme.palette.hotel.main,
+                      }
+                    },
+                    // focused style
+                    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: theme.palette.hotel.main,
+                      borderWidth: "1px",
+                    },
+                    // set the label color when focused
+                    "& .MuiInputLabel-root": {
+                      color: theme.palette.grey[500],
+                    },
+                    // style the dropdown icon
+                    "& .MuiSelect-icon": {
+                      color: theme.palette.hotel.contrastText,
+                      backgroundColor: theme.palette.hotel.main,
+                      borderRadius: "50%",
+                    }
+                  }}
+                >
                   <InputLabel>امکانات</InputLabel>
                   <SSelect
                     renderValue={(selected) => selected.join(", ")}
@@ -432,45 +559,43 @@ export default function HotelProfileCompletion() {
                     input={<OutlinedInput label="امکانات" />}
                   >
                     {availableFeatures.map(({ id, title }) => (
-                      <MenuItem key={id} value={id}>
-                        <Checkbox checked={features.indexOf(id) > -1} />
+                      <SMenuItem key={id} value={id}>
+                        <Checkbox color="hotel" checked={features.indexOf(id) > -1} />
                         <ListItemText primary={title} />
-                      </MenuItem>
+                      </SMenuItem>
                     ))}
                   </SSelect>
-                </FormControl>
+                </SFormControl>
               </Grid>
-              {/* <Grid item xs={12} md={6}>
-            <FormControl fullWidth>
-              <InputLabel>ستاره</InputLabel>
-              <SSelect
-                value={stars}
-                defaultValue={0}
-                label="ستاره"
-                onChange={handleStars}
-                error={formik.errors["stars"] && formik.touched["stars"]}
-                {...formik.getFieldProps("stars")}
-              >
-                <MenuItem value={1}>یک ستاره</MenuItem>
-                <MenuItem value={2}>دو ستاره</MenuItem>
-                <MenuItem value={3}>سه ستاره</MenuItem>
-                <MenuItem value={4}>چهار ستاره</MenuItem>
-                <MenuItem value={5}>پنج ستاره</MenuItem>
-              </SSelect>
-            </FormControl>
-          </Grid> */}
-              <Grid item md={6} xs={6}>
-                <Button type="button" variant='outlined' color="error" onClick={deleteHotel}>حذف هتل</Button>
+              <Grid item xs={12} md={6}>
+                <SFormControl fullWidth>
+                  <InputLabel>ستاره</InputLabel>
+                  <SSelect
+                    value={stars}
+                    onChange={handleStars}
+                    label="ستاره"
+                    error={formik.errors["stars"] && formik.touched["stars"]}
+                  >
+                    <SMenuItem value={1}>یک ستاره</SMenuItem>
+                    <SMenuItem value={2}>دو ستاره</SMenuItem>
+                    <SMenuItem value={3}>سه ستاره</SMenuItem>
+                    <SMenuItem value={4}>چهار ستاره</SMenuItem>
+                    <SMenuItem value={5}>پنج ستاره</SMenuItem>
+                  </SSelect>
+                </SFormControl>
               </Grid>
               <Grid item md={6} xs={6}>
-                <Button type="submit" variant="contained">
+                <Button type="button" variant='outlined' color="hotel" onClick={deleteHotel}>حذف هتل</Button>
+              </Grid>
+              <Grid item md={6} xs={6}>
+                <Button color="hotel" type="submit" variant="contained">
                   ذخیره
                 </Button>
               </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </Grid>
-      </Box>
-    </Container>
+      </Grid>
+    </Container >
   );
 }
