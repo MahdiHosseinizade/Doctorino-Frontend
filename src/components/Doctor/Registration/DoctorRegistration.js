@@ -4,7 +4,7 @@ import styles from "./doctor.module.css";
 import * as Yup from "yup";
 // import Select from 'react-select';
 import { useState } from "react";
-import { Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import getDoctorScale from "./services/getDoctorScale";
@@ -107,7 +107,7 @@ const DoctorRegister = () => {
     };
     postDoctorRegister(user)
       .then((res) => {
-        history.push("/");
+        history.push("/login");
         setDoctor(user);
         toast.success("ثبت نام با موفقیت انجام شد", {
           position: "top-right",
@@ -134,17 +134,6 @@ const DoctorRegister = () => {
       <form onSubmit={formik.handleSubmit} className={classes.loginForm}>
         <Grid container spacing={1}>
           <Grid item md={6} xs={6}>
-            {/* <TextField 
-              onChange={(e) => {
-                setDoctor({ ...doctor, first_name: e.target.value });
-              }}
-              label="نام"
-              variant="outlined"
-              name="fisrt_name"
-              type="text"
-              fullWidth
-              required
-            /> */}
             <STextField
               fullWidth
               error={
@@ -161,20 +150,8 @@ const DoctorRegister = () => {
               }
               {...formik.getFieldProps("first_name")}
             />
-            {/* <Input placeholder="نام" name="first_name" formik={formik} type="text" /> */}
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <TextField
-              onChange={(e) => {
-                setDoctor({ ...doctor, last_name: e.target.value });
-              }}
-              label="نام خانوادگی"
-              variant="outlined"
-              name="last_name"
-              type="text"
-              fullWidth
-              required
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["last_name"] && formik.touched["last_name"]}
@@ -189,23 +166,8 @@ const DoctorRegister = () => {
               }
               {...formik.getFieldProps("last_name")}
             />
-            {/* <Input placeholder="نام خانوادگی" name="last_name" formik={formik} type="text" /> */}
           </Grid>
           <Grid item md={12} xs={12}>
-            {/* <TextField
-              onChange={(e) => {
-                setDoctor({ ...doctor, email: e.target.value });
-              }}
-              label="ایمیل"
-              variant="outlined"
-              name="email"
-              type="email"
-              fullWidth
-              required   */}
-            {/* add  validation */}
-
-            {/*  /> */}
-            {/* <Input placeholder="ایمیل" name="email" formik={formik} type="email" /> */}
             <STextField
               fullWidth
               error={formik.errors["email"] && formik.touched["email"]}
@@ -222,12 +184,6 @@ const DoctorRegister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              placeholder="کلمه عبور"
-              name="password"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["password"] && formik.touched["password"]}
@@ -244,12 +200,6 @@ const DoctorRegister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              placeholder="تایید کلمه عبور"
-              name="passwordConfrim"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
               fullWidth
               error={
@@ -269,13 +219,6 @@ const DoctorRegister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              placeholder="کد نظام پزشکی"
-              name="code"
-              formik={formik}
-              type="number"
-            /> */}
-            {/* Textfield tag that user just can enter number */}
             <STextField
               fullWidth
               error={formik.errors["code"] && formik.touched["code"]}
@@ -292,28 +235,16 @@ const DoctorRegister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* add placeholder to the select */}
-            {/* <select
-              onChange={(e) => setScale(e)}
-              placeholder="تخصص"
-              className={styles.selectDocotorOption}
-              name="code"
-              id="code"
-              {...formik.getFieldProps("scale")}
-            >
-              {doctorScale &&
-                doctorScale.map((item) => (
-                  <option value={item.id}>{item.name}</option>
-                ))}
-            </select> */}
+            <FormControl fullWidth >
             <InputLabel id="scale_doctor" >تخصص</InputLabel>
-            <Select   onChange={(e) => setScale(e)} {...formik.getFieldProps("scale")} labelId="scale_doctor"   >
+            <Select id="sclae_doctor"  onChange={(e) => setScale(e)} {...formik.getFieldProps("scale")} labelId="scale_doctor"   >
               {doctorScale && doctorScale?.map((item) => {
                 return (
                   <MenuItem value={item.id}>{item.name}</MenuItem>
                 )
               })}
             </Select>
+            </FormControl>
           </Grid>
           <br />
           <Grid item md={12} xs={12}>
