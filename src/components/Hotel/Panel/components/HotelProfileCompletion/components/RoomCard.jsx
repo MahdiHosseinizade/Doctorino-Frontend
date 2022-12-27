@@ -13,10 +13,8 @@ import { makeStyles } from "@mui/styles";
 import { baseURL } from '../../../../../../utils/useAxios';
 
 
-
 const useStyles = makeStyles({
 });
-
 
 
 const RoomCard = ({ room }) => {

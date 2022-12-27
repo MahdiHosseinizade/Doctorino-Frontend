@@ -27,6 +27,8 @@ import { toast } from "react-toastify";
 import Dropzone from '../../../../common/Dropzone';
 import './HotelProfileCompletion.css';
 import PropTypes from 'prop-types';
+import Room from "./components/RoomCard"
+
 
 const STextField = styled(TextField)({
   "& .MuiFilledInput-root": {
@@ -347,7 +349,7 @@ export default function HotelProfileCompletion() {
 
         <Box sx={{ width: '100%' }}>
           <Box sx={{ marginLeft: '10px', borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs sx={{}} value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tabs sx={{marginBottom: '10px'}} value={value} onChange={handleChange} aria-label="basic tabs example">
               <Tab sx={{ width: 'auto' }} label="اطلاعات مشترک هتل" {...a11yProps(0)} />
               <Tab sx={{ width: 'auto' }} label="اطلاعات اتاق ها" {...a11yProps(1)} />
               {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
