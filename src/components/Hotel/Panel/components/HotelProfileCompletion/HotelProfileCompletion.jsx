@@ -31,7 +31,7 @@ import { useEffect } from "react";
 import AuthContext from "../../../../../context/AuthContext";
 import { toast } from "react-toastify";
 import Dropzone from '../../../../common/Dropzone';
-import './HotelProfileCompletion.css';
+// import './HotelProfileCompletion.css';
 import RoomCard from "./components/RoomCard";
 import theme from '../../../../../assets/theme/defaultTheme';
 import PropTypes from 'prop-types';
