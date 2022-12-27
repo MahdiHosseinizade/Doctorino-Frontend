@@ -4,7 +4,7 @@ import styles from "./doctor.module.css";
 import * as Yup from "yup";
 // import Select from 'react-select';
 import { useState } from "react";
-import { Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import getDoctorScale from "./services/getDoctorScale";
@@ -54,19 +54,18 @@ const validationSchema = Yup.object({
 
 const DoctorRegister = () => {
   const classes = useStyles();
-  const [scale, setscale] = useState("پزشک عمومی");
+  const [scale, setscale] = useState("");
   const [doctor, setDoctor] = useState({ ...value });
-  const [doctorScale, setDoctorScale] = useState(null);
+  const [doctorScale, setDoctorScale] = useState([]);
   const [error, setError] = useState("Ooops !!!!");
 
   // var profilePicture = <img src="/src/assets/img/DoctorProfilePhoto.jpg" alt="Doctor"/>;
-  
+
   const history = useHistory();
   useEffect(() => {
     getdoctorScale();
-  }, []);
+  }, [doctorScale]);
 
-  // console.log(doctorScale);
 
   const formik = useFormik({
     initialValues: value,
@@ -78,9 +77,10 @@ const DoctorRegister = () => {
     validationSchema: validationSchema,
     validateOnMount: true,
   });
-  console.log(formik.values);
-  const setScale = (e) => {
-    // console.log(e);
+  // console.log(formik.values);
+  
+  const handleScale = (e) => {
+    // console.log(e.target.value);
     setscale(e.target.value);
   };
 
@@ -92,6 +92,7 @@ const DoctorRegister = () => {
       console.log(error);
     }
   }
+  
 
   const postdoctorHandler = (doctor) => {
     // convet int to string
@@ -103,15 +104,17 @@ const DoctorRegister = () => {
         email: doctor.email,
         password: doctor.password,
       },
-      specialties: [parseFloat(doctor.scale)],
+      specialties: [parseFloat(scale)],
       medical_system_number: doctor.code.toString(),
       // image: URL("../../../assets/img/DoctorProfilePhoto.jpg"),
       // image: profilePicture,
       is_doctor: true,
     };
+    console.log(user);
+    
     postDoctorRegister(user)
       .then((res) => {
-        history.push("/");
+        history.push("/login");
         setDoctor(user);
         toast.success("ثبت نام با موفقیت انجام شد", {
           position: "top-right",
@@ -138,17 +141,6 @@ const DoctorRegister = () => {
       <form onSubmit={formik.handleSubmit} className={classes.loginForm}>
         <Grid container spacing={1}>
           <Grid item md={6} xs={6}>
-            {/* <TextField 
-              onChange={(e) => {
-                setDoctor({ ...doctor, first_name: e.target.value });
-              }}
-              label="نام"
-              variant="outlined"
-              name="fisrt_name"
-              type="text"
-              fullWidth
-              required
-            /> */}
             <STextField
               fullWidth
               error={
@@ -165,20 +157,8 @@ const DoctorRegister = () => {
               }
               {...formik.getFieldProps("first_name")}
             />
-            {/* <Input placeholder="نام" name="first_name" formik={formik} type="text" /> */}
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <TextField
-              onChange={(e) => {
-                setDoctor({ ...doctor, last_name: e.target.value });
-              }}
-              label="نام خانوادگی"
-              variant="outlined"
-              name="last_name"
-              type="text"
-              fullWidth
-              required
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["last_name"] && formik.touched["last_name"]}
@@ -196,20 +176,6 @@ const DoctorRegister = () => {
             {/* <Input placeholder="نام خانوادگی" name="last_name" formik={formik} type="text" /> */}
           </Grid>
           <Grid item md={12} xs={12}>
-            {/* <TextField
-              onChange={(e) => {
-                setDoctor({ ...doctor, email: e.target.value });
-              }}
-              label="ایمیل"
-              variant="outlined"
-              name="email"
-              type="email"
-              fullWidth
-              required   */}
-            {/* add  validation */}
-
-            {/*  /> */}
-            {/* <Input placeholder="ایمیل" name="email" formik={formik} type="email" /> */}
             <STextField
               fullWidth
               error={formik.errors["email"] && formik.touched["email"]}
@@ -226,12 +192,6 @@ const DoctorRegister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              placeholder="کلمه عبور"
-              name="password"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["password"] && formik.touched["password"]}
@@ -248,12 +208,6 @@ const DoctorRegister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              placeholder="تایید کلمه عبور"
-              name="passwordConfrim"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
               fullWidth
               error={
@@ -273,13 +227,6 @@ const DoctorRegister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              placeholder="کد نظام پزشکی"
-              name="code"
-              formik={formik}
-              type="number"
-            /> */}
-            {/* Textfield tag that user just can enter number */}
             <STextField
               fullWidth
               error={formik.errors["code"] && formik.touched["code"]}
@@ -296,28 +243,22 @@ const DoctorRegister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* add placeholder to the select */}
-            {/* <select
-              onChange={(e) => setScale(e)}
-              placeholder="تخصص"
-              className={styles.selectDocotorOption}
-              name="code"
-              id="code"
-              {...formik.getFieldProps("scale")}
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">تخصص</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              // value={age}
+              label="Age"
+              onChange={(e) => {handleScale(e)}}
             >
-              {doctorScale &&
-                doctorScale.map((item) => (
-                  <option value={item.id}>{item.name}</option>
-                ))}
-            </select> */}
-            <InputLabel id="scale_doctor" >تخصص</InputLabel>
-            <Select   onChange={(e) => setScale(e)} {...formik.getFieldProps("scale")} labelId="scale_doctor"   >
-              {doctorScale && doctorScale?.map((item) => {
-                return (
-                  <MenuItem value={item.id}>{item.name}</MenuItem>
-                )
-              })}
-            </Select>
+            {doctorScale.map((item) => {
+              return (
+                <MenuItem value={item.id}>{item.name}</MenuItem>
+              )
+            } )}
+          </Select>
+        </FormControl>
           </Grid>
           <br />
           <Grid item md={12} xs={12}>

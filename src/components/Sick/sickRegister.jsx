@@ -48,7 +48,7 @@ const SickRegister = () => {
     onSubmit: (values, e) => {
       // console.log(values);
       postsickHandler(values);
-      history.push("/");
+      history.push("/login");
       e.preventDefault();
     },
     validationSchema: validationSchema,
