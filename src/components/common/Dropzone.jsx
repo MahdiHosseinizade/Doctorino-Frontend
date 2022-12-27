@@ -4,19 +4,6 @@ import { useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-const baseStyle = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%",
-    padding: "5px",
-    borderStyle: "dashed",
-    borderWidth: "2px",
-    borderColor: "#c5a401",
-    borderRadius: "10px",
-};
 
 const fileDialogActiveStyle = {
     borderColor: '#000',
@@ -39,7 +26,26 @@ const rejectStyle = {
 };
 
 
-function Dropzone({ CssBaseLine, handleFile, imageToShow, ...props}) {
+function Dropzone({ CssBaseLine, handleFile, imageToShow, BaseStyle, ...props }) {
+
+    let baseStyle = {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        height: "100%",
+        padding: "5px",
+        borderStyle: "dashed",
+        borderWidth: "2px",
+        borderColor: "#c5a401",
+        borderRadius: "10px",
+        cursor: "pointer",
+    }
+
+    if (BaseStyle && CssBaseLine) {
+        baseStyle = BaseStyle;
+    }
 
     const onDrop = (acceptedFiles) => {
         if (handleFile) {
@@ -57,6 +63,7 @@ function Dropzone({ CssBaseLine, handleFile, imageToShow, ...props}) {
     } = useDropzone({ accept: { 'image/*': [] }, onDrop, multiple: false });
 
     let style = useMemo(() => ({
+        ...baseStyle,
         ...(isFocused ? focusedStyle : {}),
         ...(isDragAccept ? acceptStyle : {}),
         ...(isDragReject ? rejectStyle : {}),
@@ -68,10 +75,6 @@ function Dropzone({ CssBaseLine, handleFile, imageToShow, ...props}) {
         isFileDialogActive,
     ]);
 
-    if (!CssBaseLine) {
-        style = { ...style, ...baseStyle }
-    }
-
 
     return (
         <Box className="dropzone-container">
@@ -79,7 +82,13 @@ function Dropzone({ CssBaseLine, handleFile, imageToShow, ...props}) {
                 <input {...getInputProps()} />
                 {imageToShow && !imageToShow.includes("default") ?
 
-                    <img src={imageToShow} className="dropzone-image" /> :
+                    <img src={imageToShow} style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "10px",
+                        borderColor: "#2196f3",
+                        objectFit: "cover",
+                    }} /> :
 
                     <CloudUploadIcon color={props.iconColor ? props.iconColor : "primary"} fontSize='large' />
                 }

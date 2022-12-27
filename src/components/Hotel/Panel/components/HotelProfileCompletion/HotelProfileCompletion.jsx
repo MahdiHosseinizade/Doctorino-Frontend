@@ -635,35 +635,7 @@ export default function HotelProfileCompletion() {
                         />
                       </Grid>
                       <Grid item xs={12} md={6}>
-                        <SFormControl fullWidth
-                          sx={{
-                            "& .MuiOutlinedInput-root": {
-                              // set the color of the input
-                              "& fieldset": {
-
-                              },
-                              // set the color of the input when focused
-                              "&:hover fieldset": {
-                                borderColor: theme.palette.hotel.main,
-                              }
-                            },
-                            // focused style
-                            "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                              borderColor: theme.palette.hotel.main,
-                              borderWidth: "1px",
-                            },
-                            // set the label color when focused
-                            "& .MuiInputLabel-root": {
-                              color: theme.palette.grey[500],
-                            },
-                            // style the dropdown icon
-                            "& .MuiSelect-icon": {
-                              color: theme.palette.hotel.contrastText,
-                              backgroundColor: theme.palette.hotel.main,
-                              borderRadius: "50%",
-                            }
-                          }}
-                        >
+                        <SFormControl fullWidth>
                           <InputLabel>امکانات</InputLabel>
                           <SSelect
                             renderValue={(selected) => selected.join(", ")}
