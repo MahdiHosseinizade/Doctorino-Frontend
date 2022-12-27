@@ -173,7 +173,6 @@ const DoctorRegister = () => {
               }
               {...formik.getFieldProps("last_name")}
             />
-            {/* <Input placeholder="نام خانوادگی" name="last_name" formik={formik} type="text" /> */}
           </Grid>
           <Grid item md={12} xs={12}>
             <STextField
