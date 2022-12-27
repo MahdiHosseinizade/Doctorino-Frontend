@@ -121,6 +121,21 @@ export default function HotelProfileCompletion() {
             formData.append('cover_image', file);
         }
 
+        // formData.append("features", JSON.stringify(features));
+        features.forEach(feature => {
+            formData.append('features', feature);
+        })
+        formData.append('phone_number', hotel.phone_number);
+        formData.append('hotel_description', hotel.hotel_description);
+        formData.append('rules', hotel.rules);
+        formData.append('trade_code', hotel.trade_code);
+
+
+        // log all the form data
+        for (var key of formData.entries()) {
+            console.log(key[0] + ': ' + formData.getAll(key[0]));
+        }
+
         api.post('/api/hotel/new/',
             formData,
             {

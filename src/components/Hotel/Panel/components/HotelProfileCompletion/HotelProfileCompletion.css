@@ -1,9 +1,59 @@
+/*
+const baseStyle = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
+    padding: "5px",
+    borderStyle: "dashed",
+    borderWidth: "2px",
+    borderColor: "#c5a401",
+    borderRadius: "10px",
+};
+
+const fileDialogActiveStyle = {
+    borderColor: '#000',
+    borderWidth: '4px',
+}
+
+const focusedStyle = {
+    borderColor: '#2196f3',
+    borderWidth: '4px',
+};
+
+const acceptStyle = {
+    borderColor: '#00e676',
+    borderWidth: '4px',
+};
+
+const rejectStyle = {
+    borderColor: '#ff1744',
+    borderWidth: '4px',
+};
+*/
+
+.dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 80px;
+    padding: 5px;
+    border-style: dotted;
+    border-width: 4px;
+    border-color: #c5a401;
+    border-radius: 10px;
+}
+
 /* change the icon of the mouse to finger when mouse is over the dropzone */
 .dropzone:hover {
     cursor: pointer;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #00b5ad;
+    border-width: 4px;
+    border-style: dotted;
+    border-color: #2196f3;
 }
 
 .dropzone-image {

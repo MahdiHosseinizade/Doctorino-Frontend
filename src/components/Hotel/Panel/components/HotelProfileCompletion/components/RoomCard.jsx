@@ -32,13 +32,13 @@ const RoomCard = ({ room }) => {
             }}
         >
             <Grid container>
-                <Grid item sm={12} xs={12} md={12} sx={{ display: "flex", justifyContent: "center" }}>
+                {/* <Grid item sm={12} xs={12} md={12} sx={{ display: "flex", justifyContent: "center" }}>
                     <CardMedia
                         component="img"
                         image={room.images.length > 0 ? `${baseURL}` + room.images[0]?.image : null}
                         alt="image"
                     />
-                </Grid>
+                </Grid> */}
                 <Grid item sm={12} xs={12} md={12}>
                     <CardContent>
 

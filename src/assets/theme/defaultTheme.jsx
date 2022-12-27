@@ -16,6 +16,12 @@ const theme = createTheme({
             main: "#0080ff",
             dark: "#004d99",
             contrastText: '#fff',
+        }, 
+        hotel: {
+            main: "#FEB614",
+            light: "#FFF6E7",
+            dark: "#c7ba28",
+            contrastText: "#fff",
         }
     },
     typography: {
