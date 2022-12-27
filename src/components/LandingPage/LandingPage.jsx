@@ -12,21 +12,9 @@ import { toast } from "react-toastify";
 import DoctorSwiper from "./DoctorSwiper";
 import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useFormik } from "formik";
+import { cities } from "../../db/cities";
 
-const cities = [
-  // cities in persian
-  {value: "Tehran", label: "تهران"},
-  {value: "Mashhad", label: "مشهد"},
-  {value: "Isfahan", label: "اصفهان"},
-  {value: "Shiraz", label: "شیراز"},
-  {value: "Tabriz", label: "تبریز"},
-  {value: "Karaj", label: "کرج"},
-  {value: "Qom", label: "قم"},
-  {value: "Kermanshah", label: "کرمانشاه"},
-  {value: "Rasht", label: "رشت"},
-  {value: "Ahvaz", label: "اهواز"},
-  {value: "Kerman", label: "کرمان"},
-]
+
 
 
 const useStyles = makeStyles({
@@ -42,7 +30,9 @@ const useStyles = makeStyles({
   },
 });
 
+
 export default function LandingPage() {
+  
   const [resDoctor, setResDoctor] = useState([]);
   const [search, setSearch] = useState({
     input: "",
@@ -66,7 +56,7 @@ export default function LandingPage() {
      }
      
   })
-  // console.log(formik.values)
+  console.log(formik.values)
 
   useEffect(() => {
     getSpecialites();
@@ -159,16 +149,18 @@ export default function LandingPage() {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   // value={age}
-                  label="Age"
+                  label="city"
                   // use fomik
                   name="city"
-                  // onChange={formik.handleChange}
                   {...formik.getFieldProps("city")}
-                  // onChange={handleChange}
                 >
-                  {cities.map((item) => (
-                    <MenuItem  name value={item.value}>{item.label}</MenuItem>
-                   ))}
+                  {cities.map((item) => {
+                    return (
+                      <MenuItem  value = {item.slug} key={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    )
+                  })}
                 </Select>
               </FormControl>
             </div>
