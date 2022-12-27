@@ -13,6 +13,8 @@ import {
   Checkbox,
   ListItemText,
   Typography,
+  Tab,
+  Tabs,
 } from "@mui/material";
 import { useFormik } from "formik";
 import { useState } from "react";
@@ -24,6 +26,7 @@ import AuthContext from "../../../../../context/AuthContext";
 import { toast } from "react-toastify";
 import Dropzone from '../../../../common/Dropzone';
 import './HotelProfileCompletion.css';
+import PropTypes from 'prop-types';
 
 const STextField = styled(TextField)({
   "& .MuiFilledInput-root": {
@@ -62,6 +65,41 @@ const validationSchema = Yup.object({
   trade_code: Yup.string(),
   hotel_id: Yup.number().required("هتل باید انتخاب شود"),
 });
+
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
 
 export default function HotelProfileCompletion() {
   const { authTokens } = useContext(AuthContext);
@@ -264,11 +302,18 @@ export default function HotelProfileCompletion() {
     setCoverImage(file);
   }
 
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <Container>
       <Box
         sx={{
-          marginTop: "100px",
+          marginTop: "50px",
           bgcolor: "rgb(245, 246, 248)",
           border: "1px solid #ccc",
           marginBottom: "50px",
@@ -297,150 +342,162 @@ export default function HotelProfileCompletion() {
             marginTop: "1rem",
           }}
         />
-        <Grid container spacing={2} sx={{
-          display: "flex",
-          justifyContent: { xs: "center", md: "flex-start" },
-          alignItems: { xs: "center", md: "flex-start" },
-        }}>
-          <Grid item md={4} xs={12}>
-            <Grid container>
-              <Grid item md={12} xs={12}>
-                {/* drop zone */}
-                <Dropzone image={coverImage} />
+
+
+
+        <Box sx={{ width: '100%' }}>
+          <Box sx={{ marginLeft: '10px', borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs sx={{}} value={value} onChange={handleChange} aria-label="basic tabs example">
+              <Tab sx={{ width: 'auto' }} label="اطلاعات مشترک هتل" {...a11yProps(0)} />
+              <Tab sx={{ width: 'auto' }} label="اطلاعات اتاق ها" {...a11yProps(1)} />
+              {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
+            </Tabs>
+          </Box>
+          <TabPanel value={value} index={0}>
+            <Grid container spacing={2} sx={{
+              display: "flex",
+              justifyContent: { xs: "center", md: "flex-start" },
+              alignItems: { xs: "center", md: "flex-start" },
+            }}>
+              <Grid item md={4} xs={12}>
+                <Grid container>
+                  <Grid item md={12} xs={12}>
+                    {/* drop zone */}
+                    <Dropzone image={coverImage} />
+                  </Grid>
+                </Grid>
               </Grid>
-            </Grid>
-          </Grid>
-          <Grid item md={8} xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={12}>
-                <FormControl fullWidth>
-                  <InputLabel>هتل ها</InputLabel>
-                  <SSelect
-                    value={hotel}
-                    label="هتل ها"
-                    onChange={handleHotels}
-                    error={formik.errors["hotel_id"] && formik.touched["hotel_id"]}
-                  >
-                    {availableHotels?.map(
-                      ({ id, hotel_name }, ind) =>
-                        ind >= 0 && (
+              <Grid item md={8} xs={12}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={12}>
+                    <FormControl fullWidth>
+                      <InputLabel>هتل ها</InputLabel>
+                      <SSelect
+                        value={hotel}
+                        label="هتل ها"
+                        onChange={handleHotels}
+                        error={formik.errors["hotel_id"] && formik.touched["hotel_id"]}
+                      >
+                        {availableHotels?.map(
+                          ({ id, hotel_name }, ind) =>
+                            ind >= 0 && (
+                              <MenuItem key={id} value={id}>
+                                <ListItemText primary={hotel_name} />
+                              </MenuItem>
+                            )
+                        )}
+                      </SSelect>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <STextField
+                      fullWidth
+                      error={
+                        formik.errors["hotel_name"] && formik.touched["hotel_name"]
+                      }
+                      variant="filled"
+                      label="نام هتل"
+                      name="hotel_name"
+                      type="text"
+                      helperText={formik.touched["hotel_name"] && formik.errors["hotel_name"]}
+                      {...formik.getFieldProps("hotel_name")}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <STextField
+                      fullWidth
+                      error={
+                        formik.errors["phone_number"] && formik.touched["phone_number"]
+                      }
+                      variant="filled"
+                      label="شماره تماس هتل"
+                      name="phone_number"
+                      type="text"
+                      helperText={formik.touched["phone_number"] && formik.errors["phone_number"]}
+                      {...formik.getFieldProps("phone_number")}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <STextField
+                      fullWidth
+                      error={formik.errors["address"] && formik.touched["address"]}
+                      variant="filled"
+                      label="آدرس هتل"
+                      name="address"
+                      type="text"
+                      helperText={formik.touched["address"] && formik.errors["address"]}
+                      {...formik.getFieldProps("address")}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <STextField
+                      fullWidth
+                      error={
+                        formik.errors["trade_code"] && formik.touched["trade_code"]
+                      }
+                      variant="filled"
+                      label="کد صنفی"
+                      name="trade_code"
+                      type="text"
+                      helperText={formik.touched["trade_code"] && formik.errors["trade_code"]}
+                      {...formik.getFieldProps("trade_code")}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <STextField
+                      fullWidth
+                      error={
+                        formik.errors["hotel_description"] &&
+                        formik.touched["hotel_description"]
+                      }
+                      variant="outlined"
+                      label="توضیحات"
+                      name="hotel_description"
+                      type="text"
+                      helperText={formik.touched["hotel_description"] && formik.errors["hotel_description"]}
+                      multiline
+                      rows={4}
+                      {...formik.getFieldProps("hotel_description")}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <STextField
+                      fullWidth
+                      error={
+                        formik.errors["rules"] &&
+                        formik.touched["rules"]
+                      }
+                      variant="outlined"
+                      label="قوانین هتل"
+                      name="rules"
+                      type="text"
+                      helperText={formik.touched["rules"] && formik.errors["rules"]}
+                      multiline
+                      rows={4}
+                      {...formik.getFieldProps("rules")}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <FormControl fullWidth>
+                      <InputLabel>امکانات</InputLabel>
+                      <SSelect
+                        renderValue={(selected) => selected.join(", ")}
+                        error={formik.errors["features"] && formik.touched["features"]}
+                        multiple
+                        value={features}
+                        onChange={handleFeatures}
+                        input={<OutlinedInput label="امکانات" />}
+                      >
+                        {availableFeatures.map(({ id, title }) => (
                           <MenuItem key={id} value={id}>
-                            <ListItemText primary={hotel_name} />
+                            <Checkbox checked={features.indexOf(id) > -1} />
+                            <ListItemText primary={title} />
                           </MenuItem>
-                        )
-                    )}
-                  </SSelect>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <STextField
-                  fullWidth
-                  error={
-                    formik.errors["hotel_name"] && formik.touched["hotel_name"]
-                  }
-                  variant="filled"
-                  label="نام هتل"
-                  name="hotel_name"
-                  type="text"
-                  helperText={formik.touched["hotel_name"] && formik.errors["hotel_name"]}
-                  {...formik.getFieldProps("hotel_name")}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <STextField
-                  fullWidth
-                  error={
-                    formik.errors["phone_number"] && formik.touched["phone_number"]
-                  }
-                  variant="filled"
-                  label="شماره تماس هتل"
-                  name="phone_number"
-                  type="text"
-                  helperText={formik.touched["phone_number"] && formik.errors["phone_number"]}
-                  {...formik.getFieldProps("phone_number")}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <STextField
-                  fullWidth
-                  error={formik.errors["address"] && formik.touched["address"]}
-                  variant="filled"
-                  label="آدرس هتل"
-                  name="address"
-                  type="text"
-                  helperText={formik.touched["address"] && formik.errors["address"]}
-                  {...formik.getFieldProps("address")}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <STextField
-                  fullWidth
-                  error={
-                    formik.errors["trade_code"] && formik.touched["trade_code"]
-                  }
-                  variant="filled"
-                  label="کد صنفی"
-                  name="trade_code"
-                  type="text"
-                  helperText={formik.touched["trade_code"] && formik.errors["trade_code"]}
-                  {...formik.getFieldProps("trade_code")}
-                />
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <STextField
-                  fullWidth
-                  error={
-                    formik.errors["hotel_description"] &&
-                    formik.touched["hotel_description"]
-                  }
-                  variant="outlined"
-                  label="توضیحات"
-                  name="hotel_description"
-                  type="text"
-                  helperText={formik.touched["hotel_description"] && formik.errors["hotel_description"]}
-                  multiline
-                  rows={4}
-                  {...formik.getFieldProps("hotel_description")}
-                />
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <STextField
-                  fullWidth
-                  error={
-                    formik.errors["rules"] &&
-                    formik.touched["rules"]
-                  }
-                  variant="outlined"
-                  label="قوانین هتل"
-                  name="rules"
-                  type="text"
-                  helperText={formik.touched["rules"] && formik.errors["rules"]}
-                  multiline
-                  rows={4}
-                  {...formik.getFieldProps("rules")}
-                />
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <FormControl fullWidth>
-                  <InputLabel>امکانات</InputLabel>
-                  <SSelect
-                    renderValue={(selected) => selected.join(", ")}
-                    error={formik.errors["features"] && formik.touched["features"]}
-                    multiple
-                    value={features}
-                    onChange={handleFeatures}
-                    input={<OutlinedInput label="امکانات" />}
-                  >
-                    {availableFeatures.map(({ id, title }) => (
-                      <MenuItem key={id} value={id}>
-                        <Checkbox checked={features.indexOf(id) > -1} />
-                        <ListItemText primary={title} />
-                      </MenuItem>
-                    ))}
-                  </SSelect>
-                </FormControl>
-              </Grid>
-              {/* <Grid item xs={12} md={6}>
+                        ))}
+                      </SSelect>
+                    </FormControl>
+                  </Grid>
+                  {/* <Grid item xs={12} md={6}>
             <FormControl fullWidth>
               <InputLabel>ستاره</InputLabel>
               <SSelect
@@ -459,17 +516,27 @@ export default function HotelProfileCompletion() {
               </SSelect>
             </FormControl>
           </Grid> */}
-              <Grid item md={6} xs={6}>
-                <Button type="button" variant='outlined' color="error" onClick={deleteHotel}>حذف هتل</Button>
-              </Grid>
-              <Grid item md={6} xs={6}>
-                <Button type="submit" variant="contained">
-                  ذخیره
-                </Button>
+                  <Grid item md={6} xs={6}>
+                    <Button type="button" variant='outlined' color="error" onClick={deleteHotel}>حذف هتل</Button>
+                  </Grid>
+                  <Grid item md={6} xs={6}>
+                    <Button type="submit" variant="contained">
+                      ذخیره
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
+          </TabPanel>
+
+          <TabPanel value={value} index={1}>
+            Item Two
+          </TabPanel>
+
+          {/* <TabPanel value={value} index={2}>
+          Item Three
+        </TabPanel> */}
+        </Box>
       </Box>
     </Container>
   );
