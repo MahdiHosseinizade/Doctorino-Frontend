@@ -446,7 +446,18 @@ export default function HotelProfileCompletion() {
         </Typography> */}
         <Box sx={{ width: '100%' }}>
           <Box sx={{ marginLeft: '10px', borderBottom: 0, borderColor: 'divider' }}>
-            <Tabs sx={{ marginBottom: '10px' }} value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tabs sx={{
+              marginBottom: '10px',
+              '& .MuiTab-root': {
+                color: theme.palette.hotel.main,
+              },
+              '& .Mui-selected': {
+                color: theme.palette.hotel.dark,
+              },
+              '& .MuiTabs-indicator': {
+                backgroundColor: theme.palette.hotel.dark,
+              },
+            }} value={value} onChange={handleChange} aria-label="basic tabs example">
               <Tab sx={{ width: 'auto' }} label="اطلاعات مشترک هتل" {...a11yProps(0)} />
               <Tab sx={{ width: 'auto' }} label="اطلاعات اتاق ها" {...a11yProps(1)} />
               <Tab sx={{ width: 'auto' }} label="گالری تصاویر" {...a11yProps(2)} />
