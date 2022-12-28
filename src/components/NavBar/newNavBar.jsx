@@ -16,7 +16,7 @@ import AuthContext from '../../context/AuthContext';
 
 
 const NavBar = () => {
-  let { user, authTokens, logoutUser } = useContext(AuthContext);
+  let { user, authTokens, logOut } = useContext(AuthContext);
   // console.log(user);
 
   const history = useHistory();
@@ -194,49 +194,73 @@ const NavBar = () => {
               size="medium"
               aria-label="text button group"
               sx={{
+                width: 'auto',
+                margin: '0px 20px 0px 0px',
                 padding: "4px  3px 2px 0px",
-                display: ` ${user ? 'none' : 'flex'}`,
+                display: user ? 'none' : 'flex',
               }}
             >
-              <Button
-                onClick={() => {
-                  history.push("/login");
-                }}
-              >
-                &nbsp;ورود
-              </Button>
               <Button
                 onClick={() => {
                   history.push("/signup");
                 }}
+                sx={{width: 'auto',}}
               >
-                &nbsp;&nbsp;&nbsp;عضویت
+                &nbsp;ثبت نام
+              </Button>
+
+              <Button
+                onClick={() => {
+                  history.push("/login");
+                }}
+                sx={{width: 'auto',}}
+              >
+                &nbsp;ورود
               </Button>
             </ButtonGroup>
 
-            <Button
-              // onClick={() => {
-              //   history.push("/something");   // USER PANEL
-              // }}
+            <ButtonGroup
               variant="text"
               size="medium"
               aria-label="text button group"
               sx={{
-                border : 1,
-                margin: "4px  15px 2px 0px",
-                display: ` ${!user ? 'none' : 'flex'}`,
+                width: 'auto',
+                margin: '0px 20px 0px 0px',
+                padding: "4px  3px 2px 0px",
+                display: !user ? 'none' : 'flex',
               }}
             >
-              پنل کاربری
-            </Button>
+              <Button
+                onClick={() => {
+                  if (user.role === "doctor") {
+                    history.push("/doctor-panel/dashboard");
+                  } else if (user.role === "hotel_owner") {
+                    history.push("/hotel-panel/dashboard");
+                  } else {
+                    history.push("/patient-panel/dashboard");
+                  }
+                }}
+                sx={{ width: 'auto', }}
+              >
+                پنل کاربری
+              </Button>
+              <Button
+                onClick={() => {
+                  logOut();
+                }}
+                sx={{ width: 'auto', }}
+              >
+                خروج
+              </Button>
+            </ButtonGroup>
 
           </Box>
 
 
 
         </Toolbar>
-      </Container>
-    </AppBar>
+      </Container >
+    </AppBar >
   );
 };
 
