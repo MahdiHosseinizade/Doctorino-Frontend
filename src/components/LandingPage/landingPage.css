@@ -85,7 +85,7 @@
     font-family: 'IranYekan';
     color: #03045e;
     background-color: #ffffff;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 0 10px;
     margin-bottom: 20px;
 }
@@ -94,6 +94,7 @@
     height: 500px;
 }
 .ZareBin{
+    cursor: pointer;
     background-color: #096085;
     width: 90px;
     height:90px;
@@ -219,7 +220,7 @@
     justify-content: center;
     align-items: center;
     font-family: 'IranYekan';
-    font-size: 12px;
+    font-size: 15px;
     margin: 5px 10px;    
     height: 60px;
     border-radius: 10px;
@@ -227,6 +228,3 @@
     /* margin-right: 10px; */
 }
 
-.FormControlCity{
-    border: 1px solid #03056f;
-}
