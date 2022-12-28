@@ -10,10 +10,10 @@ import { MdPlace } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DoctorSwiper from "./DoctorSwiper";
-import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { cities } from "../../db/cities";
-
+import Select from "react-select";
 
 
 
@@ -34,17 +34,17 @@ const useStyles = makeStyles({
 export default function LandingPage() {
   
   const [resDoctor, setResDoctor] = useState([]);
-  const [search, setSearch] = useState({
-    input: "",
-    scale: 0,
-  });
+  const [city , setCity] = useState("");
+  const [cityId , setCityId] = useState("");
+  const [speciality , setSpeciality] = useState("");
+  // const [search, setSearch] = useState({
+  //   input: "",
+  //   scale: 0,
+  // });
   const [specialitie, setSpecialitie] = useState([]);
   const [searchScale, setSearchScale] = useState("");
   const [filteredScale, setFilteredScale] = useState(specialitie);
   const [findIndex, setFindIndex] = useState(null);
-  // console.log(findIndex);
-  const [map, setMap] = useState(false);
-  // console.log(specialitie);
 
   const formik = useFormik({
     initialValues: {
@@ -52,11 +52,11 @@ export default function LandingPage() {
       specialities: "",
      },
      onsubmit: (values) => {
-        console.log(values)
+        // searchDoctor(values);
      }
      
   })
-  console.log(formik.values)
+  // console.log(formik.values);
 
   useEffect(() => {
     getSpecialites();
@@ -73,21 +73,25 @@ export default function LandingPage() {
       console.log(error);
     }
   };
-
+  // const specialitieHandler = (e) => {
+  //   setSpeciality(e.target.value);
+  // }
+  // const cityHandler = (e) => {
+  //   setCity(e.target.value)
+  // }
   const searchDoctor = () => {
-    axios
-      .post("http://188.121.113.74/api/doctor/search/", {
-        specialty: search.scale,
-        name: search.input,
-        lat: 35.6892,
-        lng: 51.389,
-      })
-      .then((res) => {
-        setResDoctor(res.data);
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-      });
+    // console.log(formik.values);
+    // axios
+    //   .post("http://188.121.113.74/api/doctor/search/", {
+    //     specialty: speciality,
+    //     name: city,
+    //   })
+    //   .then((res) => {
+    //     console.log(res.data);
+    //   })
+    //   .catch((err) => {
+    //     toast.error(err.response.data.message);
+    //   });
   };
 
   const filteredScaleHandler = (search) => {
@@ -107,8 +111,6 @@ export default function LandingPage() {
     filteredScaleHandler(e.target.value);
   };
 
-  const handleChangeLocation = (lat, lng) => {};
-  // console.log(specialitie)
 
   const goSPecialitieSearch = (id) => {
     // get all doctors with specialitie id
@@ -120,17 +122,17 @@ export default function LandingPage() {
     setFindIndex(index + 1);
     goSPecialitieSearch(findIndex);
   };
+  const cityHandler = (e) =>{
+    setCity(e.name)
+    setCityId(e.id)
+    // console.log(city, cityId)
+  }
 
   return (
     <>
-      {/* {map && <AfshinMap 
-        style={{width:350 , height:350 }}
-        onChoose=  {handleChangeLocation}
-        defaultLat={35.6892}
-        defaultLng={51.389}
-      />} */}
       <div className="ContainerLandingPage">
         <NavBar />
+        <form onSubmit={formik.handleSubmit} >
         <div className="Title">
           <h2>راه حلی مناسب برای رزرو دکتر</h2>
           <h1>دکترینو</h1>
@@ -142,17 +144,15 @@ export default function LandingPage() {
               <MdPlace className="MdPlace" />
             </div>
             <div className="EnterCity">
-              {/* <input type="text" placeholder="شهر مقصد خود را انتخاب کنید ..." className="EnterCityInput" /> */}
               <FormControl className="FormControlCity" fullWidth>
-                <InputLabel id="demo-simple-select-label">شهر</InputLabel>
-                <Select
+                {/* <InputLabel id="demo-simple-select-label">شهر</InputLabel> */}
+                {/* <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  // value={age}
                   label="city"
-                  // use fomik
                   name="city"
                   {...formik.getFieldProps("city")}
+                  // onChange = {(e) => cityHandler(e)}
                 >
                   {cities.map((item) => {
                     return (
@@ -161,7 +161,20 @@ export default function LandingPage() {
                       </MenuItem>
                     )
                   })}
-                </Select>
+                </Select> */}
+                <Select
+                  // value={city}
+                  onChange={(e) =>cityHandler(e)}
+                  options={cities}
+                />
+                {/* {cities.map((item) => {
+                    return (
+                      <MenuItem  value = {item.slug} key={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    )
+                  })} */}
+                {/* </Select> */}
               </FormControl>
             </div>
           </div>
@@ -170,7 +183,7 @@ export default function LandingPage() {
             <div className="typeScale">
               <h1>تخصص : </h1>
               <input
-                onChange={inputHandler}
+                // onChange={(e) =>specialitieHandler(e)}
                 type="text"
                 className="scaleInput"
                 name="specialities"
@@ -178,14 +191,15 @@ export default function LandingPage() {
                 {...formik.getFieldProps("specialities")}
               />
             </div>
-            <div className="ZareBin">
+            <button type="submit"  onClick={searchDoctor} className="ZareBin">
               {<BiSearch className="ZarebinIcon" />}
-            </div>
+            </button>
           </div>
         </div>
         <div className="landingPage">
           <div className="searchBar"></div>
         </div>
+        </form>
       </div>
       <div className="showSpecialieties">
         {/* pass id of onClicked item to goSpecialitiesearch  */}
