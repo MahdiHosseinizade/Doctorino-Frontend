@@ -190,10 +190,12 @@ const NavBar = () => {
           >
 
             <ButtonGroup
+              noWrap
               variant="text"
               size="medium"
               aria-label="text button group"
               sx={{
+                width: 'auto',
                 padding: "4px  3px 2px 0px",
                 display: ` ${user ? 'none' : 'flex'}`,
               }}
@@ -202,6 +204,7 @@ const NavBar = () => {
                 onClick={() => {
                   history.push("/login");
                 }}
+                sx={{width: 'auto'}}
               >
                 &nbsp;ورود
               </Button>
@@ -209,12 +212,13 @@ const NavBar = () => {
                 onClick={() => {
                   history.push("/signup");
                 }}
+                sx={{width: 'auto'}}
               >
-                &nbsp;&nbsp;&nbsp;عضویت
+               &nbsp;ثبت نام
               </Button>
             </ButtonGroup>
 
-            <Button
+            {/* <Button
               // onClick={() => {
               //   history.push("/something");   // USER PANEL
               // }}
@@ -224,11 +228,42 @@ const NavBar = () => {
               sx={{
                 border : 1,
                 margin: "4px  15px 2px 0px",
-                display: ` ${!user ? 'none' : 'flex'}`,
+                display: ` ${!false ? 'none' : 'flex'}`,
               }}
             >
               پنل کاربری
-            </Button>
+            </Button> */}
+
+
+            <ButtonGroup
+              noWrap
+              variant="text"
+              size="medium"
+              aria-label="text button group"
+              sx={{
+                width: 'auto',
+                margin: '0px 20px 0px 0px',
+                padding: "4px  3px 2px 0px",
+                display: ` ${!user ? 'none' : 'flex'}`,
+              }}
+            >
+              <Button
+                onClick={() => {
+                  // history.push("/login");
+                }}
+                sx ={{width: 'auto',}}
+              >
+                پنل کاربری
+              </Button>
+              <Button
+                onClick={() => {
+                  // history.push("/signup");
+                }}
+                sx={{width: 'auto',}}
+              >
+                خروج
+              </Button>
+            </ButtonGroup>
 
           </Box>
 
