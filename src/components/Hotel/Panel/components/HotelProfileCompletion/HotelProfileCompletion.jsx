@@ -161,7 +161,7 @@ function a11yProps(index) {
 
 
 export default function HotelProfileCompletion() {
-  const { authTokens } = useContext(AuthContext);
+  const { authData } = useContext(AuthContext);
   // const [availableRooms, setAvailableRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hotel, setHotel] = useState('');
@@ -180,7 +180,7 @@ export default function HotelProfileCompletion() {
     api
       .get("/api/hotel/owner/hotel-list/", {
         headers: {
-          Authorization: `Bearer ${authTokens.access}`,
+          Authorization: `Bearer ${authData.access}`,
         },
       })
       .then((res) => {
@@ -293,7 +293,7 @@ export default function HotelProfileCompletion() {
 
     api.delete(`/api/hotel/${hotel_id}/`, {
       headers: {
-        Authorization: "Bearer " + authTokens?.access,
+        Authorization: "Bearer " + authData?.access,
       }
     })
       .then(res => {
@@ -354,7 +354,7 @@ export default function HotelProfileCompletion() {
         // // .put(`/api/hotel/${values.hotel_id}/`, formData, {
         api.put(`/api/hotel/${values.hotel_id}/`, data, {
           headers: {
-            "Authorization": "Bearer " + authTokens?.access,
+            "Authorization": "Bearer " + authData?.access,
           }
         }).then(res => {
           toast.success("هتل با موفقیت ویرایش شد", {

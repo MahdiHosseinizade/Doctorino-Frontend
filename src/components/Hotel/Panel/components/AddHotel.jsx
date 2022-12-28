@@ -132,7 +132,7 @@ const validationSchema = Yup.object({
 
 export default function HotelProfileCompletion() {
 
-    let { user, authTokens, logoutUser } = useContext(AuthContext);
+    let { user, authData, logoutUser } = useContext(AuthContext);
     let api = useAxios();
 
     const [hotel, setHotel] = useState([]);
@@ -189,10 +189,8 @@ export default function HotelProfileCompletion() {
             formData.append('cover_image', file);
         }
 
-        // formData.append("features", JSON.stringify(features));
-        features.forEach(feature => {
-            formData.append('features', feature);
-        })
+        formData.append("features", JSON.stringify(features));
+
         formData.append('phone_number', hotel.phone_number);
         formData.append('hotel_description', hotel.hotel_description);
         formData.append('rules', hotel.rules);
@@ -200,30 +198,58 @@ export default function HotelProfileCompletion() {
 
 
         // log all the form data
+        console.log("send data");
         for (var key of formData.entries()) {
             console.log(key[0] + ': ' + formData.getAll(key[0]));
         }
-
-        api.post('/api/hotel/new/',
-            formData,
-            {
-                headers:
-                {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${authTokens.access}`
-                }
-            }
-        )
-            .then(res => {
-                toast.success("هتل با موفقیت ایجاد شد", {
-                    position: "top-right",
-                    autoClose: 2000,
-                })
+        console.log(features)
+        axios.post("https://cors-anywhere.herokuapp.com/postman-echo.com/post/", formData, 
+        {
+          headers: {
+            // 'Content-Type': 'multipart/form-data',
+            'x-requested-with': 'XMLHttpRequest',
+          },
+        })
+          .then((res) => {
+            console.log("data received on server: ")
+            console.log(res.data.form);
+            toast.success(`تغیر هتل با موفقیت انجام شد`, {
+              position: "top-right",
+              autoClose: 2000,
             })
-            .catch(err => toast.error('مشکلی پیش آمده', {
-                position: "top-right",
-                autoClose: 2000,
-            }))
+          }
+          )
+          .catch((err) => {
+            console.log(err)
+            toast.error("مشکلی پیش آمده است", {
+              position: "top-right",
+              autoClose: 2000,
+            })
+          }
+        );
+
+        // console.log(features);
+        // api.post('/api/hotel/new/',
+        //     formData,
+        //     {
+        //         headers:
+        //         {
+        //             'Content-Type': 'multipart/form-data',
+        //             Authorization: `Bearer ${authData.access}`
+        //         }
+        //     }
+        // )
+        //     .then(res => {
+        //         console.log(res);
+        //         toast.success("هتل با موفقیت ایجاد شد", {
+        //             position: "top-right",
+        //             autoClose: 2000,
+        //         })
+        //     })
+        //     .catch(err => toast.error('مشکلی پیش آمده', {
+        //         position: "top-right",
+        //         autoClose: 2000,
+        //     }))
     }
 
     function handle(e) {

@@ -44,7 +44,7 @@ export default function DoctorProfileLayout() {
   const { id } = useParams();
   const [doctor, setDoctor] = useState({ ...formValues });
   const { user } = useContext(AuthContext);
-  const { authTokens } = useContext(AuthContext);
+  const { authData } = useContext(AuthContext);
   const API = useAxios();
 
 
@@ -80,14 +80,14 @@ export default function DoctorProfileLayout() {
           `/api/doctor/user_id_to_doctor_id/${user.user_id}/`,
           {
             headers: {
-              Authorization: `Bearer ${authTokens.access}`,
+              Authorization: `Bearer ${authData.access}`,
             },
           }
         )
           .then((response) => {
             API.get(`/api/doctor/${response.data.id}/`, {
               headers: {
-                Authorization: `Bearer ${authTokens.access}`,
+                Authorization: `Bearer ${authData.access}`,
               },
             })
               .then((response) => {
@@ -126,7 +126,7 @@ export default function DoctorProfileLayout() {
       fetchData1();
       //   fetchData2();
     }
-  }, [loading, doctor, id, user.user_id, authTokens.access, API]);
+  }, [loading, doctor, id, user.user_id, authData.access, API]);
 
   return (
     <Container>
