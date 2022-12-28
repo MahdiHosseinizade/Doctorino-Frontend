@@ -190,6 +190,7 @@ const NavBar = () => {
           >
 
             <ButtonGroup
+              noWrap
               variant="text"
               size="medium"
               aria-label="text button group"
