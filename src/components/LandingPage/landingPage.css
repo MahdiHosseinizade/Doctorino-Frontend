@@ -38,6 +38,7 @@
 }
 
 .SearchBar_Container{
+    margin-right: 72px;
     display: flex;
     width: 50%;
     
@@ -46,7 +47,7 @@
     position: absolute;
     bottom: 17%;
     border-radius: 16px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .ContainerLandingPage{
@@ -91,7 +92,7 @@
 }
 .vl{
     border-left: 1px solid #03056f;
-    height: 500px;
+    height: 100px;
 }
 .ZareBin{
     cursor: pointer;
