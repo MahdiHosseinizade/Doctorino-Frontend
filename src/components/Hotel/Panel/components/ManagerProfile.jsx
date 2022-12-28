@@ -49,7 +49,7 @@ export default function ManagerProfile(props) {
     const [month, setMonth] = useState([]);
     const [year, setYear] = useState([]);
 
-    let { user, authTokens, logoutUser } = useContext(AuthContext);
+    let { user, authData, logoutUser } = useContext(AuthContext);
     let api = useAxios();
 
     const handleGender = (event) => {
@@ -195,7 +195,7 @@ export default function ManagerProfile(props) {
                 headers:
                 {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${authTokens.access}`
+                    Authorization: `Bearer ${authData.access}`
                 }
             }
         )

@@ -3,13 +3,13 @@ import { Redirect, Route } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 
-const PrivateSwitch = ({ children, ...rest }) => {
+const PrivateSwitch = ({ children, role, ...rest }) => {
 
     const { user } = useContext(AuthContext);
 
     return (
         <>
-            {user ? <Route {...rest} /> : <Redirect to="/" />}
+            {user && role && user.role === role ? <Route {...rest} /> : <Redirect to="/" />}
         </>
     )
 }

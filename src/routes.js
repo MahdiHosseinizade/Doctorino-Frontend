@@ -22,10 +22,10 @@ const routes = [
 
   { path: "/signup", component: SignUpPage },
 
-  { path: "/hotel-panel", component: HotelPanel, private: false },
+  { path: "/hotel-panel", component: HotelPanel, private: true, role: "hotel_owner" },
   { path: '/hotels', component: Hotels },
 
-  { path: "/doctor-panel", component: DoctorPanel, private: true },
+  { path: "/doctor-panel", component: DoctorPanel, private: true, role: "doctor" },
   { path: "/list-of-doctors", component: ListOfDoctors },
 
   { path: "/login", component: Login },

@@ -92,7 +92,7 @@ export default function AppointmentReports() {
   const [errors, setErrors] = useState({ ...formValues });
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
-  const { authTokens } = useContext(AuthContext);
+  const { authData } = useContext(AuthContext);
   const API = useAxios();
   const [startTime, setStartTime] = React.useState(
     dayjs("2014-08-18T21:11:54")
@@ -139,13 +139,13 @@ export default function AppointmentReports() {
     function fetchData() {
       API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
         headers: {
-          Authorization: `Bearer ${authTokens.access}`,
+          Authorization: `Bearer ${authData.access}`,
         },
       })
         .then((res) => {
           // API.get(`http://188.121.113.74/api/doctor/workday/`, {
           //   headers: {
-          //     Authorization: `Bearer ${authTokens.access}`,
+          //     Authorization: `Bearer ${authData.access}`,
           //   },
           // })
           //   .then((response) => {
@@ -194,7 +194,7 @@ export default function AppointmentReports() {
     }, 200000);
 
     return () => clearInterval(id);
-  }, [loading, API, authTokens.access, user.user_id, values]);
+  }, [loading, API, authData.access, user.user_id, values]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -217,7 +217,7 @@ export default function AppointmentReports() {
         },
         // {
         //   headers: {
-        //     Authorization: `Bearer ${authTokens.access}`,
+        //     Authorization: `Bearer ${authData.access}`,
         //   },
         // }
       )

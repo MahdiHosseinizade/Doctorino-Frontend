@@ -100,7 +100,7 @@ export default function DoctorProfileCompletion() {
   const [provinceInfo, setProvinceInfo] = useState({ ...provinceValues });
   const [citiesList, setCitiesList] = useState([]);
   const { user } = useContext(AuthContext);
-  const { authTokens } = useContext(AuthContext);
+  const { authData } = useContext(AuthContext);
   const API = useAxios();
 
   const handleInputChange = (e) => {
@@ -200,7 +200,7 @@ export default function DoctorProfileCompletion() {
       );
       API.get(`http://188.121.113.74/api/doctor/specialties/`, {
         headers: {
-          Authorization: `Bearer ${authTokens.access}`,
+          Authorization: `Bearer ${authData.access}`,
         },
       })
         .then((response) => {
@@ -214,7 +214,7 @@ export default function DoctorProfileCompletion() {
         `/api/doctor/user_id_to_doctor_id/${user.user_id}/`,
         {
           headers: {
-            Authorization: `Bearer ${authTokens.access}`,
+            Authorization: `Bearer ${authData.access}`,
           },
         }
       )
@@ -222,7 +222,7 @@ export default function DoctorProfileCompletion() {
           console.log("this is the response of doctor id", response.data);
           API.get(`/api/doctor/${response.data.id}/`, {
             headers: {
-              Authorization: `Bearer ${authTokens.access}`,
+              Authorization: `Bearer ${authData.access}`,
             },
           })
             .then((response) => {
@@ -271,7 +271,7 @@ export default function DoctorProfileCompletion() {
     }, 200000);
 
     return () => clearInterval(id);
-  }, [loading, API, authTokens.access, user.user_id, values, provinceInfo, citiesList]);
+  }, [loading, API, authData.access, user.user_id, values, provinceInfo, citiesList]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -310,7 +310,7 @@ export default function DoctorProfileCompletion() {
           },
           {
             headers: {
-              Authorization: `Bearer ${authTokens.access}`,
+              Authorization: `Bearer ${authData.access}`,
             },
           }
         )
