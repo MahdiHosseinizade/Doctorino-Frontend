@@ -38,13 +38,16 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-
+      history.push("/");
       toast.success(`با موفقیت وارد شدید`, {
         position: "top-right",
         autoClose: 2000,
       });
     } else {
-      alert("Something went wrong!");
+      toast.error(`نام کاربری یا رمز عبور اشتباه است`, {
+        position: "top-right",
+        autoClose: 2000,
+      });
     }
   };
 

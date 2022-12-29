@@ -8,6 +8,8 @@ import { Grid, TextField } from "@mui/material";
 import "./sickRegister.css";
 import { toast } from "react-toastify";
 import styled from "@emotion/styled";
+import AuthContext from "../../context/AuthContext";
+import { useContext } from "react";
 
 const value = {
   first_name: "",
@@ -38,6 +40,7 @@ const validationSchema = Yup.object({
 });
 
 const SickRegister = () => {
+  const {loginUser} = useContext(AuthContext);
   const history = useHistory();
   const [user, setUser] = useState([]);
   const [error, setError] = useState("Ooops !!!!");
@@ -55,28 +58,91 @@ const SickRegister = () => {
     validateOnMount: true,
   });
 
-  console.log(formik.values);
-
+  // console.log(formik.values);
+  // axios.post(
+//     `${baseURL}/api/hotel/owner/new/`,
+//     {
+//         "user" : {
+//             "password": hotel.pass,
+//             "email": hotel.email,
+//             "first_name": hotel.name,
+//             "last_name": hotel.family,
+//             "is_hotel_owner": true
+//         }
+//     }
+// )
+//     .then((res) => {
+//         toast.success(
+//             `ثبت نام ${res.data.user.first_name} ${res.data.user.last_name} با موفقیت انجام شد`,
+//             {
+//                 position: "top-right",
+//                 autoClose: 2000,
+//             }
+//         )
+//         loginUser(hotel.email, hotel.pass);
+//     })
+//     .catch(
+//         (err) => {
+//             console.log(err);
+//             toast.error(
+//                 'مشکلی پیش آمده است',
+//                 {
+//                     position: "top-right",
+//                     autoClose: 2000,
+//                 }
+//             )
+//         }
+//     );
   const postsickHandler = (user) => {
     // post Header in Body Request
-    axios
-      .post("http://127.0.0.1:8000/api/auth/new-user/", user)
-      .then((res) => {
-        setUser(res.data);
-        toast.success("ثبت نام با موفقیت انجام شد", {
-          position: "top-right",
-          autoClose: 2000,
-        });
-      })
-      .catch((err) => {
-        setError(err.response.data.email);
-        if (err.response.data.email) {
-          toast.error("ایمیل وارد شده تکرای است", {
+    // console.log(user);
+    const userData = {
+      user:{
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        password: user.password,
+      }
+    }
+    axios.post("http://188.121.113.74/api/auth/patient/new/",userData)
+    .then((res) =>{
+      toast.success(
+        `ثبت نام ${res.data.user.first_name} ${res.data.user.last_name} با موفقیت انجام شد`,
+        {
             position: "top-right",
-            autoClose: 2000,
-          });
+            autoClose: 3000,
         }
-      });
+      )
+      loginUser(user.email, user.password);
+    })
+    .catch((err) =>{
+      console.log(err);
+      toast.error(
+        'مشکلی پیش آمده است',
+        {
+            position: "top-right",
+            autoClose: 3000,
+        }
+      )
+    })
+    // axios
+    //   .post("http://188.121.113.74/api/auth/patient/new/", user)
+    //   .then((res) => {
+    //     setUser(res.data);
+    //     toast.success("ثبت نام با موفقیت انجام شد", {
+    //       position: "top-right",
+    //       autoClose: 2000,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     setError(err.response.data.email);
+    //     if (err.response.data.email) {
+    //       toast.error("ایمیل وارد شده تکرای است", {
+    //         position: "top-right",
+    //         autoClose: 2000,
+    //       });
+    //     }
+    //   });
   };
 
   return (
