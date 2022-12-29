@@ -214,18 +214,20 @@
 }
 
 .doctorScale{
-    background-color: #b8c4d4;
+    background-color: #096085;
     display: flex;
-    width: 200px;
+    width: 400px;
     cursor: pointer;
     justify-content: center;
     align-items: center;
     font-family: 'IranYekan';
-    font-size: 15px;
+    font-size: 14px;
     margin: 5px 10px;    
     height: 60px;
     border-radius: 10px;
     border: 1px solid #ccc;
+    text-decoration: none;
+    color: white;
     /* margin-right: 10px; */
 }
 
