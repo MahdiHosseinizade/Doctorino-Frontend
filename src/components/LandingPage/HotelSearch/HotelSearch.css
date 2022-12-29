@@ -1,7 +1,9 @@
 .searchBar{
     margin-bottom: 60px;
     /* background-image: url('https://www.finds.ir/img/2020081384124649.jpg'); */
-    background-color: #096085;
+    /* background-color: #096085; */
+    background-color: #fdb713;
+    
     width: 60vw;
     height: 60vh;
     padding: 10px;
@@ -9,6 +11,16 @@
     outline: none;
     border-radius: 10px;
     z-index: -1;
+}
+
+.searchBarTitle {
+    color: #000;
+    font-size: 40px;
+}
+
+.searchBarText {
+    color: #000;
+    font-size: 20px;
 }
 
 .search{

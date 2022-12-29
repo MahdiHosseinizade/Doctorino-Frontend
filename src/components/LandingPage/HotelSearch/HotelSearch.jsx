@@ -10,6 +10,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { useHistory } from "react-router-dom";
+import { alignProperty } from "@mui/material/styles/cssUtils";
 
 // const useStyles = makeStyles({});
 
@@ -42,8 +43,8 @@ export default function HotelSearch() {
       <NavBar />
       <form>
         <div className="Title">
-          {/* <h2>راه حلی مناسب برای رزرو دکتر</h2> */}
-          <h1>دکترینو</h1>
+          <h2 className="searchBarText">راه حلی مناسب برای رزرو دکتر و هتل</h2>
+          <h1 className="searchBarTitle">دکترینو</h1>
         </div>
 
         <div className="SearchBar_Container">
@@ -58,13 +59,14 @@ export default function HotelSearch() {
                   value={city}
                   onChange={(e) => handleCity(e)}
                   options={cities}
-                  //   menuPortalTarget={document.body}
-                  //   styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                  menuPortalTarget={document.body}
+                  // menuPortalTarget={document.querySelector("#root > div.ContainerLandingPage > form > div.SearchBar_Container > div.chooseLocation")}
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 0 }) , direction: "rtl", marginLeft: "5000px" }}
                 />
               </FormControl>
             </div>
           </div>
-          <div className="vl"></div>
+          {/* <div className="vl"></div> */}
           <div className="searchScale">
             <button onClick={handleSubmit} className="ZareBin">
               {<BiSearch className="ZarebinIcon" />}
