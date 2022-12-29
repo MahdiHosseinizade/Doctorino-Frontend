@@ -15,7 +15,6 @@ import {
   Typography,
   Tab,
   Tabs,
-  Paper,
   Fab,
   Zoom,
   Accordion,
@@ -347,12 +346,9 @@ export default function HotelProfileCompletion() {
           formData.append("features", feat);
         })
 
-        // add form data to url search params
         for (var pair of formData.entries()) {
           data.append(pair[0], pair[1]);
         }
-
-        // // .put(`/api/hotel/${values.hotel_id}/`, formData, {
         api.put(`/api/hotel/${values.hotel_id}/`, data, {
           headers: {
             "Authorization": "Bearer " + authData?.access,
@@ -368,29 +364,6 @@ export default function HotelProfileCompletion() {
             autoClose: 2000,
           })
         })
-        // axios.post("https://cors-anywhere.herokuapp.com/postman-echo.com/post/", formData, {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data',
-        //     'x-requested-with': 'XMLHttpRequest',
-        //   },
-        // })
-        //   .then((res) => {
-        //     console.log(res.data.form);
-        //     toast.success(`تغیر هتل با موفقیت انجام شد`, {
-        //       position: "top-right",
-        //       autoClose: 2000,
-        //     })
-        //   }
-        //   )
-        //   .catch((err) => {
-        //     console.log(err)
-        //     toast.error("مشکلی پیش آمده است", {
-        //       position: "top-right",
-        //       autoClose: 2000,
-        //     })
-        //   }
-        // );
-
         formik.resetForm();
         setLoading(true);
       }
@@ -436,6 +409,7 @@ export default function HotelProfileCompletion() {
 
   }
 
+
   const deleteRoom = (id) => {
     console.log(id)
     // api.delete(`/api/hotel/${}/`, {
@@ -460,6 +434,7 @@ export default function HotelProfileCompletion() {
     //   })
   }
 
+
   return (
     <Container>
       <Box
@@ -476,7 +451,15 @@ export default function HotelProfileCompletion() {
         onSubmit={formik.handleSubmit}
         component="form"
       >
-
+        {/* <Typography
+          sx={{
+            textAlign: "center",
+            margin: "10px",
+          }}
+          variant="h5"
+        >
+          تکمیل اطلاعات هتل
+        </Typography> */}
         <Box sx={{ width: '100%' }}>
           <Box sx={{ marginLeft: '10px', borderBottom: 0, borderColor: 'divider' }}>
             <Tabs sx={{
@@ -759,60 +742,7 @@ export default function HotelProfileCompletion() {
                       }}
                     />
 
-                    {/* this part */}
                     <Grid container spacing={2}>
-                      {/* <Grid item xs={12} md={6}>
-                        <STextField
-                          fullWidth
-                          error={
-                            formik.errors["hotel_name"] && formik.touched["hotel_name"]
-                          }
-                          variant="outlined"
-                          label="نام هتل"
-                          name="hotel_name"
-                          type="text"
-                          helperText={formik.touched["hotel_name"] && formik.errors["hotel_name"]}
-                          {...formik.getFieldProps("hotel_name")}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <STextField
-                          fullWidth
-                          error={
-                            formik.errors["hotel_name"] && formik.touched["hotel_name"]
-                          }
-                          variant="outlined"
-                          label="نام هتل"
-                          name="hotel_name"
-                          type="text"
-                          helperText={formik.touched["hotel_name"] && formik.errors["hotel_name"]}
-                          {...formik.getFieldProps("hotel_name")}
-                        />
-                      </Grid>
-                      
-                      <Grid item md={6} xs={6}>
-                        <Button type="button" variant='outlined' color="hotel" onClick={deleteHotel}>حذف هتل</Button>
-                      </Grid>
-                      
-                      <Grid item md={6} xs={6}>
-                        <Button color="hotel" type="submit" variant="contained">
-                          ذخیره
-                        </Button>
-                      </Grid>
-
-                      <Grid item>
-                        {rooms.map((room, index) => <AddRoomAccordion room= {}/>)}
-                      </Grid>
-
-                      <Fab size='small'
-                        onClick={AddRoomAccordion}
-                        sx={{
-                          backgroundColor: "primary",
-                          margin: "30px 0px 0px 10px",
-                        }}
-                      >
-                        <AddIcon />
-                      </Fab>*/}
                       {console.log(rooms)}
                       <Grid container spacing={1} sx={{ marginTop: '10px' }}>
                         {rooms.map((room, index) => {
@@ -824,8 +754,8 @@ export default function HotelProfileCompletion() {
                                   aria-controls={`aria${room.id}`}
                                   id={`id${room.id}`}
                                 >
-                                {console.log(rooms)}
-                                  <Typography>اتاق نوع {}</Typography>
+                                  {console.log(rooms)}
+                                  <Typography>اتاق نوع { }</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                   <Typography sx={{ marginBottom: '7px' }}>اتاق {room.bed_count} خوابه</Typography>
@@ -852,7 +782,7 @@ export default function HotelProfileCompletion() {
                                           autoClose: 2000,
                                         })
                                       })
-                                      {window.location.reload(false);}
+                                    { window.location.reload(false); }
                                   }}>حذف اتاق</Button>
                                 </AccordionDetails>
                               </Accordion>
@@ -863,20 +793,17 @@ export default function HotelProfileCompletion() {
                       </Grid>
                     </Grid>
                   </Box>
-                </Grid>
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                  Add Room
+                </TabPanel>
+
+                <TabPanel value={value} index={3}>
+                  Picture Gallery
+                </TabPanel>
               </Grid>
             </Grid>
-          </TabPanel>
-
-          <TabPanel value={value} index={2}>
-            Add Room
-          </TabPanel>
-
-          <TabPanel value={value} index={3}>
-            Picture Gallery
-          </TabPanel>
-
-
+          </Grid>
         </Box>
       </Box >
     </Container >
