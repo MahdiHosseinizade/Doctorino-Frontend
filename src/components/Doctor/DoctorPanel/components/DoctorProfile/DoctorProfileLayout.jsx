@@ -164,9 +164,14 @@ export default function DoctorProfileLayout() {
         },
       })
         .then((response) => {
-          console.log("this is the response of specialties", response.data);
-          setAvailableSpecilaities(response.data);
-          // console.log("this is the available specialties: ", availableSpecilaities);
+          setTimeout(() => {
+            console.log("this is the response of specialties", response.data);
+            setAvailableSpecilaities(response.data);
+            console.log(
+              "this is the available specialties: ",
+              availableSpecilaities
+            );
+          }, 5000);
         })
         .catch((error) => {
           console.log("Error returned from fetching specialties: ", error);
@@ -186,6 +191,12 @@ export default function DoctorProfileLayout() {
           })
             .then((response) => {
               console.log("the response of doctor", response.data);
+              const temp = availableSpecilaities.filter((specialty) => {
+                if (specialty.name === response.data.specialties[0].name) {
+                  return specialty.name;
+                }
+              });
+              console.log("specialty temp: ", temp);
               setDoctor({
                 ...response.data,
                 first_name: response.data.user.first_name,
@@ -260,7 +271,6 @@ export default function DoctorProfileLayout() {
     API,
     availableSpecilaities,
     profilePhoto,
-
   ]);
 
   const handleInputChange = (e) => {
@@ -391,6 +401,7 @@ export default function DoctorProfileLayout() {
             autoClose: 2000,
           });
         });
+      window.location.reload();
       setLoading(false);
     }
   };
@@ -420,10 +431,12 @@ export default function DoctorProfileLayout() {
                   alt="doctor image"
                 />
                 <CardActions className={classes.uploadPhotoButton}>
+                  {/* <form onSubmit={handleSubmit}> */}
                   <Button
                     variant="contained"
                     color="primary"
                     component="label"
+                    // type="submit"
                     // onClick={thiredHandleChange}
                   >
                     <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
@@ -437,6 +450,7 @@ export default function DoctorProfileLayout() {
                       onChange={handleProfilePhoto}
                     />
                   </Button>
+                  {/* </form> */}
                 </CardActions>
                 {/* </Card> */}
               </Grid>

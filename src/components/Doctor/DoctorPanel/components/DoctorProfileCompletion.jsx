@@ -14,6 +14,10 @@ import {
   Grid,
   TextField,
   FormControl,
+  FormControlLabel,
+  FormLabel,
+  RadioGroup,
+  Radio,
   InputLabel,
   Select,
   MenuItem,
@@ -79,11 +83,6 @@ const formValues = {
   clinic_address: "",
 
   work_periods: [],
-  // license_proof: null,
-  // location: {
-  //   type: "",
-  //   coordinates: [0, 0],
-  // },
 };
 
 const provinceValues = {
@@ -108,14 +107,6 @@ export default function DoctorProfileCompletion() {
   const { authTokens } = useContext(AuthContext);
   const API = useAxios();
 
-  // const handleSpecilaities = (e) => {
-  //   setAvailableSpecilaities([...availableSpecilaities, e.target.value]);
-  //   setValues({
-  //     ...values,
-  //     specialties: availableSpecilaities,
-  //   });
-  // };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -128,21 +119,10 @@ export default function DoctorProfileCompletion() {
         id: value,
       });
     }
-    // else if (name === "specialties") {
-    //   console.log("in specialties if statement");
-    //   setValues({
-    //     ...values,
-    //     [name]: availableSpecilaities.map((item) => item.id === value),
-    //   });
-    //   console.log("values: ", values);
-    // }
   };
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
-    // console.log("in validate func: ", fieldValues);
-    // console.log("user firstname: ", fieldValues.user["first_name"]);
-    // console.log("temp", temp.user);
     if ("first_name" in fieldValues)
       temp.first_name = fieldValues.first_name ? "" : "نام خود را وارد کنید.";
     if ("last_name" in fieldValues)
@@ -161,9 +141,6 @@ export default function DoctorProfileCompletion() {
       temp.phone_number = fieldValues.phone_number
         ? ""
         : "شماره موبایل خود را وارد کنید.";
-    // if ("phone_number" in fieldValues)
-    //   temp.phone_number =
-    //     fieldValues.phone_number.length > 11 && fieldValues.phone_number.length < 11 ? "" : "شماره موبایل وارد شده معتبر نیست.";
     if ("office_number" in fieldValues)
       temp.office_number = fieldValues.office_number
         ? ""
@@ -185,21 +162,13 @@ export default function DoctorProfileCompletion() {
         ? ""
         : "وارد کردن آدرس مطب ضروری است.";
 
-    // if ("email" in fieldValues)
-    //   temp.email = /$^|.+@.+..+/.test(fieldValues.email)
-    //     ? ""
-    //     : "Email is not valid.";
-    // if ("departmentId" in fieldValues)
-    //   temp.departmentId =
-    //     fieldValues.departmentId.length !== 0 ? "" : "This field is required.";
+    if ("gender" in fieldValues)
+      temp.gender = fieldValues.gender ? "" : "وارد کردن جنسیت الزامیست.";
+
     setErrors({
       ...temp,
     });
-
-    // console.log("This is the fieldValues: ", fieldValues);
     if (fieldValues === values) {
-      // console.log("going out of validate func:");
-      // return Object.values(temp).every((x) => x === "");
       return true;
     }
   };
@@ -214,12 +183,6 @@ export default function DoctorProfileCompletion() {
     }
 
     function fetchData() {
-      // console.log(
-      //   "this the user's id before anything goes wrong: ",
-      //   user.user_id
-      // );
-      // console.log("this is the user: ", user);
-
       // Fetching available specialties from the database
       API.get(`http://188.121.113.74/api/doctor/specialties/`, {
         headers: {
@@ -227,9 +190,7 @@ export default function DoctorProfileCompletion() {
         },
       })
         .then((response) => {
-          console.log("this is the response of specialties", response.data);
           setAvailableSpecilaities(response.data);
-          // console.log("this is the available specialties: ", availableSpecilaities);
         })
         .catch((error) => {
           console.log("Error returned from fetching specialties: ", error);
@@ -242,7 +203,6 @@ export default function DoctorProfileCompletion() {
         },
       })
         .then((response) => {
-          // console.log("this is the response of doctor id", response.data);
           API.get(`/api/doctor/${response.data.id}/`, {
             headers: {
               Authorization: `Bearer ${authTokens.access}`,
@@ -250,6 +210,7 @@ export default function DoctorProfileCompletion() {
           })
             .then((response) => {
               console.log("the response of doctor", response.data);
+              
               setProvinceInfo({
                 ...provinceInfo,
                 id: provinces.filter((province) => {
@@ -258,18 +219,6 @@ export default function DoctorProfileCompletion() {
                   }
                 })[0]["id"],
               });
-              const temp = educations.map((education) => {
-                if (education.name === response.data.education) {
-                  return education.id;
-                }
-              });
-              console.log("this is the temp in useEffect: ", temp);
-              const tempFind = educations.filter((education) => {
-                if (education.name === response.data.education) {
-                  return education.id;
-                }
-              })[0]["id"];
-              // console.log("this is the tempFind in useEffect: ", tempFind);
               setValues({
                 ...response.data,
                 first_name: response.data.user.first_name,
@@ -282,46 +231,30 @@ export default function DoctorProfileCompletion() {
                 medical_system_number: response.data.medical_system_number,
                 phone_number: response.data.phone_number,
                 office_number: response.data.office_number,
-                // education: response.data.education,
                 education: educations.filter((education) => {
                   if (education.name === response.data.education) {
                     return education.id;
                   }
                 })[0]["id"],
-                // education: educations.find((education) => education.name === response.data.education),
-                // specialties: response.data.specialties[0].id,
                 specialties: availableSpecilaities.filter((specialty) => {
                   if (specialty.name === response.data.specialties[0].name) {
                     return specialty.id;
                   }
                 })[0]["id"],
-                // specialties: availableSpecilaities.find((specialty) => specialty.name === response.data.specialties[0].name),
-                // province: response.data.province,
                 province: provinces.filter((province) => {
                   if (province.name === response.data.province) {
                     return province.id;
                   }
                 })[0]["id"],
-                // province: provinces.find((province) => province.name === response.data.province),
-                // city: response.data.city,
                 city: cities.filter((city) => {
                   if (city.name === response.data.city) {
                     return city.id;
                   }
                 })[0]["id"],
-                // city: cities.find((city) => city.name === response.data.city),
                 clinic_address: response.data.clinic_address,
                 work_periods: response.data.work_periods,
                 description: response.data.description,
-                // image: response.data.image,
               });
-              // console.log("this is the response.data.province: ", response.data.province);
-              // console.log("this is the response.data.province_name: ", response.data.province_name);
-              // setProvinceInfo({
-              //   id: response.data.province,
-              //   name: response.data.province_name,
-              // });
-              // console.log("this is the values of doctor", values);
               handleCities();
               setLoading(false);
             })
@@ -357,79 +290,64 @@ export default function DoctorProfileCompletion() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      // console.log("values while in handle submit & validated: ", values);
-      // console.log("the list of education: ", educations);
-      // const temp = educations.map((education) => {
-      //   if (education.id === values.education) {
-      //     return education.name;
-      //   }
-      // })[values.education - 1];
-      // console.log("the temp: ", temp);
-
-      const sendingList = {
-        ...values,
-        id: values.id,
-        user: {
-          first_name: values.first_name,
-          last_name: values.last_name,
-          username: values.username,
-          id: values.inner_id,
-          email: values.email,
-        },
-        // specialties: values.specialties,
-        specialties: [
-          // {
-          //   id: values.specialties,
-          //   name: availableSpecilaities.map((specialty) => {
-          //     if (specialty.id === values.specialties) {
-          //       return specialty.name;
-          //     }
-          //   })[0],
-          // },
-          values.specialties,
-        ],
-        medical_system_number: Number(values.medical_system_number),
-        is_active: true,
-        gender: 2,
-        // province: values.province,
-        province: provinces.map((province) => {
+      const formData = new FormData();
+      formData.append("id", values.id);
+      formData.append("user", {
+        id: values.inner_id,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        username: values.username,
+      });
+      formData.append("specialties", [
+        availableSpecilaities.filter((specialty) => {
+          if (specialty.id === values.specialties) {
+            return specialty.id;
+          }
+        })[0]["id"],
+      ]);
+      if (Number(values.medical_system_number)) {
+        formData.append("medical_system_number", values.medical_system_number);
+      }
+      formData.append("is_active", true);
+      formData.append("gender", values.gender);
+      formData.append(
+        "province",
+        provinces.map((province) => {
           if (province.id === values.province) {
-            console.log(
-              "this is the province in values while in if statement --------> ",
-              values.province
-            );
             return province.name;
           }
-        })[values.province - 1],
-        // city: values.city,
-        city: cities.map((city) => {
+        })[values.province - 1]
+      );
+      formData.append(
+        "city",
+        cities.map((city) => {
           if (city.id === values.city) {
             return city.name;
           }
-        })[values.city - 1],
-        // image: values.image,
-        clinic_address: values.clinic_address,
-        // education: values.education,
-        education: educations.map((education) => {
+        })[values.city - 1]
+      );
+      formData.append(
+        "education",
+        educations.map((education) => {
           if (education.id === values.education) {
             return education.name;
           }
-        })[values.education - 1],
-        national_code:
-          values.national_code.length === 10 ? values.national_code : "",
-        phone_number:
-          values.phone_number.length === 11 ? values.phone_number : "",
-        office_number:
-          values.office_number.length === 11 ? values.office_number : "",
-        // license_proof: null,
-        // location: {
-        //   type: "",
-        //   coordinates: [0, 0],
-        // },
-      };
-      console.log("sendingList: ", sendingList);
+        })[values.education - 1]
+      );
+      if (values.national_code.length === 10)
+        formData.append("national_code", values.national_code);
+
+      if (values.phone_number.length === 11)
+        formData.append("phone_number", values.phone_number);
+      if (values.office_number.length === 11)
+        formData.append("office_number", values.office_number);
+      formData.append("clinic_address", values.clinic_address);
+      formData.append("work_periods", values.work_periods);
+      formData.append("description", values.description);
+
       axios
-        .put(`http://188.121.113.74/api/doctor/${values.id}/`, sendingList, {
+        .put(`http://188.121.113.74/api/doctor/${values.id}/`, formData, {
           headers: {
             Authorization: `Bearer ${authTokens.access}`,
           },
@@ -474,8 +392,6 @@ export default function DoctorProfileCompletion() {
             });
           }
         });
-
-      // console.log("Values after changing: ", values);
       setLoading(true);
     }
   };
@@ -666,7 +582,7 @@ export default function DoctorProfileCompletion() {
             </FormControl>
           </Grid>
 
-          <Grid item xs={12} md={12}>
+          <Grid item xs={12} md={6}>
             <TextField
               variant="outlined"
               label="آدرس کامل مطب"
@@ -680,6 +596,32 @@ export default function DoctorProfileCompletion() {
               rows={2}
               fullWidth
             />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <FormControl>
+              <FormLabel>جنسیت</FormLabel>
+              <RadioGroup
+                row
+                value={values.gender}
+                onChange={handleInputChange}
+                name="gender"
+                error={errors.gender ? true : false}
+                helperText={errors.gender ? errors.gender : null}
+                fullWidth
+              >
+                <FormControlLabel
+                  value={0}
+                  control={<Radio />}
+                  label="مرد"
+                />
+                <FormControlLabel
+                  value={1}
+                  control={<Radio />}
+                  label="زن"
+                />
+              </RadioGroup>
+            </FormControl>
           </Grid>
 
           <Grid item md={12} xs={12}>

@@ -238,11 +238,13 @@ function EnhancedTableToolbar(props) {
       )}
 
       {numSelected > 0 ? (
-        {/* <Tooltip title="Delete">
+        {
+          /* <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
           </IconButton>
-        </Tooltip> */}
+        </Tooltip> */
+        }
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
@@ -291,7 +293,7 @@ export default function AppointmentReports() {
   );
   const [endTime, setEndTime] = React.useState(dayjs("2014-08-18T21:11:54"));
   const rows = [
-    availableTimes.map((item) => {
+    ...availableTimes.map((item) => {
       return createData(
         weekdays.find((day) => day.id - 1 === item.day),
         item.fromTime,
@@ -356,7 +358,10 @@ export default function AppointmentReports() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (id) => {
+    console.log("selected: ", selected);
+    return selected.indexOf(id) !== -1;
+  };
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -399,221 +404,101 @@ export default function AppointmentReports() {
   };
 
   useEffect(() => {
-    // function fetchData() {
-    //   // Fetching user's information from the database
-    //   API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
-    //     headers: {
-    //       Authorization: `Bearer ${authTokens.access}`,
-    //     },
-    //   })
-    //     .then((response) => {
-    //       // console.log("this is the response of doctor id", response.data);
-    //       console.log("the doctor id: ", response.data.id);
-    //       const tempId = response.data.id;
-    //       console.log("the tempId: ", tempId);
-    //       axios
-    //         .get(`http://188.121.113.74/api/doctor/workday/`, {
-    //           headers: {
-    //             Authorization: `Bearer ${authTokens.access}`,
-    //           },
-    //         })
-    //         .then((res) => {
-    //           console.log("this is the response of workday", res.data);
-    //           const temp = res.data.filter((item) => {
-    //             if (item.doctor === tempId) {
-    //               return item;
-    //             }
-    //           });
-    //           console.log("this is the temp: ", temp);
-    //           setAvailableTimes(temp);
-    //         });
-
-    //       // setUserID(response.data.id);
-
-    //       // API.get(`/api/doctor/${response.data.id}/`, {
-    //       //   headers: {
-    //       //     Authorization: `Bearer ${authTokens.access}`,
-    //       //   },
-    //       // })
-    //       //   .then((response) => {
-    //       //     console.log("the response of doctor", response.data);
-    //       //     setProvinceInfo({
-    //       //       ...provinceInfo,
-    //       //       id: provinces.filter((province) => {
-    //       //         if (province.name === response.data.province) {
-    //       //           return province.id;
-    //       //         }
-    //       //       })[0]["id"],
-    //       //     });
-    //       //     const temp = educations.map((education) => {
-    //       //       if (education.name === response.data.education) {
-    //       //         return education.id;
-    //       //       }
-    //       //     });
-    //       //     console.log("this is the temp in useEffect: ", temp);
-    //       //     const tempFind = educations.filter((education) => {
-    //       //       if (education.name === response.data.education) {
-    //       //         return education.id;
-    //       //       }
-    //       //     })[0]["id"];
-    //       //     console.log("this is the tempFind in useEffect: ", tempFind);
-    //       //     setValues({
-    //       //       ...response.data,
-    //       //       first_name: response.data.user.first_name,
-    //       //       last_name: response.data.user.last_name,
-    //       //       email: response.data.user.email,
-    //       //       username: response.data.user.username,
-    //       //       inner_id: response.data.user.id,
-    //       //       id: response.data.id,
-    //       //       national_code: response.data.national_code,
-    //       //       medical_system_number: response.data.medical_system_number,
-    //       //       phone_number: response.data.phone_number,
-    //       //       office_number: response.data.office_number,
-    //       //       // education: response.data.education,
-    //       //       education: educations.filter((education) => {
-    //       //         if (education.name === response.data.education) {
-    //       //           return education.id;
-    //       //         }
-    //       //       })[0]["id"],
-    //       //       // education: educations.find((education) => education.name === response.data.education),
-    //       //       // specialties: response.data.specialties[0].id,
-    //       //       specialties: availableSpecilaities.filter((specialty) => {
-    //       //         if (specialty.name === response.data.specialties[0].name) {
-    //       //           return specialty.id;
-    //       //         }
-    //       //       })[0]["id"],
-    //       //       // specialties: availableSpecilaities.find((specialty) => specialty.name === response.data.specialties[0].name),
-    //       //       // province: response.data.province,
-    //       //       province: provinces.filter((province) => {
-    //       //         if (province.name === response.data.province) {
-    //       //           return province.id;
-    //       //         }
-    //       //       })[0]["id"],
-    //       //       // province: provinces.find((province) => province.name === response.data.province),
-    //       //       // city: response.data.city,
-    //       //       city: cities.filter((city) => {
-    //       //         if (city.name === response.data.city) {
-    //       //           return city.id;
-    //       //         }
-    //       //       })[0]["id"],
-    //       //       // city: cities.find((city) => city.name === response.data.city),
-    //       //       clinic_address: response.data.clinic_address,
-    //       //       work_periods: response.data.work_periods,
-    //       //       description: response.data.description,
-    //       //       image: response.data.image,
-    //       //     });
-    //       //     // console.log("this is the response.data.province: ", response.data.province);
-    //       //     // console.log("this is the response.data.province_name: ", response.data.province_name);
-    //       //     // setProvinceInfo({
-    //       //     //   id: response.data.province,
-    //       //     //   name: response.data.province_name,
-    //       //     // });
-    //       //     // console.log("this is the values of doctor", values);
-    //       //     handleCities();
-    //       //     setLoading(false);
-    //       //   })
-    //       //   .catch((error) => {
-    //       //     console.log("Error from fetching doctor's info: ", error);
-    //       //   });
-    //     })
-    //     .catch((error) => {
-    //       console.log("Error from fetching doctor's ID: ", error);
-    //     });
-    // }
-
-    function fetchData() {
+    const fetchData = async () => {
       // Fetching the doctor id from the user id
-      API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
+      await API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
         headers: {
           Authorization: `Bearer ${authTokens.access}`,
         },
       })
-        .then((res) => {
-          // API.get(`http://188.121.113.74/api/doctor/workday/`, {
-          //   headers: {
-          //     Authorization: `Bearer ${authTokens.access}`,
-          //   },
-          // })
-          //   .then((response) => {
-          //     console.log("the user id: ", res.data.id);
-          //     console.log("values: ", values);
-          //     console.log("this is the response of workday: ", response.data);
-          //     response.data.map((item) => {
-          //       console.log("this is the item in useEffect", item);
-          //       if (
-          //         item.doctor === res.data.id &&
-          //         item.day === values.day
-          //       ) {
-          //         console.log("in useEffect condition");
-          //         setValues({
-          //           ...values,
-          //           id: item.id,
-          //           day: item.day,
-          //           fromTime: item.from_time,
-          //           toTime: item.to_time,
-          //           doctorId: item.doctor,
-          //         });
-          //       }
-          //     });
-          //   })
-          //   .catch((error) => {
-          //     console.log("this is the error of specialties", error);
-          //   });
-          console.log("this is res.data.id: ", res.data.id);
+        .then(async (res) => {
+          // console.log("this is res.data.id: ", res.data.id);
           setValues({
             ...values,
             doctorId: res.data.id,
-          })
-          axios.get("http://188.121.113.74/api/doctor/workday/", {
+          });
+          // console.log("this is the values: ", values);
+          API.get("http://188.121.113.74/api/doctor/workday/", {
             headers: {
               Authorization: `Bearer ${authTokens.access}`,
             },
           })
-            .then((response) => {
-              console.log("this is the response of workday: ", response.data);
-              response.data.filter((item) => {
-                if (item.doctor === res.data.id) {
-                  setAvailableTimes((availableTimes) => [
-                    ...availableTimes,
-                    {
-                      id: item.id,
-                      day: item.day,
-                      fromTime: item.from_time,
-                      toTime: item.to_time,
-                      doctorId: item.doctor,
-                    },
-                  ]);
+            .then(async (response) => {
+              setTimeout(() => {
+                try {
+                  // setLoading(true);
+                  console.log(
+                    "this is the response of workday: ",
+                    response.data
+                  );
+                  const temptimes = response.data.filter((item) => {
+                    if (item.doctor === res.data.id) {
+                      console.log(
+                        "in useEffect condition setting availableTimes"
+                      );
+                      return {
+                        id: item.id,
+                        day: item.day,
+                        fromTime: item.from_time,
+                        toTime: item.to_time,
+                        doctorId: item.doctor,
+                      };
+                    }
+                  });
+                  console.log("this is the temptimes: ", temptimes);
+                  setAvailableTimes([...temptimes]);
+                  console.log("this is the availableTimes: ", availableTimes);
+                } catch (error) {
+                  console.log("this is the error of availableTimes: ", error);
                 }
-              });
+              }, 1);
             })
             .catch((error) => {
-              console.log("this is the error of specialties", error);
+              console.log("this is the error of workday", error);
+            })
+            .finally(() => {
+              setLoading(false);
             });
-          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
         });
-    }
+    };
 
     if (loading) {
-      fetchData();
-      console.log("this is the availableTimes: ", availableTimes);
+      // fetchData();
+      // console.log("this is the availableTimes: ", availableTimes);
+      // setLoading(false);
+      try {
+        console.log("loading: ", loading);
+        fetchData();
+        console.log("this is the availableTimes: ", availableTimes);
+      } catch (error) {
+        console.log("this is the error of availableTimes: ", error);
+      } finally {
+        console.log("setting the loading to false");
+        setLoading(false);
+        // console.log("loading: ", loading);
+      }
     }
+    console.log("loading after if statement: ", loading);
+    setLoading(false);
+    console.log("loading after setting to false: ", loading);
+    console.log(
+      "this is the availableTimes after if statement in useeffect: ",
+      availableTimes
+    );
+    // console.log("this is the rows: ", row)
 
     const id = setInterval(() => {
       fetchData();
     }, 200000);
 
     return () => clearInterval(id);
-  }, [
-    loading,
-    API,
-    authTokens.access,
-    user.user_id,
-    values,
-    availableTimes,
-  ]);
+  }, [loading, API, authTokens.access, user.user_id, values, availableTimes]);
+
+  console.log("availableTimes outside of useeffect: ", availableTimes);
+  console.log("rows outside of useeffect: ", rows);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -678,6 +563,7 @@ export default function AppointmentReports() {
                   rowCount={rows.length}
                 />
                 <TableBody>
+                  {console.log("this is the rows in TableBody: ", rows)}
                   {stableSort(rows, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
@@ -747,6 +633,7 @@ export default function AppointmentReports() {
         </Box>
       </Grid>
 
+      {/** Time Selection */}
       <Grid item xs={12}>
         <form
           onSubmit={handleSubmit}
