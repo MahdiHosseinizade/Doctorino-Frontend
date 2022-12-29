@@ -65,7 +65,7 @@ export default function LandingPage() {
   useEffect(() => {
     getSpecialites();
     filteredScaleHandler(searchScale);
-  }, [specialitie]);
+  }, []);
 
   const getSpecialites = async () => {
     try {
@@ -87,11 +87,11 @@ export default function LandingPage() {
     // console.log(formik.values);
     axios
       .post("http://188.121.113.74/api/doctor/search/", {
-        specialty: speciality.id,
+        specialties: [speciality.id],
         city: city.id,
       })
       .then((res) => {
-        console.log(res.data);
+        setResDoctor(res.data);
       })
       .catch((err) => {
         toast.error(err.response.data.message);
