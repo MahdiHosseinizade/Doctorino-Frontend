@@ -216,6 +216,7 @@ export default function ManagerProfile(props) {
             <Box
                 onSubmit={formik.handleSubmit}
                 component="form"
+                autoComplete="off"
                 mt={5}
                 sx={{
                     bgcolor: 'rgb(245, 246, 248)',
@@ -227,9 +228,7 @@ export default function ManagerProfile(props) {
                     '& .MuiTextField-root': { m: 0.5 },
                     boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
                 }}
-                onSubmit={formik.handleSubmit}
-                component="form"
-                autoComplete="off"
+                
             >
                 <Typography
                     sx={{
