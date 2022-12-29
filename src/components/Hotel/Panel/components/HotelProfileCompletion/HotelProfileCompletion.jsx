@@ -165,6 +165,7 @@ export default function HotelProfileCompletion() {
   const { authData } = useContext(AuthContext);
   // const [availableRooms, setAvailableRooms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loading4, setLoading4] = useState(false);
   const [hotel, setHotel] = useState('');
   const [stars, setStars] = useState("");
   const [features, setFeatures] = useState([]);
@@ -282,6 +283,10 @@ export default function HotelProfileCompletion() {
       })
       .catch(err => console.error(err))
 
+      if (value === 3) {
+        setLoading4(true);
+      }
+
     api.get(`/api/hotel/${hotel_id}/room/`)
       .then(res => {
         setRooms(res.data);
@@ -384,6 +389,10 @@ export default function HotelProfileCompletion() {
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if (newValue === 3) {
+      setLoading4(true);
+      setLoading(false);
+    }
   };
 
   const formRoomValue = {
@@ -941,7 +950,7 @@ export default function HotelProfileCompletion() {
                     />
 
                     <Grid container spacing={2}>
-                      <ImageGallery />
+                      <ImageGallery hotel_id={hotel} loading={loading4} setLoading={setLoading4} />
                     </Grid>
                   </Box>
                 </TabPanel>
