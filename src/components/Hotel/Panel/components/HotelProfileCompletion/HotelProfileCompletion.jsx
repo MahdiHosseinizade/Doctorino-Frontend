@@ -32,6 +32,7 @@ import AuthContext from "../../../../../context/AuthContext";
 import { toast } from "react-toastify";
 import Dropzone from '../../../../common/Dropzone';
 import RoomCard from "./components/RoomCard";
+import ImageGallery from "./components/ImageGallery"
 import theme from '../../../../../assets/theme/defaultTheme';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -795,11 +796,83 @@ export default function HotelProfileCompletion() {
                   </Box>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                  Add Room
+                  <Box
+                    sx={{
+                      color: theme.palette.hotel.dark,
+                      marginTop: { xs: "20px", md: "20px" },
+                      bgcolor: "rgb(245, 246, 248)",
+                      border: "1px solid #ccc",
+                      marginBottom: "50px",
+                      borderRadius: "10px",
+                      padding: "20px",
+                      "& .MuiTextField-root": { m: 0.5 },
+                      boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+                    }}
+                    onSubmit={formik.handleSubmit}
+                    component="form"
+                  >
+                    <Typography
+                      sx={{
+                        textAlign: "center",
+                        margin: "10px",
+                      }}
+                      variant="h5"
+                    >
+                      اتاق های فعال
+                    </Typography>
+
+                    <hr width="100%"
+                      style={{
+                        backgroundColor: theme.palette.hotel.dark,
+                        marginBottom: "1rem",
+                        marginTop: "1rem",
+                      }}
+                    />
+
+                    <Grid container spacing={2}>
+
+                    </Grid>
+                  </Box>
                 </TabPanel>
 
                 <TabPanel value={value} index={3}>
-                  Picture Gallery
+                  <Box
+                    sx={{
+                      color: theme.palette.hotel.dark,
+                      marginTop: { xs: "20px", md: "20px" },
+                      bgcolor: "rgb(245, 246, 248)",
+                      border: "1px solid #ccc",
+                      marginBottom: "50px",
+                      borderRadius: "10px",
+                      padding: "20px",
+                      "& .MuiTextField-root": { m: 0.5 },
+                      boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+                    }}
+                    onSubmit={formik.handleSubmit}
+                    component="form"
+                  >
+                    <Typography
+                      sx={{
+                        textAlign: "center",
+                        margin: "10px",
+                      }}
+                      variant="h5"
+                    >
+                      تصاویر هتل
+                    </Typography>
+
+                    <hr width="100%"
+                      style={{
+                        backgroundColor: theme.palette.hotel.dark,
+                        marginBottom: "1rem",
+                        marginTop: "1rem",
+                      }}
+                    />
+
+                    <Grid container spacing={2}>
+                      <ImageGallery />
+                    </Grid>
+                  </Box>
                 </TabPanel>
               </Grid>
             </Grid>
