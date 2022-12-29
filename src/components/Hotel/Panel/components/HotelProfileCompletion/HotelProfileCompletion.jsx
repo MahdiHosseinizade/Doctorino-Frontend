@@ -127,6 +127,18 @@ const validationSchema = Yup.object({
   hotel_id: Yup.number().required("هتل باید انتخاب شود"),
 });
 
+const formRoomValue = {
+  bed_count: "",
+  price_per_night: '',
+  number_of_room: '',
+};
+
+const validationSchemaRoom = Yup.object({
+  bed_count: Yup.string().required("تعداد تخت باید انتخاب شود"),
+  price_per_night: Yup.string().required("قیمت باید انتخاب شود"),
+  number_of_room: Yup.string().required("تعداداتاق ها باید انتخاب شود"),
+});
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -173,7 +185,6 @@ export default function HotelProfileCompletion() {
   const [rooms, setRooms] = useState([]);
   const [coverImage, setCoverImage] = useState(null);
   const [showForm, setRoomForm] = useState('');
-
   const history = useHistory();
   const api = useAxios();
 
@@ -386,19 +397,6 @@ export default function HotelProfileCompletion() {
     setValue(newValue);
   };
 
-  const formRoomValue = {
-    bed_count: "",
-    price_per_night: '',
-    number_of_room: '',
-    hotel_id: "",
-  };
-
-  const validationSchemaRoom = Yup.object({
-    bed_count: Yup.string().required("تعداد تخت باید انتخاب شود"),
-    price_per_night: Yup.string().required("قیمت باید انتخاب شود"),
-    number_of_room: Yup.string().required("تعداداتاق ها باید انتخاب شود"),
-    hotel_id: Yup.number().required("هتل باید انتخاب شود"),
-  });
 
   const formikRoom = useFormik({
     initialValues: formRoomValue,
@@ -408,8 +406,7 @@ export default function HotelProfileCompletion() {
     },
 
     onSubmit: (values) => {
-      history.push('/login')
-      if (!values.hotel_id) {
+      if (!hotel) {
         toast.error("هتل انتخاب نشده است.", {
           position: "top-right",
           autoClose: 2000,
@@ -418,12 +415,11 @@ export default function HotelProfileCompletion() {
         const roomData = new URLSearchParams();
         let roomFormData = new FormData();
 
-        // formData.append("cover_image", values.cover_image, "cover_image.jpg");
         roomFormData.append("bed_count", values.bed_count);
         roomFormData.append("price_per_night", values.price_per_night);
         roomFormData.append("number_of_room", values.number_of_room);
 
-        api.put(`/api/hotel/room/`, roomData, {
+        api.put(`/api/hotel/room/new/`, roomData, {
           headers: {
             "Authorization": "Bearer " + authData?.access,
           }
@@ -438,13 +434,18 @@ export default function HotelProfileCompletion() {
             autoClose: 2000,
           })
         })
-        formik.resetForm();
+        formikRoom.resetForm();
         setLoading(true);
       }
     },
     validationSchema: validationSchemaRoom,
   });
 
+
+  function handle(e) {
+    e.preventDefault();
+    console.log(e);
+  }
 
   return (
     <Container>
@@ -547,8 +548,6 @@ export default function HotelProfileCompletion() {
                       "& .MuiTextField-root": { m: 0.5 },
                       boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
                     }}
-                    onSubmit={formik.handleSubmit}
-                    component="form"
                   >
                     <Typography
                       sx={{
@@ -568,7 +567,9 @@ export default function HotelProfileCompletion() {
                       }}
                     />
 
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2}
+                      onSubmit={formik.handleSubmit}
+                      component="form">
                       <Grid item xs={12} md={12}>
                         <Dropzone CssBaseLine={true} handleFile={handleCoverImage} iconColor={'hotel'} />
                       </Grid>
@@ -721,8 +722,6 @@ export default function HotelProfileCompletion() {
                       "& .MuiTextField-root": { m: 0.5 },
                       boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
                     }}
-                  // onSubmit={formik.handleSubmit}
-                  // component="form"
                   >
                     <Typography
                       sx={{
@@ -903,6 +902,7 @@ export default function HotelProfileCompletion() {
                         </Button>
                       </Grid>
                     </Grid>
+                    {/* <Button type="submit" disabled={!formikRoom.isValid} variant="outlined">test</Button> */}
                   </Box>
                 </TabPanel>
 
@@ -919,8 +919,6 @@ export default function HotelProfileCompletion() {
                       "& .MuiTextField-root": { m: 0.5 },
                       boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
                     }}
-                  // onSubmit={formik.handleSubmit}
-                  // component="form"
                   >
                     <Typography
                       sx={{
