@@ -214,6 +214,8 @@ export default function ManagerProfile(props) {
     return (
         <Container>
             <Box
+                onSubmit={formik.handleSubmit}
+                component="form"
                 mt={5}
                 sx={{
                     bgcolor: 'rgb(245, 246, 248)',
@@ -415,18 +417,7 @@ export default function ManagerProfile(props) {
                         <FormControl fullWidth>
                             <InputLabel>سال تولد</InputLabel>
                             <SSelect
-                                //     value={stars}
-                                //     defaultValue={0}
-                                //     label="ستاره"
-                                //     onChange={handleStars}
-                                //     error={formik.errors["stars"] && formik.touched["stars"]}
-                                //     {...formik.getFieldProps('stars')}
-                                // >
-                                //     <MenuItem value={1}>یک ستاره</MenuItem>
-                                //     <MenuItem value={2}>دو ستاره</MenuItem>
-                                //     <MenuItem value={3}>سه ستاره</MenuItem>
-                                //     <MenuItem value={4}>چهار ستاره</MenuItem>
-                                //     <MenuItem value={5}>پنج ستاره</MenuItem>
+
                                 required
                                 defaultValue={0}
                                 value={year}
@@ -434,13 +425,6 @@ export default function ManagerProfile(props) {
                                 onChange={reHandleYear}
                                 error={formik.errors["birthYear"] && formik.touched["birthYear"]}
                                 {...formik.getFieldProps('birthYear')}
-
-                            // {...formik.getFieldProps('birthYear')}
-                            // renderValue={(selected) => selected.join(', ')}
-                            // error={formik.errors["birthYear"] && formik.touched["birthYear"]}
-                            // value={year}
-                            // onChange={reHandleYear}
-                            // input={<OutlinedInput label="سال تولد" />}
                             >
                                 {years.map((feat, ind) => (
                                     <MenuItem key={ind} value={feat}>
@@ -523,7 +507,7 @@ export default function ManagerProfile(props) {
 
                     <Grid item xs={12} sx={{ marginTop: '20px' }}>
                         <Button type="submit"
-                            // disabled={(formik.isValid)}
+                            disabled={(formik.isValid)}
                             variant="contained"
                             color='hotel'
                             style={{ fontSize: '15px' }}

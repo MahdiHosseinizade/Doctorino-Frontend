@@ -128,15 +128,17 @@ const validationSchema = Yup.object({
 });
 
 const formRoomValue = {
-  bed_count: "",
+  bed_count: '',
   price_per_night: '',
   number_of_room: '',
+  room_title: '',
 };
 
 const validationSchemaRoom = Yup.object({
   bed_count: Yup.string().required("تعداد تخت باید انتخاب شود"),
   price_per_night: Yup.string().required("قیمت باید انتخاب شود"),
   number_of_room: Yup.string().required("تعداداتاق ها باید انتخاب شود"),
+  room_title: Yup.string()
 });
 
 function TabPanel(props) {
@@ -175,7 +177,6 @@ function a11yProps(index) {
 
 export default function HotelProfileCompletion() {
   const { authData } = useContext(AuthContext);
-  // const [availableRooms, setAvailableRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hotel, setHotel] = useState('');
   const [stars, setStars] = useState("");
@@ -418,8 +419,9 @@ export default function HotelProfileCompletion() {
         roomFormData.append("bed_count", values.bed_count);
         roomFormData.append("price_per_night", values.price_per_night);
         roomFormData.append("number_of_room", values.number_of_room);
+        roomFormData.append("room_title", values.room_title);
 
-        api.put(`/api/hotel/room/new/`, roomData, {
+        api.post(`/api/hotel/room/`, roomData, {
           headers: {
             "Authorization": "Bearer " + authData?.access,
           }
@@ -753,7 +755,7 @@ export default function HotelProfileCompletion() {
                                   aria-controls={`aria${room.id}`}
                                   id={`id${room.id}`}
                                 >
-                                  {/* {console.log(rooms)} */}
+                                
                                   <Typography>اتاق نوع {rooms.indexOf(room) + 1}</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
@@ -834,6 +836,25 @@ export default function HotelProfileCompletion() {
                         justifyContent: 'center',
                       }}
                     >
+                      <Grid item xs={12}
+                        sx={{
+                          dispaly: 'flex',
+                          justifyContent: 'center',
+                        }}>
+                        <STextField
+                          sx={{ left: '25%', minWidth: '50%' }}
+                          error={
+                            formikRoom.errors["room_title"] && formikRoom.touched["room_title"]
+                          }
+                          variant="outlined"
+                          label="عنوان اتاق"
+                          name="room_title"
+                          type="text"
+                          helperText={formikRoom.touched["room_title"] && formikRoom.errors["room_title"]}
+                          {...formikRoom.getFieldProps("room_title")}
+                        />
+                      </Grid>
+                      <br />
                       <Grid item xs={12}
                         sx={{
                           dispaly: 'flex',
