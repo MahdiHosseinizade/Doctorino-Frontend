@@ -10,7 +10,7 @@ import { MdPlace } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DoctorSwiper from "./DoctorSwiper";
-import { FormControl, InputLabel, MenuItem, TextField } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { cities } from "../../db/cities";
 import Select from "react-select";
@@ -37,10 +37,7 @@ export default function LandingPage() {
   const [city , setCity] = useState("");
   const [cityId , setCityId] = useState("");
   const [speciality , setSpeciality] = useState("");
-  // const [search, setSearch] = useState({
-  //   input: "",
-  //   scale: 0,
-  // });
+  const [specialityId , setSpecialityId] = useState("");
   const [specialitie, setSpecialitie] = useState([]);
   const [searchScale, setSearchScale] = useState("");
   const [filteredScale, setFilteredScale] = useState(specialitie);
@@ -54,9 +51,16 @@ export default function LandingPage() {
      onsubmit: (values) => {
         // searchDoctor(values);
      }
-     
   })
-  // console.log(formik.values);
+  // convert  speciality to json that have id and value and label
+  const specialityJson = specialitie.map((item) => {
+    return {
+      id: item.id,
+      value: item.name,
+      label: item.name,
+    };
+  });
+  // console.log(specialityJson);
 
   useEffect(() => {
     getSpecialites();
@@ -81,17 +85,17 @@ export default function LandingPage() {
   // }
   const searchDoctor = () => {
     // console.log(formik.values);
-    // axios
-    //   .post("http://188.121.113.74/api/doctor/search/", {
-    //     specialty: speciality,
-    //     name: city,
-    //   })
-    //   .then((res) => {
-    //     console.log(res.data);
-    //   })
-    //   .catch((err) => {
-    //     toast.error(err.response.data.message);
-    //   });
+    axios
+      .post("http://188.121.113.74/api/doctor/search/", {
+        specialty: speciality.id,
+        city: city.id,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
   };
 
   const filteredScaleHandler = (search) => {
@@ -123,10 +127,15 @@ export default function LandingPage() {
     goSPecialitieSearch(findIndex);
   };
   const cityHandler = (e) =>{
-    setCity(e.name)
-    setCityId(e.id)
+    setCity(e)
+    // setCityId(e.id)
     // console.log(city, cityId)
   }
+  const SpecialityHandler = (e) =>{
+    setSpeciality(e)
+    // setSpecialityId(e.id)
+  }
+  // console.log(speciality, city)
 
   return (
     <>
@@ -145,36 +154,11 @@ export default function LandingPage() {
             </div>
             <div className="EnterCity">
               <FormControl className="FormControlCity" fullWidth>
-                {/* <InputLabel id="demo-simple-select-label">شهر</InputLabel> */}
-                {/* <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="city"
-                  name="city"
-                  {...formik.getFieldProps("city")}
-                  // onChange = {(e) => cityHandler(e)}
-                >
-                  {cities.map((item) => {
-                    return (
-                      <MenuItem  value = {item.slug} key={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    )
-                  })}
-                </Select> */}
                 <Select
-                  // value={city}
+                  value={city}
                   onChange={(e) =>cityHandler(e)}
                   options={cities}
                 />
-                {/* {cities.map((item) => {
-                    return (
-                      <MenuItem  value = {item.slug} key={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    )
-                  })} */}
-                {/* </Select> */}
               </FormControl>
             </div>
           </div>
@@ -182,13 +166,10 @@ export default function LandingPage() {
           <div className="searchScale">
             <div className="typeScale">
               <h1>تخصص : </h1>
-              <input
-                // onChange={(e) =>specialitieHandler(e)}
-                type="text"
-                className="scaleInput"
-                name="specialities"
-                placeholder="تخصص مورد نظرخود را وارد کنید "
-                {...formik.getFieldProps("specialities")}
+              <Select 
+                options={specialityJson}
+                onChange={(e) => SpecialityHandler(e)}
+                value={speciality}
               />
             </div>
             <button type="submit"  onClick={searchDoctor} className="ZareBin">
@@ -202,18 +183,20 @@ export default function LandingPage() {
         </form>
       </div>
       <div className="showSpecialieties">
-        {/* pass id of onClicked item to goSpecialitiesearch  */}
-        {filteredScale &&
-          filteredScale.map((item, index) => (
-            <a
-              href={`/specialist/${+findIndex + 1}`}
-              className="doctorScale"
-              onClick={() => findIndexFunction(index)}
-              key={index}
-            >
-              {item.name}
-            </a>
+        <Grid container spacing={3} style={{justifyContent : 'space-around' }} >
+          {filteredScale && filteredScale.map((item, index) => (
+            <Grid item xs={4} md={4} sm={4} key={index}>
+              <a 
+                href={`/specialist/${+findIndex + 1}`}
+                className="doctorScale"
+                onClick={() => findIndexFunction(index)}
+                key={index}
+              >
+                {item.name}
+              </a>
+            </Grid>
           ))}
+        </Grid>
       </div>
       <DoctorSwiper />
     </>
