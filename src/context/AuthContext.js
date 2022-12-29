@@ -8,19 +8,37 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  let [authTokens, setAuthTokens] = useState(() =>
-    localStorage.getItem("authTokens")
-      ? JSON.parse(localStorage.getItem("authTokens"))
+  let [authData, setAuthTokens] = useState(() =>
+    localStorage.getItem("authData")
+      ? JSON.parse(localStorage.getItem("authData"))
       : null
   );
   let [user, setUser] = useState(() =>
-    localStorage.getItem("authTokens")
-      ? jwt_decode(localStorage.getItem("authTokens"))
+    localStorage.getItem("authData")
+      ? jwt_decode(localStorage.getItem("authData"))
       : null
   );
   let [loading, setLoading] = useState(true);
 
   const history = useHistory();
+
+  function extractUserData(data) {
+    let role = "patient";
+    if (data.is_doctor) {
+      role = "doctor";
+    } else if (data.is_hotel_owner) {
+      role = "hotel_owner";
+    }
+    
+    return {
+      id: data.id,
+      child_id: data['child-id'],
+      username: data.username,
+      first_name: data['first-name'],
+      last_name: data['last-name'],
+      role: role,
+    };
+  }
 
   let loginUser = async (email, pwd) => {
     // let response = await fetch('http://127.0.0.1:8000/api/auth/token/', {
@@ -36,25 +54,24 @@ export const AuthProvider = ({ children }) => {
 
     if (response.status === 200) {
       setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
+      
+      setUser(extractUserData(data));
+
+      localStorage.setItem("authData", JSON.stringify(data));
 
       toast.success(`با موفقیت وارد شدید`, {
         position: "top-right",
         autoClose: 2000,
       });
     } else {
-      toast.error("وارد نشدید", {
-        position: "top-right",
-        autoClose: 2000
-      })
+      alert("Something went wrong!");
     }
   };
 
   let logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
-    localStorage.removeItem("authTokens");
+    localStorage.removeItem("authData");
 
     toast.info("خارج شدید", {
       position: "top-right",
@@ -66,20 +83,21 @@ export const AuthProvider = ({ children }) => {
 
   let contextData = {
     user: user,
-    authTokens: authTokens,
+    authData: authData,
     setAuthTokens: setAuthTokens,
     setUser: setUser,
     loginUser: loginUser,
     logOut: logoutUser,
+    extractUserData: extractUserData,
   };
 
   useEffect(() => {
-    if (authTokens) {
-      setUser(jwt_decode(authTokens.access));
+    if (authData) {
+      setUser(extractUserData(authData));
     }
 
     setLoading(false);
-  }, [authTokens, loading]);
+  }, [authData, loading]);
 
   return (
     <AuthContext.Provider value={contextData}>

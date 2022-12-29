@@ -64,7 +64,7 @@ const validationSchema = Yup.object({
 
 export default function HotelProfileCompletion() {
 
-    let { user, authTokens, logoutUser } = useContext(AuthContext);
+    let { user, authData, logoutUser } = useContext(AuthContext);
     let api = useAxios();
 
     const [hotel, setHotel] = useState([]);
@@ -120,7 +120,7 @@ export default function HotelProfileCompletion() {
             {
                 headers:
                 {
-                    Authorization: `Bearer ${authTokens.access}`
+                    Authorization: `Bearer ${authData.access}`
                 }
             }
         )

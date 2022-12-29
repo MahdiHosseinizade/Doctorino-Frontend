@@ -81,7 +81,7 @@ export default function ScheduleTime(props) {
     // let { user } = useContext(AuthContext);
     // var user = {objName: "rezo"};    //testing
 
-    let { user, authTokens, logoutUser } = useContext(AuthContext);
+    let { user, authData, logoutUser } = useContext(AuthContext);
     let api = useAxios();
 
     const history = useHistory();
@@ -193,7 +193,7 @@ export default function ScheduleTime(props) {
                 headers:
                 {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${authTokens.access}`
+                    Authorization: `Bearer ${authData.access}`
                 }
             }
         )
