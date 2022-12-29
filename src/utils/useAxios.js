@@ -27,13 +27,10 @@ const useAxios = () => {
             refresh: authData.refresh
         });
 
-
         if (response.status === 401) {
             logOut();
         } else {
             authData.access = response.data.access;
-
-            setUser(extractUserData(response.data));
 
             req.headers.Authorization = `Bearer ${response.data.access}`
             

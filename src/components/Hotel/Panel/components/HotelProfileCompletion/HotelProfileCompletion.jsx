@@ -479,7 +479,18 @@ export default function HotelProfileCompletion() {
 
         <Box sx={{ width: '100%' }}>
           <Box sx={{ marginLeft: '10px', borderBottom: 0, borderColor: 'divider' }}>
-            <Tabs sx={{ marginBottom: '10px' }} value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tabs sx={{
+              marginBottom: '10px',
+              '& .MuiTab-root': {
+                color: theme.palette.grey[700],
+              },
+              '& .Mui-selected': {
+                color: theme.palette.hotel.dark,
+              },
+              '& .MuiTabs-indicator': {
+                backgroundColor: theme.palette.hotel.dark,
+              },
+            }} value={value} onChange={handleChange} aria-label="basic tabs example">
               <Tab sx={{ width: 'auto' }} label="اطلاعات مشترک هتل" {...a11yProps(0)} />
               <Tab sx={{ width: 'auto' }} label="اطلاعات اتاق ها" {...a11yProps(1)} />
               <Tab sx={{ width: 'auto' }} label="اتاق جدید" {...a11yProps(2)} />
@@ -495,53 +506,52 @@ export default function HotelProfileCompletion() {
             }}
           />
 
-          <TabPanel value={value} index={0}>
-            <Grid container spacing={2} sx={{
-              display: "flex",
-              justifyContent: { xs: "center", md: "flex-start" },
-              alignItems: { xs: "center", md: "flex-start" },
-            }}>
-              <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{
+            display: "flex",
+            justifyContent: { xs: "center", md: "flex-start" },
+            alignItems: { xs: "center", md: "flex-start" },
+          }}>
+            <Grid container spacing={2}>
 
-                <Grid item xs={12} md={5}>
-                  <Box sx={{
-                    marginTop: { xs: "10px", md: "10px" },
-                    borderRadius: "10px",
-                    padding: 1,
-                  }}>
-                    <SFormControl fullWidth>
-                      <InputLabel>هتل ها</InputLabel>
-                      <SSelect
-                        value={hotel}
-                        label="هتل ها"
-                        onChange={handleHotels}
-                        error={formik.errors["hotel_id"] && formik.touched["hotel_id"]}
-                      >
-                        {availableHotels?.map(
-                          ({ id, hotel_name }, ind) =>
-                            ind >= 0 && (
-                              <SMenuItem key={id} value={id}>
-                                <ListItemText primary={hotel_name} />
-                              </SMenuItem>
-                            )
-                        )}
-                      </SSelect>
-                    </SFormControl>
+              <Grid item xs={12} md={4}>
+                <Box sx={{
+                  marginTop: { xs: "10px", md: "10px" },
+                  borderRadius: "10px",
+                  padding: 1,
+                }}>
+                  <SFormControl fullWidth>
+                    <InputLabel>هتل ها</InputLabel>
+                    <SSelect
+                      value={hotel}
+                      label="هتل ها"
+                      onChange={handleHotels}
+                      error={formik.errors["hotel_id"] && formik.touched["hotel_id"]}
+                    >
+                      {availableHotels?.map(
+                        ({ id, hotel_name }, ind) =>
+                          ind >= 0 && (
+                            <SMenuItem key={id} value={id}>
+                              <ListItemText primary={hotel_name} />
+                            </SMenuItem>
+                          )
+                      )}
+                    </SSelect>
+                  </SFormControl>
 
-                    <Box component="img" src={coverImage ? coverImage : "https://media.radissonhotels.net/image/metropolitan-hotel-sofia-a-member-of-radisson-individuals/exteriorview/16256-145921-f72742573_3xl.jpg?impolicy=Card&gravity=North"}
-                      sx={{
-                        width: "100%",
-                        marginTop: 2,
-                        height: { xs: "300px", md: "450px" },
-                        objectFit: "fill",
-                        borderRadius: "10px",
-                        border: `5px solid ${theme.palette.hotel.main}`,
-                      }}
-                    />
-                  </Box>
-                </Grid>
-
-                <Grid item xs={12} md={7}>
+                  <Box component="img" src={coverImage ? coverImage : "https://media.radissonhotels.net/image/metropolitan-hotel-sofia-a-member-of-radisson-individuals/exteriorview/16256-145921-f72742573_3xl.jpg?impolicy=Card&gravity=North"}
+                    sx={{
+                      width: "100%",
+                      marginTop: 2,
+                      height: { xs: "300px", md: "450px" },
+                      objectFit: "fill",
+                      borderRadius: "10px",
+                      border: `5px solid ${theme.palette.hotel.main}`,
+                    }}
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={8}>
+                <TabPanel value={value} index={0}>
                   <Box
                     sx={{
                       color: theme.palette.hotel.dark,
@@ -714,58 +724,8 @@ export default function HotelProfileCompletion() {
                       </Grid>
                     </Grid>
                   </Box>
-                </Grid>
-              </Grid>
-            </Grid>
-          </TabPanel>
-
-          <TabPanel value={value} index={1}>
-            <Grid container spacing={2} sx={{
-              display: "flex",
-              justifyContent: { xs: "center", md: "flex-start" },
-              alignItems: { xs: "center", md: "flex-start" },
-            }}>
-              <Grid container spacing={2}>
-
-                <Grid item xs={12} md={4}>
-                  <Box sx={{
-                    marginTop: { xs: "10px", md: "10px" },
-                    borderRadius: "10px",
-                    padding: 1,
-                  }}>
-                    <SFormControl fullWidth>
-                      <InputLabel>هتل ها</InputLabel>
-                      <SSelect
-                        value={hotel}
-                        label="هتل ها"
-                        onChange={handleHotels}
-                        error={formik.errors["hotel_id"] && formik.touched["hotel_id"]}
-                      >
-                        {availableHotels?.map(
-                          ({ id, hotel_name }, ind) =>
-                            ind >= 0 && (
-                              <SMenuItem key={id} value={id}>
-                                <ListItemText primary={hotel_name} />
-                              </SMenuItem>
-                            )
-                        )}
-                      </SSelect>
-                    </SFormControl>
-
-                    <Box component="img" src={coverImage ? coverImage : "https://media.radissonhotels.net/image/metropolitan-hotel-sofia-a-member-of-radisson-individuals/exteriorview/16256-145921-f72742573_3xl.jpg?impolicy=Card&gravity=North"}
-                      sx={{
-                        width: "100%",
-                        marginTop: 2,
-                        height: { xs: "300px", md: "450px" },
-                        objectFit: "fill",
-                        borderRadius: "10px",
-                        border: `5px solid ${theme.palette.hotel.main}`,
-                      }}
-                    />
-                  </Box>
-                </Grid>
-
-                <Grid item xs={12} md={8}>
+                </TabPanel>
+                <TabPanel value={value} index={1}>
                   <Box
                     sx={{
                       color: theme.palette.hotel.dark,
