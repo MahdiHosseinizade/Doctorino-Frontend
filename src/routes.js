@@ -4,11 +4,13 @@ import Login from "./components/Login/Login";
 import SignUpPage from "./components/SignUp/SignUp";
 
 import HotelPanel from "./components/Hotel/Panel/HotelPanel";
-import Hotels from './components/Hotel/HotelList/Hotels';
+import Hotels from "./components/Hotel/HotelList/Hotels";
 
 import DoctorPanel from "./components/Doctor/DoctorPanel/DoctorPanel";
 import ListOfDoctors from "./components/Doctor/ListOfDoctors/ListOfDoctors";
 import LandingPage from "./components/LandingPage/LandingPage.jsx";
+import HotelSearch from "./components/LandingPage/HotelSearch/HotelSearch";
+import FoundHotels from "./components/LandingPage/HotelSearch/FoundHotels";
 import NotFound from "./pages/NotFoundPage";
 
 import scheduleTable from "./components/Doctor/DoctorProfile/scheduleTable";
@@ -16,15 +18,16 @@ import drLayout from "./components/Doctor/DoctorProfile/DoctorProfileLayout";
 import Hotel from "./components/Hotel/Hotel/Hotel";
 import DoctorSpecialitie from "./components/Doctor/SpecialitiePage/DoctorSpecialities";
 
-
 const routes = [
   { path: "/schedule-table", component: scheduleTable },
-  { path: "/doctor-layout", component: drLayout},
+  { path: "/doctor-layout", component: drLayout },
   { path: "/signup", component: SignUpPage },
-  {path: "/hotel/:id", component: Hotel},
-  {path: "/specialist/:id", component: DoctorSpecialitie},
+  { path: "/hotel/:id", component: Hotel },
+  { path: "/specialist/:id", component: DoctorSpecialitie },
   { path: "/hotel-panel", component: HotelPanel, private: true },
-  { path: '/hotels', component: Hotels },
+  { path: "/hotels", component: Hotels },
+  { path: "/hotel-search", component: HotelSearch },
+  { path: "/found-hotels", component: FoundHotels },
   { path: "/doctor-panel", component: DoctorPanel, private: true },
   { path: "/list-of-doctors", component: ListOfDoctors },
   { path: "/login", component: Login },
