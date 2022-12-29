@@ -204,13 +204,15 @@
 }
 
 .showSpecialieties{
-    justify-content: center;
-    align-items: center;
+    justify-content: space-around;
+    /* align-items: center;  */
     background-color: rgb(199, 226, 226);
     margin-bottom: 2%;
     margin: 0 auto;
     border: 1px solid #ccc;
     padding: 15px  ;
+    border-radius: 10px;
+    margin-bottom: 50px;
 }
 
 .doctorScale{
@@ -231,3 +233,14 @@
     /* margin-right: 10px; */
 }
 
+/* .SelectSpeciality{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    margin: 5px 10px;
+    font-family: 'IranYekan';
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+} */
