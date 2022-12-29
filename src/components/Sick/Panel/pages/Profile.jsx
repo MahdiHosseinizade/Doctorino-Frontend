@@ -71,7 +71,7 @@ const Profile = () => {
       })
         .then(async (res) => {
           setUsr(res.data);
-          console.log(res.data);
+
           if (res.data.user?.first_name) {
             formik.setFieldValue("first_name", res.data.user.first_name);
           }
@@ -92,12 +92,8 @@ const Profile = () => {
           }
 
           if (res.data.birth_day) {
-            console.log("birth day setting");
-
-            let date = moment(res.data.birth_day);
-            date = date.format("jYYYY-jM-jD");
-            formik.setFieldValue("birth_day", date);
-            date = date.split("-");
+            let date = res.data.birth_day.split("-");
+            formik.setFieldValue("birth_day", res.data.birth_day);
             setBirthDay({ day: parseInt(date[2]), month: parseInt(date[1]), year: parseInt(date[0]) });
           }
 
@@ -120,18 +116,12 @@ const Profile = () => {
 
   function handleDatePicker(e) {
     setBirthDay(e);
-    let date = moment(`${e.year}/${e.month}/${e.day}`);
-    formik.setFieldValue("birth_day", date.format("YYYY-MM-DD"));
+    formik.setFieldValue("birth_day", `${e.year}-${e.month}-${e.day}`);
   }
 
   const formik = useFormik({
     initialValues: formValue,
     onSubmit: (values) => {
-      console.log(values.city);
-      // setToShow("formik: " + values.birth_day + "          birthDay: " + birthDay.year + "/" + birthDay.month + "/" + birthDay.day + "          usr: " + usr.birth_day);
-      console.log(
-        values
-      )
 
       api.put(`/api/auth/patient/${user.child_id}/`, {
         user: {
@@ -142,7 +132,7 @@ const Profile = () => {
         city: values.city,
         code_melli: values.social_number,
         phone_number: values.phone_number,
-        // birth_day: values.birth_day,
+        birth_day: values.birth_day,
       }, {
         headers: {
           Authorization: `Bearer ${authData?.access}`
