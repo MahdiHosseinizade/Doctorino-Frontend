@@ -6,7 +6,6 @@ import AuthContext from "../../context/AuthContext";
 import { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { MdPlace } from "react-icons/md";
-// import Map from "./Map";
 import axios from "axios";
 import { toast } from "react-toastify";
 import DoctorSwiper from "./DoctorSwiper";
@@ -14,6 +13,7 @@ import { FormControl, Grid, InputLabel, MenuItem, TextField } from "@mui/materia
 import { useFormik } from "formik";
 import { cities } from "../../db/cities";
 import Select from "react-select";
+import { Link,useHistory } from "react-router-dom";
 
 
 
@@ -32,7 +32,8 @@ const useStyles = makeStyles({
 
 
 export default function LandingPage() {
-  
+  // const navigate = useNavigate();
+  const history = useHistory();
   const [resDoctor, setResDoctor] = useState([]);
   const [city , setCity] = useState("");
   const [cityId , setCityId] = useState("");
@@ -52,7 +53,7 @@ export default function LandingPage() {
         // searchDoctor(values);
      }
   })
-  // convert  speciality to json that have id and value and label
+
   const specialityJson = specialitie.map((item) => {
     return {
       id: item.id,
@@ -60,7 +61,6 @@ export default function LandingPage() {
       label: item.name,
     };
   });
-  // console.log(specialityJson);
 
   useEffect(() => {
     getSpecialites();
@@ -77,26 +77,23 @@ export default function LandingPage() {
       console.log(error);
     }
   };
-  // const specialitieHandler = (e) => {
-  //   setSpeciality(e.target.value);
-  // }
-  // const cityHandler = (e) => {
-  //   setCity(e.target.value)
-  // }
-  const searchDoctor = () => {
-    // console.log(formik.values);
-    axios
+  
+
+  const searchDoctor = async (e) => {
+    e.preventDefault();
+    await axios
       .post("http://188.121.113.74/api/doctor/search/", {
         specialties: [speciality.id],
         city: city.id,
       })
       .then((res) => {
-        setResDoctor(res.data);
+        history.push('/SearchDoctor',{contact:res.data})
       })
       .catch((err) => {
         toast.error(err.response.data.message);
       });
   };
+  console.log(resDoctor);
 
   const filteredScaleHandler = (search) => {
     if (!search || search === "") {
@@ -117,7 +114,6 @@ export default function LandingPage() {
 
 
   const goSPecialitieSearch = (id) => {
-    // get all doctors with specialitie id
     console.log(id);
   };
 
@@ -128,20 +124,17 @@ export default function LandingPage() {
   };
   const cityHandler = (e) =>{
     setCity(e)
-    // setCityId(e.id)
-    // console.log(city, cityId)
   }
   const SpecialityHandler = (e) =>{
     setSpeciality(e)
-    // setSpecialityId(e.id)
   }
-  // console.log(speciality, city)
+  
 
   return (
     <>
       <div className="ContainerLandingPage">
         <NavBar />
-        <form onSubmit={formik.handleSubmit} >
+        <form  >
         <div className="Title">
           <h2>راه حلی مناسب برای رزرو دکتر</h2>
           <h1>دکترینو</h1>
@@ -172,9 +165,9 @@ export default function LandingPage() {
                 value={speciality}
               />
             </div>
-            <button type="submit"  onClick={searchDoctor} className="ZareBin">
-              {<BiSearch className="ZarebinIcon" />}
-            </button>
+              <button   onClick={searchDoctor} className="ZareBin">
+                {<BiSearch className="ZarebinIcon" />}
+              </button>
           </div>
         </div>
         <div className="landingPage">
@@ -185,7 +178,7 @@ export default function LandingPage() {
       <div className="showSpecialieties">
         <Grid container spacing={3} style={{justifyContent : 'space-around' }} >
           {filteredScale && filteredScale.map((item, index) => (
-            <Grid item xs={4} md={4} sm={4} key={index}>
+            <Grid item xs={6} md={4}  key={index}>
               <a 
                 href={`/specialist/${+findIndex + 1}`}
                 className="doctorScale"
