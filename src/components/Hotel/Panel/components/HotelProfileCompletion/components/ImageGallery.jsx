@@ -73,8 +73,8 @@ const ImageGallery = () => {
                             <img src={popupImage} className="popup-image" alt="selected image" />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={handleCancel} color="error" variant="outlined">لغو</Button>
-                            <Button onClick={handleAccept} variant="outlined" autoFocus>ذخیره تصویر</Button>
+                            <Button onClick={handleCancel}  variant="outlined">لغو</Button>
+                            <Button onClick={handleAccept} color="success" variant="outlined" autoFocus>ذخیره تصویر</Button>
                         </DialogActions>
                     </Dialog>
 

@@ -525,6 +525,7 @@ export default function ManagerProfile(props) {
                         <Button type="submit"
                             // disabled={(formik.isValid)}
                             variant="contained"
+                            color='hotel'
                             style={{ fontSize: '15px' }}
                         >ثبت اطلاعات
                         </Button>
