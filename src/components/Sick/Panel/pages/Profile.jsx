@@ -13,6 +13,8 @@ import moment from "jalali-moment";
 import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
 import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
 import "./Profile.css";
+import { city } from '../../../../assets/maps';
+
 
 const STextField = styled(TextField)({
   "& .MuiFilledInput-root": {
@@ -31,10 +33,10 @@ const SSelect = styled(Select)({
 const formValue = {
   first_name: "",
   last_name: "",
-  father_name: "",
+  province: "",
+  city: "",
   sex: "",
   social_number: "", // code meli
-  sex: "",
   phone_number: "", // شماره موبایل
   birth_day: "1200/01/01",
 };
@@ -42,8 +44,9 @@ const formValue = {
 const validationSchema = Yup.object({
   first_name: Yup.string(),
   last_name: Yup.string(),
-  father_name: Yup.string(),
-  social_number: Yup.string(),
+  province: Yup.string(),
+  city: Yup.string(),
+  social_number: Yup.string().length(10, "کد ملی باید 10 رقم باشد"),
   sex: Yup.string(),
   phone_number: Yup.string(),
   birth_day: Yup.string(),
@@ -52,27 +55,34 @@ const validationSchema = Yup.object({
 
 const Profile = () => {
 
-  const { authTokens, user } = useContext(AuthContext);
-  const [birthDay, setBirthDay] = useState({day: 26, month: 10, year: 1401});
+  const { authData, user } = useContext(AuthContext);
+  const [birthDay, setBirthDay] = useState({ day: 26, month: 10, year: 1401 });
+  const [toShow, setToShow] = useState("");
   const [loading, setLoading] = useState(true);
   const [usr, setUsr] = useState(null);
   const api = useAxios();
 
   const fetchData = () => {
     if (loading) {
-      api.get(`/api/auth/new-user/${user.user_id}/`, {
+      api.get(`/api/auth/patient/${user.child_id}/`, {
         headers: {
-          Authorization: `Bearer ${authTokens?.access}`
+          Authorization: `Bearer ${authData?.access}`
         }
       })
         .then(async (res) => {
           setUsr(res.data);
           console.log(res.data);
-          if (res.data.first_name) {
-            formik.setFieldValue("first_name", res.data.first_name);
+          if (res.data.user?.first_name) {
+            formik.setFieldValue("first_name", res.data.user.first_name);
           }
-          if (res.data.last_name) {
-            formik.setFieldValue("last_name", res.data.last_name);
+          if (res.data.user?.last_name) {
+            formik.setFieldValue("last_name", res.data.user.last_name);
+          }
+          if (res.data.province) {
+            formik.setFieldValue("province", res.data.province);
+          }
+          if (res.data.city) {
+            formik.setFieldValue("city", res.data.city);
           }
           if (res.data.code_melli) {
             formik.setFieldValue("social_number", res.data.code_melli);
@@ -81,15 +91,14 @@ const Profile = () => {
             formik.setFieldValue("phone_number", res.data.phone_number);
           }
 
-          let date = moment(res.data.birth_day);
-          date = date.format("jYYYY-jM-jD");
-          formik.setFieldValue("birth_day", date);
-          // setBirthDay(date);
-
-
           if (res.data.birth_day) {
             console.log("birth day setting");
 
+            let date = moment(res.data.birth_day);
+            date = date.format("jYYYY-jM-jD");
+            formik.setFieldValue("birth_day", date);
+            date = date.split("-");
+            setBirthDay({ day: parseInt(date[2]), month: parseInt(date[1]), year: parseInt(date[0]) });
           }
 
           if (res.data.gender != null) {
@@ -99,8 +108,6 @@ const Profile = () => {
         })
     }
 
-    // console.log("use state", birthDay);
-    // console.log(formik.values);
     setLoading(false);
   }
 
@@ -109,42 +116,36 @@ const Profile = () => {
       fetchData();
     }
 
-    const id = setInterval(() => {
-      fetchData();
-    }, 2000);
-
-    return () => clearInterval(id);
-
-  }, [loading, usr, birthDay])
+  }, [loading, usr, birthDay, fetchData])
 
   function handleDatePicker(e) {
-    console.log(e);
-    // setBirthDay({day: 26, month: 10, year: 1402});
-    // let date = moment(`${e.year}/${e.month}/${e.day}`);
-    // date = date.format("jYYYY-jM-jD");
-    // formik.setFieldValue("birth_day", date);
-    // console.log(formik.values["birth_day"]);
+    setBirthDay(e);
+    let date = moment(`${e.year}/${e.month}/${e.day}`);
+    formik.setFieldValue("birth_day", date.format("YYYY-MM-DD"));
   }
 
   const formik = useFormik({
     initialValues: formValue,
     onSubmit: (values) => {
-      setUsr((prev) => (
-        {
-          ...prev,
-          "first_name": values.first_name,
-          "last_name": values.last_name,
-          "code_melli": values.social_number,
-          "birth_day": values.birth_day,
-          "gender": values.sex,
-          "phone_number": values.phone_number,
-        }
-      ))
+      console.log(values.city);
+      // setToShow("formik: " + values.birth_day + "          birthDay: " + birthDay.year + "/" + birthDay.month + "/" + birthDay.day + "          usr: " + usr.birth_day);
+      console.log(
+        values
+      )
 
-      api.put(`/api/auth/new-user/${user.user_id}/`,
-        usr, {
+      api.put(`/api/auth/patient/${user.child_id}/`, {
+        user: {
+          first_name: values.first_name,
+          last_name: values.last_name,
+        },
+        province: values.province,
+        city: values.city,
+        code_melli: values.social_number,
+        phone_number: values.phone_number,
+        // birth_day: values.birth_day,
+      }, {
         headers: {
-          Authorization: `Bearer ${authTokens?.access}`
+          Authorization: `Bearer ${authData?.access}`
         }
       })
         .then(res => toast.success('اطلاعات با موفقیت ثبت شد', {
@@ -166,7 +167,7 @@ const Profile = () => {
     }}>
       <Box
         sx={{
-          marginTop: "200px",
+          marginTop: "50px",
           bgcolor: "rgb(245, 246, 248)",
           border: "1px solid #ccc",
           borderRadius: "10px",
@@ -216,18 +217,36 @@ const Profile = () => {
             <STextField
               fullWidth
               error={
-                formik.errors["father_name"] && formik.touched["father_name"]
+                formik.errors["province"] && formik.touched["province"]
               }
               variant="outlined"
-              label="نام پدر"
-              name="father_name"
+              label="استان"
+              name="province"
               type="text"
               helperText={
-                formik.touched["father_name"] &&
-                formik.errors["father_name"]
+                formik.touched["province"] &&
+                formik.errors["province"]
               }
-              {...formik.getFieldProps("father_name")}
+              {...formik.getFieldProps("province")}
             />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel>شهر</InputLabel>
+              <SSelect
+                error={formik.errors["city"] && formik.touched["city"]}
+                {...formik.getFieldProps('city')}
+                input={<OutlinedInput label="شهر" />}
+              >
+                {city.map((item) => {
+                  return (
+                    <MenuItem key={item[0]} value={item[0]}>
+                      <ListItemText primary={item[1]} />
+                    </MenuItem>
+                  )
+                })}
+              </SSelect>
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth>
@@ -290,15 +309,19 @@ const Profile = () => {
               value={birthDay}
               colorPrimary="#3f51b5"
               colorPrimaryLight='#757ce8'
-              onChange={setBirthDay}
+              onChange={handleDatePicker}
               shouldHighlightWeekends
               locale="fa"
-              calendarPopperPosition='auto'
+              calendarPopperPosition='bottom'
               calendarSelectedDayClassName='selected-day'
               calendarClassName='custom-calendar'
+              formatInputText={() => `تاریخ تولد: ${birthDay.year}/${birthDay.month}/${birthDay.day}`}
             />
           </Grid>
-          <Grid item md={12} sx={{
+          <Grid item xs={6} md={6}>
+            {toShow}
+          </Grid>
+          <Grid item md={12} xs={12} sx={{
             marginTop: 4,
           }}>
             <Button fullWidth variant="contained" color="primary" type="submit" disabled={!(formik.isValid)}>ذخیره</Button>
