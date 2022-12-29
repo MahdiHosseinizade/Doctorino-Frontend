@@ -15,17 +15,17 @@ import { useFormik } from "formik";
 
 const cities = [
   // cities in persian
-  {value: "Tehran", label: "تهران"},
-  {value: "Mashhad", label: "مشهد"},
-  {value: "Isfahan", label: "اصفهان"},
-  {value: "Shiraz", label: "شیراز"},
-  {value: "Tabriz", label: "تبریز"},
-  {value: "Karaj", label: "کرج"},
-  {value: "Qom", label: "قم"},
-  {value: "Kermanshah", label: "کرمانشاه"},
-  {value: "Rasht", label: "رشت"},
-  {value: "Ahvaz", label: "اهواز"},
-  {value: "Kerman", label: "کرمان"},
+  { value: "Tehran", label: "تهران" },
+  { value: "Mashhad", label: "مشهد" },
+  { value: "Isfahan", label: "اصفهان" },
+  { value: "Shiraz", label: "شیراز" },
+  { value: "Tabriz", label: "تبریز" },
+  { value: "Karaj", label: "کرج" },
+  { value: "Qom", label: "قم" },
+  { value: "Kermanshah", label: "کرمانشاه" },
+  { value: "Rasht", label: "رشت" },
+  { value: "Ahvaz", label: "اهواز" },
+  { value: "Kerman", label: "کرمان" },
 ]
 
 
@@ -52,6 +52,7 @@ export default function LandingPage() {
   const [searchScale, setSearchScale] = useState("");
   const [filteredScale, setFilteredScale] = useState(specialitie);
   const [findIndex, setFindIndex] = useState(null);
+  const [loading, setLoading] = useState(true);
   // console.log(findIndex);
   const [map, setMap] = useState(false);
   // console.log(specialitie);
@@ -60,18 +61,21 @@ export default function LandingPage() {
     initialValues: {
       city: "",
       specialities: "",
-     },
-     onsubmit: (values) => {
-        console.log(values)
-     }
-     
+    },
+    onsubmit: (values) => {
+      console.log(values)
+    }
+
   })
   // console.log(formik.values)
 
   useEffect(() => {
-    getSpecialites();
-    filteredScaleHandler(searchScale);
-  }, [specialitie]);
+    if (loading) {
+      getSpecialites();
+      filteredScaleHandler(searchScale);
+      setLoading(false);
+    }
+  }, [specialitie, loading]);
 
   const getSpecialites = async () => {
     try {
@@ -117,7 +121,7 @@ export default function LandingPage() {
     filteredScaleHandler(e.target.value);
   };
 
-  const handleChangeLocation = (lat, lng) => {};
+  const handleChangeLocation = (lat, lng) => { };
   // console.log(specialitie)
 
   const goSPecialitieSearch = (id) => {
@@ -147,7 +151,7 @@ export default function LandingPage() {
         </div>
         <div className="SearchBar_Container">
           <div className="chooseLocation">
-            <div  className="LocationIcon">
+            <div className="LocationIcon">
               <h2>لوکیشن</h2>
               <MdPlace className="MdPlace" />
             </div>
@@ -164,11 +168,11 @@ export default function LandingPage() {
                   name="city"
                   // onChange={formik.handleChange}
                   {...formik.getFieldProps("city")}
-                  // onChange={handleChange}
+                // onChange={handleChange}
                 >
                   {cities.map((item) => (
-                    <MenuItem  name value={item.value}>{item.label}</MenuItem>
-                   ))}
+                    <MenuItem name value={item.value}>{item.label}</MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>

@@ -1,0 +1,85 @@
+/*
+.dp__input {
+    width: 94%;
+    height: 30px;
+    margin-right: 4px;
+    padding: 10px;
+    display: block;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    color: #000;
+    font-family: "IranYekan" !important;
+    font-size: 16px;
+    font-weight: 550;
+    box-sizing: content-box;
+    outline-color: #72b2ff;
+}
+
+.dp__input:hover {
+    border: 1px solid black;
+}
+
+.eVqaMu {
+    display: none;
+}
+
+.sc-kAzzGY {
+    display: none;
+} 
+
+.bTnNdK svg {
+    fill: #fff;
+}
+
+[data-testid="arrow-left"] {
+    cursor: pointer;
+    fill: #fff;
+    background-color: #617fdf;
+    border-radius: 50%;
+}
+
+[data-testid="arrow-right"] {
+    cursor: pointer;
+    border: 1px solid #617fdf;
+    border-radius: 50%;
+}
+
+[data-testid="arrow-right"] path {
+    fill: #617fdf;
+}
+
+[data-testid="arrow-right"]:hover {
+    background-color: #617edf36;
+}
+*/
+
+
+/* .custom-calendar {
+    color: black !important;
+    border: 1px solid black;
+    margin-top: 30px;
+}
+
+.custom-calendar button {
+    color: black !important;
+    border: 1px solid black;
+} */
+
+.Calendar>:not(.Calendar__footer) button {
+    color: black;
+}
+
+.selected-day {
+    color: white !important;
+}
+
+.Calendar.-rtl .Calendar__monthArrowWrapper.-right {
+    margin-bottom: 55px;
+    margin-top: -55px;
+}
+
+
+.Calendar.-rtl .Calendar__monthArrowWrapper.-left {
+    margin-bottom: -55px;
+    margin-top: 55px;
+}
