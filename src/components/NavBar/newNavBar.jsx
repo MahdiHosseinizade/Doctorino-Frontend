@@ -158,7 +158,7 @@ const NavBar = () => {
               sx={{ mr: 5, with: "20px", padding: "7px 7px 0px 0px" }}
               variant="inline"
             >
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               {pages.map((page) => (
                 <Button
                   key={page}
@@ -176,7 +176,6 @@ const NavBar = () => {
               ))}
             </ButtonGroup>
           </Box>
-          {/*///////////////////////*/}
           <Box
             sx={{
               display: 'flex',
