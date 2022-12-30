@@ -38,6 +38,7 @@
 }
 
 .SearchBar_Container{
+    margin-right: 72px;
     display: flex;
     width: 50%;
     
@@ -46,7 +47,7 @@
     position: absolute;
     bottom: 17%;
     border-radius: 16px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .ContainerLandingPage{
@@ -85,15 +86,16 @@
     font-family: 'IranYekan';
     color: #03045e;
     background-color: #ffffff;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 0 10px;
     margin-bottom: 20px;
 }
 .vl{
     border-left: 1px solid #03056f;
-    height: 500px;
+    height: 100px;
 }
 .ZareBin{
+    cursor: pointer;
     background-color: #096085;
     width: 90px;
     height:90px;
@@ -202,31 +204,43 @@
 }
 
 .showSpecialieties{
-    justify-content: center;
-    align-items: center;
+    justify-content: space-around;
+    /* align-items: center;  */
     background-color: rgb(199, 226, 226);
     margin-bottom: 2%;
     margin: 0 auto;
     border: 1px solid #ccc;
     padding: 15px  ;
+    border-radius: 10px;
+    margin-bottom: 50px;
 }
 
 .doctorScale{
-    background-color: #b8c4d4;
+    background-color: #096085;
     display: flex;
-    width: 200px;
+    width: 400px;
     cursor: pointer;
     justify-content: center;
     align-items: center;
     font-family: 'IranYekan';
-    font-size: 12px;
+    font-size: 14px;
     margin: 5px 10px;    
     height: 60px;
     border-radius: 10px;
     border: 1px solid #ccc;
+    text-decoration: none;
+    color: white;
     /* margin-right: 10px; */
 }
 
-.FormControlCity{
-    border: 1px solid #03056f;
-}
+/* .SelectSpeciality{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    margin: 5px 10px;
+    font-family: 'IranYekan';
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+} */

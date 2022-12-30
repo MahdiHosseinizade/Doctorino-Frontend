@@ -56,7 +56,10 @@ const Login = ({ history }) => {
     onSubmit: (values, e) => {
       // postuserHandler(values);
       loginUser(values.email, values.password);
-      history.push("/");
+      // if login successfull redirect to landing page
+      if (document.cookie.token) {
+        history.push("/");
+      }
       e.preventDefault();
     },
     validationSchema: validationSchema,
