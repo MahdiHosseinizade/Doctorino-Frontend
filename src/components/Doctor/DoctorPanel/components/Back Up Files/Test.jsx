@@ -67,7 +67,7 @@ const validationSchema = Yup.object({
 
 export default function DoctorProfileCompletion() {
   const { user } = useContext(AuthContext);
-  const { authTokens } = useContext(AuthContext);
+  const { authData } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const api = useAxios();
   const history = useHistory();
@@ -166,7 +166,7 @@ export default function DoctorProfileCompletion() {
   //   api
   //     .get("/api/hotel/owner/hotel-list/", {
   //       headers: {
-  //         Authorization: `Bearer ${authTokens.access}`,
+  //         Authorization: `Bearer ${authData.access}`,
   //       },
   //     })
   //     .then((res) => setAvailableHotels(res.data))
@@ -206,7 +206,7 @@ export default function DoctorProfileCompletion() {
   //   if (response.status === 200) {
   //     setAuthTokens(data);
   //     setUser(jwt_decode(data.access));
-  //     localStorage.setItem("authTokens", JSON.stringify(data));
+  //     localStorage.setItem("authData", JSON.stringify(data));
 
   //     toast.success(`با موفقیت وارد شدید`, {
   //       position: "top-right",

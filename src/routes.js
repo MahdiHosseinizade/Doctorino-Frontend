@@ -22,7 +22,7 @@ import SickPanel from './components/Sick/Panel/SickPanel';
 
 const routes = [
 
-  { path: "/sick-panel", component: SickPanel, private: true },
+  { path: "/patient-panel", component: SickPanel, private: true, role:"patient" },
 
   { path: "/schedule-table", component: scheduleTable },
   { path: "/doctor-layout", component: drLayout},

@@ -9,6 +9,12 @@ import AuthContext from '../../../../context/AuthContext';
 import { useContext } from 'react';
 import useAxios from '../../../../utils/useAxios';
 import { useEffect } from 'react';
+import moment from "jalali-moment";
+import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
+import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
+import "./Profile.css";
+import { city } from '../../../../assets/maps';
+
 
 const STextField = styled(TextField)({
   "& .MuiFilledInput-root": {
@@ -27,95 +33,109 @@ const SSelect = styled(Select)({
 const formValue = {
   first_name: "",
   last_name: "",
-  father_name: "",
+  province: "",
+  city: "",
   sex: "",
   social_number: "", // code meli
-  sex: "",
   phone_number: "", // شماره موبایل
-  birth_day: "",
-  birth_year: "",
-  birth_month: "",
+  birth_day: "1200/01/01",
 };
 
 const validationSchema = Yup.object({
   first_name: Yup.string(),
   last_name: Yup.string(),
-  father_name: Yup.string(),
-  social_number: Yup.string(),
+  province: Yup.string(),
+  city: Yup.string(),
+  social_number: Yup.string().length(10, "کد ملی باید 10 رقم باشد"),
   sex: Yup.string(),
   phone_number: Yup.string(),
   birth_day: Yup.string(),
-  birth_month: Yup.string(),
-  birth_year: Yup.string(),
 });
 
 
 const Profile = () => {
 
-  const { authTokens, user } = useContext(AuthContext);
+  const { authData, user } = useContext(AuthContext);
+  const [birthDay, setBirthDay] = useState({ day: 26, month: 10, year: 1401 });
+  const [toShow, setToShow] = useState("");
   const [loading, setLoading] = useState(true);
   const [usr, setUsr] = useState(null);
   const api = useAxios();
 
-  useEffect(() => {
+  const fetchData = () => {
     if (loading) {
-      api.get(`/api/auth/new-user/${user.user_id}/`, {
+      api.get(`/api/auth/patient/${user.child_id}/`, {
         headers: {
-          Authorization: `Bearer ${authTokens?.access}`
+          Authorization: `Bearer ${authData?.access}`
         }
       })
-        .then(res => {
+        .then(async (res) => {
           setUsr(res.data);
 
-          if (res.data.first_name) {
-            formik.setFieldValue("first_name", res.data.first_name);
+          if (res.data.user?.first_name) {
+            formik.setFieldValue("first_name", res.data.user.first_name);
           }
-          if (res.data.last_name) {
-            formik.setFieldValue("last_name", res.data.last_name);
+          if (res.data.user?.last_name) {
+            formik.setFieldValue("last_name", res.data.user.last_name);
+          }
+          if (res.data.province) {
+            formik.setFieldValue("province", res.data.province);
+          }
+          if (res.data.city) {
+            formik.setFieldValue("city", res.data.city);
           }
           if (res.data.code_melli) {
             formik.setFieldValue("social_number", res.data.code_melli);
-          }
-          if (res.data.birth_day) {
-            formik.setFieldValue("birth_day", parseInt(res.data.birth_day.split("-")[2]));
-          }
-          if (res.data.birth_month) {
-            formik.setFieldValue("birth_month", res.data.birth_day.split("-")[1]);
-          }
-          if (res.data.birth_year) {
-            formik.setFieldValue("birth_year", res.data.birth_day.split("-")[0]);
           }
           if (res.data.phone_number) {
             formik.setFieldValue("phone_number", res.data.phone_number);
           }
 
-          if (res.data.gender) {
+          if (res.data.birth_day) {
+            let date = res.data.birth_day.split("-");
+            formik.setFieldValue("birth_day", res.data.birth_day);
+            setBirthDay({ day: parseInt(date[2]), month: parseInt(date[1]), year: parseInt(date[0]) });
+          }
+
+          if (res.data.gender != null) {
             formik.setFieldValue("sex", res.data.gender)
           }
           setLoading(false);
         })
     }
-  }, [loading, usr])
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    if (loading) {
+      fetchData();
+    }
+
+  }, [loading, usr, birthDay, fetchData])
+
+  function handleDatePicker(e) {
+    setBirthDay(e);
+    formik.setFieldValue("birth_day", `${e.year}-${e.month}-${e.day}`);
+  }
 
   const formik = useFormik({
     initialValues: formValue,
     onSubmit: (values) => {
-      setUsr((prev) => (
-        {
-          ...prev,
-          "first_name": values.first_name,
-          "last_name": values.last_name,
-          "code_melli": values.social_number,
-          "birth_day": ["2013", "2017", "2000", "1980"][Math.floor(Math.random() * 4)] + "-" + ((months.indexOf(values.birth_month) + 1) || "8") + "-" + values.birth_day,
-          "gender": values.sex,
-          "phone_number": values.phone_number,
-        }
-      ))
 
-      api.put(`/api/auth/new-user/${user.user_id}/`,
-        usr, {
+      api.put(`/api/auth/patient/${user.child_id}/`, {
+        user: {
+          first_name: values.first_name,
+          last_name: values.last_name,
+        },
+        province: values.province,
+        city: values.city,
+        code_melli: values.social_number,
+        phone_number: values.phone_number,
+        birth_day: values.birth_day,
+      }, {
         headers: {
-          Authorization: `Bearer ${authTokens?.access}`
+          Authorization: `Bearer ${authData?.access}`
         }
       })
         .then(res => toast.success('اطلاعات با موفقیت ثبت شد', {
@@ -129,16 +149,6 @@ const Profile = () => {
     },
     validationSchema: validationSchema,
   });
-
-  const days = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
-  const months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"]
-  const years = [
-    '1400', '1399', '1398', '1397', '1396', '1395', '1394', '1393', '1392', '1391', '1390', '1389', '1388', '1387', '1386', '1385', '1384',
-    '1383', '1382', '1381', '1380', '1379', '1378', '1377', '1376', '1375', '1374', '1373', '1372', '1371', '1370', '1369', '1368', '1367', '1366', '1365',
-    '1364', '1363', '1362', '1361', '1360', '1359', '1358', '1357', '1356', '1355', '1354', '1353', '1352', '1351', '1350', '1349', '1348', '1347', '1346', '1345',
-    '1344', '1343', '1342', '1341', '1340', '1339', '1338', '1337', '1336', '1335', '1334', '1333', '1332', '1331', '1330', '1329', '1328', '1327', '1326', '1325',
-    '1324', '1323', '1322', '1321', '1320', '1319', '1318', '1317',
-    '1316', '1315', '1314', '1313', '1312', '1311', '1310', '1309', '1308', '1307', '1306', '1305', '1304', '1303', '1302', '1301', '1300']
 
   return (
     <Container sx={{
@@ -197,18 +207,36 @@ const Profile = () => {
             <STextField
               fullWidth
               error={
-                formik.errors["father_name"] && formik.touched["father_name"]
+                formik.errors["province"] && formik.touched["province"]
               }
               variant="outlined"
-              label="نام پدر"
-              name="father_name"
+              label="استان"
+              name="province"
               type="text"
               helperText={
-                formik.touched["father_name"] &&
-                formik.errors["father_name"]
+                formik.touched["province"] &&
+                formik.errors["province"]
               }
-              {...formik.getFieldProps("father_name")}
+              {...formik.getFieldProps("province")}
             />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel>شهر</InputLabel>
+              <SSelect
+                error={formik.errors["city"] && formik.touched["city"]}
+                {...formik.getFieldProps('city')}
+                input={<OutlinedInput label="شهر" />}
+              >
+                {city.map((item) => {
+                  return (
+                    <MenuItem key={item[0]} value={item[0]}>
+                      <ListItemText primary={item[1]} />
+                    </MenuItem>
+                  )
+                })}
+              </SSelect>
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth>
@@ -219,10 +247,13 @@ const Profile = () => {
                 input={<OutlinedInput label="جنسیت" />}
               >
                 <MenuItem value={0}>
-                  <ListItemText primary="مذکر" />
+                  <ListItemText primary="مرد" />
                 </MenuItem>
                 <MenuItem value={1}>
-                  <ListItemText primary="مونث" />
+                  <ListItemText primary="زن" />
+                </MenuItem>
+                <MenuItem value={2}>
+                  <ListItemText primary="سایر" />
                 </MenuItem>
               </SSelect>
             </FormControl>
@@ -261,55 +292,26 @@ const Profile = () => {
               {...formik.getFieldProps("phone_number")}
             />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
-              <InputLabel>روز تولد</InputLabel>
-              <SSelect
-                error={formik.errors["birth_day"] && formik.touched["birth_day"]}
-                {...formik.getFieldProps('birth_day')}
-                input={<OutlinedInput label="روز تولد" />}
-              >
-                {days.map((day, index) => (
-                  <MenuItem key={index} value={day}>
-                    <ListItemText primary={day} />
-                  </MenuItem>
-                ))}
-              </SSelect>
-            </FormControl>
+          <Grid item xs={6} md={6}>
+            {/* <DatePicker timePicker={false} value={birthDay} onClickSubmitButton={handleDatePicker} /> */}
+            <DatePicker
+              inputPlaceholder='تاریخ تولد'
+              value={birthDay}
+              colorPrimary="#3f51b5"
+              colorPrimaryLight='#757ce8'
+              onChange={handleDatePicker}
+              shouldHighlightWeekends
+              locale="fa"
+              calendarPopperPosition='bottom'
+              calendarSelectedDayClassName='selected-day'
+              calendarClassName='custom-calendar'
+              formatInputText={() => `تاریخ تولد: ${birthDay.year}/${birthDay.month}/${birthDay.day}`}
+            />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
-              <InputLabel>ماه تولد</InputLabel>
-              <SSelect
-                error={formik.errors["birth_month"] && formik.touched["birth_month"]}
-                {...formik.getFieldProps('birth_month')}
-                input={<OutlinedInput label="ماه تولد" />}
-              >
-                {months.map((month, index) => (
-                  <MenuItem key={index} value={month}>
-                    <ListItemText primary={month} />
-                  </MenuItem>
-                ))}
-              </SSelect>
-            </FormControl>
+          <Grid item xs={6} md={6}>
+            {toShow}
           </Grid>
-          <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
-              <InputLabel>سال تولد</InputLabel>
-              <SSelect
-                error={formik.errors["birth_year"] && formik.touched["birth_year"]}
-                {...formik.getFieldProps('birth_year')}
-                input={<OutlinedInput label="سال تولد" />}
-              >
-                {years.map((year, index) => (
-                  <MenuItem key={index} value={year}>
-                    <ListItemText primary={year} />
-                  </MenuItem>
-                ))}
-              </SSelect>
-            </FormControl>
-          </Grid>
-          <Grid item md={12} sx={{
+          <Grid item md={12} xs={12} sx={{
             marginTop: 4,
           }}>
             <Button fullWidth variant="contained" color="primary" type="submit" disabled={!(formik.isValid)}>ذخیره</Button>

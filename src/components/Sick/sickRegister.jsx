@@ -61,7 +61,9 @@ const SickRegister = () => {
   const postsickHandler = (user) => {
     // post Header in Body Request
     axios
-      .post(`${baseURL}/api/auth/new-user/`, user)
+      .post(`${baseURL}/api/auth/patient/new/`, {
+        user: user,
+      })
       .then((res) => {
         setUser(res.data);
         toast.success("ثبت نام با موفقیت انجام شد", {

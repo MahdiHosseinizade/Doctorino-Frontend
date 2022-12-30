@@ -63,7 +63,7 @@ const validationSchema = Yup.object({
 });
 
 export default function HotelProfileCompletion() {
-  const { authTokens } = useContext(AuthContext);
+  const { authData } = useContext(AuthContext);
 
   const [loading, setLoading] = useState(true);
   const [hotel, setHotel] = useState();
@@ -78,7 +78,7 @@ export default function HotelProfileCompletion() {
     api
       .get("/api/hotel/owner/hotel-list/", {
         headers: {
-          Authorization: `Bearer ${authTokens.access}`,
+          Authorization: `Bearer ${authData.access}`,
         },
       })
       .then((res) => setAvailableHotels(res.data))
@@ -146,7 +146,7 @@ export default function HotelProfileCompletion() {
         api
           .put(`/api/hotel/${values.hotel_id}/`, data, {
             headers: {
-              Authorization: "Bearer " + authTokens.access,
+              Authorization: "Bearer " + authData.access,
             },
           })
           .then((res) =>
