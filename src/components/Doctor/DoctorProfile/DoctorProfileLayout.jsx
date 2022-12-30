@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import NavBar from "../../NavBar/newNavBar"
+import NavBar from "../../NavBar/newNavBar";
 import { Schedule } from "@mui/icons-material";
 
 export default function DoctorProfileLayout() {
@@ -44,9 +44,7 @@ export default function DoctorProfileLayout() {
             // fetchData2();
         }
 
-    }, [loading, doctor, setLoading, setDoctor,
-        //  scheduleTime, scheduleTime
-        ])
+    }, [loading, doctor, setLoading, setDoctor,])
 
     return (
         <Container>

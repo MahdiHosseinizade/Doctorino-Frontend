@@ -21,6 +21,8 @@ import "./Hotel.css";
 import { Box } from "@mui/system";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import { Star } from "@mui/icons-material";
 import { MdPool } from "react-icons/md";
 import { CgGym } from "react-icons/cg";
@@ -69,6 +71,7 @@ const useStyles = makeStyles({
   },
   hotel_image: {
     position: "absolute",
+    right: "5px",
     right: "5px",
     width: "90%",
     height: "90%",
@@ -124,10 +127,12 @@ const Hotel = () => {
       .get(`http://188.121.113.74/api/hotel/${id}/`)
       .then((res) => {
         setHotel({ ...res.data });
+        setHotel({ ...res.data });
       })
       .catch((err) => console.log(err));
   };
   // I want to implement features of hotel with icons
+
 
   const iconsFeatures = [
     { icon: <MdPool />, title: "استخر" },
