@@ -18,7 +18,7 @@ const theme = createTheme({
             contrastText: '#fff',
         }, 
         hotel: {
-            main: "#FEB614",
+            main: "#eab308",
             light: "#FFF6E7",
             dark: "#c7ba28",
             contrastText: "#fff",
