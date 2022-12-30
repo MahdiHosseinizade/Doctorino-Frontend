@@ -10,6 +10,8 @@ import DoctorProfileLayout from "./components/Doctor/DoctorProfile/DoctorProfile
 import LandingPage from "./components/LandingPage/LandingPage.jsx";
 import HotelSearch from "./components/LandingPage/HotelSearch/HotelSearch";
 import FoundHotels from "./components/LandingPage/HotelSearch/FoundHotels";
+import HotelSearch from "./components/LandingPage/HotelSearch/HotelSearch";
+import FoundHotels from "./components/LandingPage/HotelSearch/FoundHotels";
 import NotFound from "./pages/NotFoundPage";
 import scheduleTable from "./components/Doctor/DoctorProfile/scheduleTable";
 import drLayout from "./components/Doctor/DoctorProfile/DoctorProfileLayout";
@@ -20,6 +22,7 @@ import SearchDoctorResponse from "./components/LandingPage/SearchDocResponse";
 
 const routes = [
   { path: "/schedule-table", component: scheduleTable },
+  { path: "/doctor-layout", component: drLayout },
   { path: "/doctor-layout", component: drLayout },
   { path: "/signup", component: SignUpPage },
   { path: "/hotel/:id", component: Hotel },
