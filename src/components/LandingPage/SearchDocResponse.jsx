@@ -24,17 +24,17 @@ const SearchDoctorResponse = () => {
     return (
         <div>
             <Container>
-            <Grid className={classes.navBar}>
-                <NavBar />
-            </Grid>-
-            <Grid container className={classes.container} sx={{ m: 3 }}>
-            {contact.map((doctor, index) => (
-                <Grid item key={index} xs={12} md={12} lg={12} xl={12}>
-                    <DoctorCard doctor={doctor} />
+                <Grid className={classes.navBar}>
+                    <NavBar />
                 </Grid>
-            ))}
-            </Grid>
-        </Container>
+                <Grid container className={classes.container} sx={{ m: 3 }}>
+                {contact.map((doctor, index) => (
+                    <Grid item key={index} xs={12} md={12} lg={12} xl={12}>
+                        <DoctorCard doctor={doctor} />
+                    </Grid>
+                ))}
+                </Grid>
+            </Container>
         </div>
     );
 }
