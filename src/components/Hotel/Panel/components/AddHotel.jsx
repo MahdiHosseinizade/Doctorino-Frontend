@@ -189,7 +189,9 @@ export default function HotelProfileCompletion() {
             formData.append('cover_image', file);
         }
 
-        formData.append("features", JSON.stringify(features));
+        features.forEach(feat => {
+            formData.append("features", feat)
+        })
 
         formData.append('phone_number', hotel.phone_number);
         formData.append('hotel_description', hotel.hotel_description);
@@ -202,54 +204,28 @@ export default function HotelProfileCompletion() {
         for (var key of formData.entries()) {
             console.log(key[0] + ': ' + formData.getAll(key[0]));
         }
-        console.log(features)
-        axios.post("https://cors-anywhere.herokuapp.com/postman-echo.com/post/", formData, 
-        {
-          headers: {
-            // 'Content-Type': 'multipart/form-data',
-            'x-requested-with': 'XMLHttpRequest',
-          },
-        })
-          .then((res) => {
-            console.log("data received on server: ")
-            console.log(res.data.form);
-            toast.success(`تغیر هتل با موفقیت انجام شد`, {
-              position: "top-right",
-              autoClose: 2000,
-            })
-          }
-          )
-          .catch((err) => {
-            console.log(err)
-            toast.error("مشکلی پیش آمده است", {
-              position: "top-right",
-              autoClose: 2000,
-            })
-          }
-        );
 
-        // console.log(features);
-        // api.post('/api/hotel/new/',
-        //     formData,
-        //     {
-        //         headers:
-        //         {
-        //             'Content-Type': 'multipart/form-data',
-        //             Authorization: `Bearer ${authData.access}`
-        //         }
-        //     }
-        // )
-        //     .then(res => {
-        //         console.log(res);
-        //         toast.success("هتل با موفقیت ایجاد شد", {
-        //             position: "top-right",
-        //             autoClose: 2000,
-        //         })
-        //     })
-        //     .catch(err => toast.error('مشکلی پیش آمده', {
-        //         position: "top-right",
-        //         autoClose: 2000,
-        //     }))
+        api.post('/api/hotel/new/',
+            formData,
+            {
+                headers:
+                {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${authData.access}`
+                }
+            }
+        )
+            .then(res => {
+                console.log(res);
+                toast.success("هتل با موفقیت ایجاد شد", {
+                    position: "top-right",
+                    autoClose: 2000,
+                })
+            })
+            .catch(err => toast.error('مشکلی پیش آمده', {
+                position: "top-right",
+                autoClose: 2000,
+            }))
     }
 
     function handle(e) {
@@ -258,6 +234,7 @@ export default function HotelProfileCompletion() {
 
     function handleImage(files) {
         setImageToShow(URL.createObjectURL(files[0]));
+        setFile(files[0]);
     }
 
     return (
@@ -354,6 +331,23 @@ export default function HotelProfileCompletion() {
                                 <STextField
                                     fullWidth
                                     error={
+                                        formik.errors["hotel_description"] &&
+                                        formik.touched["hotel_description"]
+                                    }
+                                    variant="outlined"
+                                    label="توضیحات"
+                                    name="hotel_description"
+                                    type="text"
+                                    helperText={formik.touched["hotel_description"] && formik.errors["hotel_description"]}
+                                    multiline
+                                    rows={3}
+                                    {...formik.getFieldProps("hotel_description")}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={12}>
+                                <STextField
+                                    fullWidth
+                                    error={
                                         formik.errors["rules"] &&
                                         formik.touched["rules"]
                                     }
@@ -363,7 +357,7 @@ export default function HotelProfileCompletion() {
                                     type="text"
                                     helperText={formik.touched["rules"] && formik.errors["rules"]}
                                     multiline
-                                    rows={4}
+                                    rows={3}
                                     {...formik.getFieldProps("rules")}
                                 />
                             </Grid>
