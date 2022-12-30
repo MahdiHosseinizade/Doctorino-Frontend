@@ -6,6 +6,8 @@ import { FormControl } from "@mui/material";
 import { MdPlace } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 import { cities } from "../../../db/cities";
+// import { provinces } from "../../../db/Provinces.js";
+// import {provinces} from "../../../db/Provinces"
 import axios from "axios";
 import { toast } from "react-toastify";
 import Select from "react-select";
@@ -15,6 +17,8 @@ import { alignProperty } from "@mui/material/styles/cssUtils";
 // const useStyles = makeStyles({});
 
 export default function HotelSearch() {
+  // console.log("the provinces: ", provinces);
+  // console.log("the city: ", cities);
   const [city, setCity] = useState("");
   // const classes = useStyles();
   const history = useHistory();
@@ -25,13 +29,19 @@ export default function HotelSearch() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("city id: ", city.id);
     await axios
       .post("http://188.121.113.74/api/hotel/search/", {
-        city: city.id,
+        province: city.id,
+        // province: 1,
       })
       .then((response) => {
-        console.log("the response of found hotels: ", response.data);
-        history.push("/found-hotels", { hotels: response.data });
+        if (response.data.length !== 0) {
+          console.log("the response of found hotels: ", response.data);
+          history.push("/found-hotels", { hotels: response.data });
+        } else {
+          toast.error("هیچ هتلی یافت نشد");
+        }
       })
       .catch((err) => {
         toast.error(err.response.data.message);
@@ -56,12 +66,16 @@ export default function HotelSearch() {
             <div className="EnterCity">
               <FormControl className="FormControlCity" fullWidth>
                 <Select
-                  value={city}
+                  value={city.name}
                   onChange={(e) => handleCity(e)}
                   options={cities}
                   menuPortalTarget={document.body}
                   // menuPortalTarget={document.querySelector("#root > div.ContainerLandingPage > form > div.SearchBar_Container > div.chooseLocation")}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 0 }) , direction: "rtl", marginLeft: "5000px" }}
+                  styles={{
+                    menuPortal: (base) => ({ ...base, zIndex: 0 }),
+                    direction: "rtl",
+                    marginLeft: "5000px",
+                  }}
                 />
               </FormControl>
             </div>
