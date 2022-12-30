@@ -10,8 +10,6 @@ import DoctorProfileLayout from "./components/Doctor/DoctorProfile/DoctorProfile
 import LandingPage from "./components/LandingPage/LandingPage.jsx";
 import HotelSearch from "./components/LandingPage/HotelSearch/HotelSearch";
 import FoundHotels from "./components/LandingPage/HotelSearch/FoundHotels";
-import HotelSearch from "./components/LandingPage/HotelSearch/HotelSearch";
-import FoundHotels from "./components/LandingPage/HotelSearch/FoundHotels";
 import NotFound from "./pages/NotFoundPage";
 import scheduleTable from "./components/Doctor/DoctorProfile/scheduleTable";
 import drLayout from "./components/Doctor/DoctorProfile/DoctorProfileLayout";
