@@ -79,10 +79,10 @@ const Profile = () => {
             formik.setFieldValue("last_name", res.data.user.last_name);
           }
           if (res.data.province) {
-            formik.setFieldValue("province", res.data.province);
+            // formik.setFieldValue("province", res.data.province);
           }
           if (res.data.city) {
-            formik.setFieldValue("city", res.data.city);
+            // formik.setFieldValue("city", res.data.city);
           }
           if (res.data.code_melli) {
             formik.setFieldValue("social_number", res.data.code_melli);

@@ -112,7 +112,7 @@ const AppointmentCard = ({ appointment, deleteAppointment }) => {
 
     return (
         <Card className={classes.card} sx={{
-            backgroundColor: "#fff",
+            backgroundColor: "#bfdbfe",
             border: "1px solid darkblue",
             borderRadius: "10px",
             boxShadow: "0 0 5px 0 rgba(0,0,0,0.2)",
