@@ -64,7 +64,10 @@ export const AuthProvider = ({ children }) => {
         autoClose: 2000,
       });
     } else {
-      alert("Something went wrong!");
+      toast.error(`نام کاربری یا رمز عبور اشتباه است`, {
+        position: "top-right",
+        autoClose: 2000,
+      });
     }
   };
 

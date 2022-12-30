@@ -90,8 +90,11 @@ const Hotelregister = () => {
         onSubmit: (values) => {
             posthotelHandler(values);
         },
-        validationSchema: validationSchema
+        validationSchema: validationSchema,
+        validateOnMount: true,
+
     })
+    console.log(formik.values);
 
   return (
     <div>
@@ -102,18 +105,18 @@ const Hotelregister = () => {
               // id="first_name"
               fullWidth
               error={
-                formik.errors["first_name"] && formik.touched["first_name"]
+                formik.errors["name"] && formik.touched["name"]
               }
               variant="outlined"
               label="نام"
-              name="first_name"
+              name="name"
               type="text"
               helperText={
-                formik.errors["first_name"] &&
-                formik.touched["first_name"] &&
-                formik.errors["first_name"]
+                formik.errors["name"] &&
+                formik.touched["name"] &&
+                formik.errors["name"]
               }
-              {...formik.getFieldProps("first_name")}
+              {...formik.getFieldProps("name")}
             />
             {/* <Input label="نام" name="name" formik={formik} type="text" /> */}
           </Grid>
@@ -126,17 +129,17 @@ const Hotelregister = () => {
             /> */}
             <STextField
               fullWidth
-              error={formik.errors["last_name"] && formik.touched["last_name"]}
+              error={formik.errors["family"] && formik.touched["family"]}
               variant="outlined"
               label="نام خانوادگی"
-              name="last_name"
+              name="family"
               type="text"
               helperText={
-                formik.errors["last_name"] &&
-                formik.touched["last_name"] &&
-                formik.errors["last_name"]
+                formik.errors["family"] &&
+                formik.touched["family"] &&
+                formik.errors["family"]
               }
-              {...formik.getFieldProps("last_name")}
+              {...formik.getFieldProps("family")}
             />
           </Grid>
           <Grid item md={12} xs={12}>

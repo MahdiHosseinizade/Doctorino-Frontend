@@ -70,7 +70,7 @@ function Hotels({ history, location, match, staticContext, props }) {
             setHotels(response.data)
             response.data.map(item => console.log(item.city))
         } else {
-            alert("Something went wrong")
+            console.log('error')
         }
     }
 
