@@ -13,7 +13,8 @@ import moment from "jalali-moment";
 import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
 import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
 import "./Profile.css";
-import { city } from '../../../../assets/maps';
+import cities from "../../../../db/Cities.js";
+import provinces from "../../../../db/Provinces";
 
 
 const STextField = styled(TextField)({
@@ -44,8 +45,8 @@ const formValue = {
 const validationSchema = Yup.object({
   first_name: Yup.string(),
   last_name: Yup.string(),
-  province: Yup.string(),
-  city: Yup.string(),
+  province: Yup.number(),
+  city: Yup.number(),
   social_number: Yup.string().length(10, "کد ملی باید 10 رقم باشد"),
   sex: Yup.string(),
   phone_number: Yup.string(),
@@ -58,13 +59,40 @@ const Profile = () => {
   const { authData, user } = useContext(AuthContext);
   const [birthDay, setBirthDay] = useState({ day: 26, month: 10, year: 1401 });
   const [toShow, setToShow] = useState("");
+  const [citiesToShow, setCitiesToShow] = useState([]);
+  const [provincesToShow, setProvincesToShow] = useState([]);
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
   const [loading, setLoading] = useState(true);
   const [usr, setUsr] = useState(null);
   const api = useAxios();
 
-  const fetchData = () => {
+  async function setCitiesByProvince(province) {
+    const citiesLST = cities.filter((city) => city.province_id === province);
+    setCitiesToShow(citiesLST);
+  }
+
+  const handleProvince = (event) => {
+    const value = event.target.value;
+    setProvince(value);
+
+    const province = provinces.find((province) => province.id === value);
+    formik.setFieldValue("province", province.id);
+
+    setCitiesByProvince(value);
+  }
+
+  const handleCity = (event) => {
+    const value = event.target.value;
+    setCity(value);
+
+    const city = cities.find((city) => city.id === value);
+    formik.setFieldValue("city", city.id);
+  }
+
+  const fetchData = async () => {
     if (loading) {
-      api.get(`/api/auth/patient/${user.child_id}/`, {
+      await api.get(`/api/auth/patient/${user.child_id}/`, {
         headers: {
           Authorization: `Bearer ${authData?.access}`
         }
@@ -72,17 +100,33 @@ const Profile = () => {
         .then(async (res) => {
           setUsr(res.data);
 
+          const {
+            province,
+            city,
+          } = res.data;
+
           if (res.data.user?.first_name) {
             formik.setFieldValue("first_name", res.data.user.first_name);
           }
           if (res.data.user?.last_name) {
             formik.setFieldValue("last_name", res.data.user.last_name);
           }
-          if (res.data.province) {
-            // formik.setFieldValue("province", res.data.province);
+
+          if (province) {
+            const provinceObj = provinces.find(prov => prov.name === province);
+            if (provinceObj) {
+              setCitiesByProvince(provinceObj.id);
+              setProvince(provinceObj.id);
+              formik.setFieldValue("province", provinceObj.id);
+            }
           }
-          if (res.data.city) {
-            // formik.setFieldValue("city", res.data.city);
+
+          if (city && citiesToShow.length > 0) {
+            const cityObj = citiesToShow.find(cty => cty.name === city);
+            if (cityObj) {
+              setCity(cityObj.id);
+              formik.setFieldValue("city", cityObj.id);
+            }
           }
           if (res.data.code_melli) {
             formik.setFieldValue("social_number", res.data.code_melli);
@@ -109,6 +153,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (loading) {
+      setProvincesToShow(provinces);
       fetchData();
     }
 
@@ -204,37 +249,36 @@ const Profile = () => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <STextField
-              fullWidth
-              error={
-                formik.errors["province"] && formik.touched["province"]
-              }
-              variant="outlined"
-              label="استان"
-              name="province"
-              type="text"
-              helperText={
-                formik.touched["province"] &&
-                formik.errors["province"]
-              }
-              {...formik.getFieldProps("province")}
-            />
+            <FormControl fullWidth>
+              <InputLabel>استان</InputLabel>
+              <SSelect
+                value={province}
+                onChange={handleProvince}
+                label="استان"
+                error={formik.errors["province"] && formik.touched["province"]}
+              >
+                {provincesToShow.map(({ id, name }) => (
+                  <MenuItem key={id} value={id}>
+                    <ListItemText primary={name} />
+                  </MenuItem>
+                ))}
+              </SSelect>
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={6}>
             <FormControl fullWidth>
               <InputLabel>شهر</InputLabel>
               <SSelect
+                value={city}
+                onChange={handleCity}
+                label="شهر"
                 error={formik.errors["city"] && formik.touched["city"]}
-                {...formik.getFieldProps('city')}
-                input={<OutlinedInput label="شهر" />}
               >
-                {city.map((item) => {
-                  return (
-                    <MenuItem key={item[0]} value={item[0]}>
-                      <ListItemText primary={item[1]} />
-                    </MenuItem>
-                  )
-                })}
+                {citiesToShow.map(({ id, name }) => (
+                  <MenuItem key={id} value={id}>
+                    <ListItemText primary={name} />
+                  </MenuItem>
+                ))}
               </SSelect>
             </FormControl>
           </Grid>
