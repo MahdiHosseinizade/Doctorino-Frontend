@@ -49,7 +49,7 @@ const useStyles = makeStyles({
   },
   featureCard: {
     width: "750px",
-    height: "300px",
+    height: "100%",
     display: "fix",
     paddingInline: "13px",
     marginBottom: "20px",
@@ -57,7 +57,7 @@ const useStyles = makeStyles({
   availableRoomsCard: {
     textAlign: "center",
     width: "350px",
-    height: "70%",
+    height: "95%",
     display: "fix",
     paddingInline: "13px",
     marginBottom: "20px",
@@ -84,6 +84,10 @@ const useStyles = makeStyles({
     "&:hover": {
       backgroundColor: "#2563eb",
     },
+  },
+  rulesCard: {
+    marginBottom: "20px",
+    width: "100%",
   },
 });
 const Hotel = () => {
@@ -342,10 +346,10 @@ const Hotel = () => {
         </Grid>
 
         <Grid item xs={12} md={12}>
-            {availableRooms && <AvailableRooms availableRooms={availableRooms} /> }
+            {availableRooms && <AvailableRooms availableRooms={availableRooms} fromTime={fromTime} toTime={toTime}/> }
         </Grid>
         <Grid item xs={12} md={12}>
-          <Card className={classes.card3}>
+          <Card className={classes.rulesCard}>
             <div>
               {/* <h2 className="h2_emkanat">قوانین هتل</h2> */}
               <CardHeader
