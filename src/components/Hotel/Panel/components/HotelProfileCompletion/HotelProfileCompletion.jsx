@@ -36,6 +36,8 @@ import RoomCard from "./components/RoomCard";
 import ImageGallery from "./components/ImageGallery"
 import theme from '../../../../../assets/theme/defaultTheme';
 import PropTypes from 'prop-types';
+import cities from "../../../../../assets/map_data/Cities";
+import provinces from "../../../../../assets/map_data/Provinces";
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -125,6 +127,8 @@ const validationSchema = Yup.object({
   features: Yup.array(),
   trade_code: Yup.string(),
   hotel_id: Yup.number().required("هتل باید انتخاب شود"),
+  city: Yup.string(),
+  province: Yup.string(),
 });
 
 const formRoomValue = {
@@ -182,6 +186,10 @@ export default function HotelProfileCompletion() {
   const [hotel, setHotel] = useState('');
   const [stars, setStars] = useState("");
   const [features, setFeatures] = useState([]);
+  const [cityList, setCityList] = useState([]);
+  const [provinceList, setProvinceList] = useState(provinces);
+  const [cityState, setCity] = useState("");
+  const [provinceState, setProvince] = useState("");
   const [availableFeatures, setAvailableFeatures] = useState([]);
   const [availableHotels, setAvailableHotels] = useState([]);
   const [rooms, setRooms] = useState([]);
@@ -235,6 +243,29 @@ export default function HotelProfileCompletion() {
     formik.setFieldValue("features", feat);
   };
 
+  function setCitiesByProvince(province) {
+    const citiesLST = cities.filter((city) => city.province_id === province);
+    setCityList(citiesLST);
+  }
+  
+  const handleProvince = (event) => {
+    const value = event.target.value;
+    setProvince(value);
+
+    const province = provinces.find((province) => province.id === value);
+    formik.setFieldValue("province", province.id);
+
+    setCitiesByProvince(value);
+  }
+
+  const handleCity = (event) => {
+    const value = event.target.value;
+    setCity(value);
+
+    const city = cityList.find((city) => city.id === value);
+    formik.setFieldValue("city", city.id);
+  }
+
   const handleStars = (event) => {
     const value = event.target.value;
     setStars(value);
@@ -257,6 +288,8 @@ export default function HotelProfileCompletion() {
           trade_code,
           cover_image,
           stars,
+          city,
+          province,
         } = res.data;
 
         formik.resetForm();
@@ -291,6 +324,25 @@ export default function HotelProfileCompletion() {
           console.log(stars);
           setStars(stars);
           formik.setFieldValue("stars", stars);
+        }
+
+        setProvinceList(provinces);
+
+        if (province) {
+          const provinceObj = provinces.find(prov => prov.name === province);
+          if (provinceObj) {
+            setCitiesByProvince(provinceObj.id);
+            setProvince(provinceObj.id);
+            formik.setFieldValue("province", provinceObj.id);
+          }
+        }
+
+        if (city && cityList.length > 0) {
+          const cityObj = cityList.find(cty => cty.name === city);
+          if (cityObj) {
+            setCity(cityObj.id);
+            formik.setFieldValue("city", cityObj.id);
+          }
         }
       })
       .catch(err => console.error(err))
@@ -337,7 +389,12 @@ export default function HotelProfileCompletion() {
     onReset: () => {
       setFeatures([]);
       setCoverImage(null);
+      setProvinceList([]);
+      setCityList([]);
+      setProvince('');
+      setCity('');
       setHotel('');
+      setStars('');
     },
 
     onSubmit: (values) => {
@@ -356,9 +413,11 @@ export default function HotelProfileCompletion() {
         formData.append("address", values.address);
         formData.append("rules", values.rules);
         formData.append("stars", values.stars);
+        formData.append("province", values.province);
+        formData.append("city", values.city);
 
-        values.features.forEach(feat => {
-          formData.append("features", feat);
+        features.forEach(feat => {
+          formData.append("features", feat)
         })
 
         if (values.cover_image) {
@@ -643,7 +702,7 @@ export default function HotelProfileCompletion() {
                           type="text"
                           helperText={formik.touched["hotel_description"] && formik.errors["hotel_description"]}
                           multiline
-                          rows={4}
+                          rows={3}
                           {...formik.getFieldProps("hotel_description")}
                         />
                       </Grid>
@@ -660,9 +719,43 @@ export default function HotelProfileCompletion() {
                           type="text"
                           helperText={formik.touched["rules"] && formik.errors["rules"]}
                           multiline
-                          rows={4}
+                          rows={3}
                           {...formik.getFieldProps("rules")}
                         />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <SFormControl fullWidth>
+                          <InputLabel>استان</InputLabel>
+                          <SSelect
+                            value={provinceState}
+                            onChange={handleProvince}
+                            label="استان"
+                            error={formik.errors["province"] && formik.touched["province"]}
+                          >
+                            {provinceList.map(({ id, name }) => (
+                              <SMenuItem key={id} value={id}>
+                                <ListItemText primary={name} />
+                              </SMenuItem>
+                            ))}
+                          </SSelect>
+                        </SFormControl>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <SFormControl fullWidth>
+                          <InputLabel>شهر</InputLabel>
+                          <SSelect
+                            value={cityState}
+                            onChange={handleCity}
+                            label="شهر"
+                            error={formik.errors["city"] && formik.touched["city"]}
+                          >
+                            {cityList.map(({ id, name }) => (
+                              <SMenuItem key={id} value={id}>
+                                <ListItemText primary={name} />
+                              </SMenuItem>
+                            ))}
+                          </SSelect>
+                        </SFormControl>
                       </Grid>
                       <Grid item xs={12} md={6}>
                         <SFormControl fullWidth>

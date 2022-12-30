@@ -228,10 +228,6 @@ export default function HotelProfileCompletion() {
             }))
     }
 
-    function handle(e) {
-        setFile(e.target.files[0]);
-    }
-
     function handleImage(files) {
         setImageToShow(URL.createObjectURL(files[0]));
         setFile(files[0]);
