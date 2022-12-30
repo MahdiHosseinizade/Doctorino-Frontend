@@ -62,7 +62,6 @@ const NavBar = () => {
         <Toolbar disableGutters>
           <Typography
             variant="h4"
-            noWrap
             component="a"
             href="/"
             sx={{
@@ -137,7 +136,6 @@ const NavBar = () => {
               <AdbIcon color="primary" sx={{ fontSize: 45, mr: 1 }} />
               <Typography
                 variant="h4"
-                noWrap
                 sx={{
                   display: "inline-block",
                   fontSize: "35px",
@@ -189,7 +187,6 @@ const NavBar = () => {
           >
 
             <ButtonGroup
-              noWrap
               variant="text"
               size="medium"
               aria-label="text button group"

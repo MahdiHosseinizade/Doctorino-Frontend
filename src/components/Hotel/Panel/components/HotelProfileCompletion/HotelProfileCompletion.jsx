@@ -208,7 +208,7 @@ export default function HotelProfileCompletion() {
 
     api
       .get("/api/hotel/room/")
-      .then((res) => setAvailableFeatures(res.data))
+      .then((res) => setRoomForm(res.data))
       .catch((err) => console.error(err));
 
     setLoading(false);
