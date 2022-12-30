@@ -20,24 +20,37 @@ const NavBar = () => {
   // console.log(user);
 
   const history = useHistory();
-  const pages = ["نوبت دهی مطب", "مشاوره پزشکی", "مراکز درمانی"];
+  const pages = ["لیست پزشکان", "لیست هتل ها",];
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
+
     setAnchorElNav(event.currentTarget);
+
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (e) => {
     setAnchorElNav(null);
+    if (e.target.innerHTML === "لیست پزشکان")
+      history.push("/list-of-doctors/")
+    else if (e.target.innerHTML === "لیست هتل ها")
+      history.push("/hotels/")
+    if (e.target.innerText === "لیست پزشکان")
+      history.push("/list-of-doctors/")
+    else if (e.target.innerText === "لیست هتل ها")
+      history.push("/hotels/")
+    console.log(e)
   };
 
   const handleCloseUserMenu = () => {
+
     setAnchorElUser(null);
   };
 
@@ -161,7 +174,6 @@ const NavBar = () => {
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
-                  // sx={{padding: "2px 0px 2px", my:2 , color: "black", display: "block", innerWidth: "30px", outerWidth: "40px" }}
                   sx={{
                     width: "140px",
                     color: "black",
@@ -201,7 +213,7 @@ const NavBar = () => {
                 onClick={() => {
                   history.push("/signup");
                 }}
-                sx={{width: 'auto',}}
+                sx={{ width: 'auto', }}
               >
                 &nbsp;ثبت نام
               </Button>
@@ -210,7 +222,7 @@ const NavBar = () => {
                 onClick={() => {
                   history.push("/login");
                 }}
-                sx={{width: 'auto',}}
+                sx={{ width: 'auto', }}
               >
                 &nbsp;ورود
               </Button>

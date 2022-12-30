@@ -54,7 +54,7 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -66,7 +66,7 @@ function TabPanel(props) {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -206,16 +206,16 @@ const Profile = (props) => {
           </TabPanel>
           <TabPanel value={value} index={1}>
             <h4 style={{ marginBottom: "15px" }}>  شماره تماس</h4>
-            <p>
+            <Typography>
               <PhoneEnabledIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
               {props.doctor?.office_number}
-            </p>
+            </Typography>
             <br />
             <h4 style={{ marginBottom: "15px" }}> نشانی مطب</h4>
-            <p>
+            <Typography>
               <LocationOnIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
               {`${props.doctor?.province}، ${props.doctor?.city}، ${props.doctor?.clinic_address}`}
-            </p>
+            </Typography>
           </TabPanel>
           <TabPanel value={value} index={2}>
             نظرات و امتیاز
