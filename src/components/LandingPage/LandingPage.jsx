@@ -43,6 +43,7 @@ export default function LandingPage() {
   const [searchScale, setSearchScale] = useState("");
   const [filteredScale, setFilteredScale] = useState(specialitie);
   const [findIndex, setFindIndex] = useState(null);
+  const [loading,serLoading] = useState(true);
 
   const formik = useFormik({
     initialValues: {
@@ -63,9 +64,13 @@ export default function LandingPage() {
   });
 
   useEffect(() => {
-    getSpecialites();
+    if (loading) {
+      getSpecialites();
     filteredScaleHandler(searchScale);
-  }, [specialitie]);
+    serLoading(false);
+  }
+
+  }, [specialitie,loading]);
 
   const getSpecialites = async () => {
     try {
