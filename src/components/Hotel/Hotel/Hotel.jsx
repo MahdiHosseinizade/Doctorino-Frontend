@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import {
   Card,
@@ -6,14 +6,12 @@ import {
   CardHeader,
   CardMedia,
   CardActions,
-  Button,
   Container,
   Grid,
   Typography,
   TextField,
 } from "@mui/material";
 import AvailableRooms from "./AvailableRooms";
-import AuthContext from "../../../context/AuthContext";
 import AdapterJalali from "@date-io/date-fns-jalali";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -31,6 +29,7 @@ import { BiCoffeeTogo, BiWifi } from "react-icons/bi";
 import { FaChild } from "react-icons/fa";
 import { RiBilliardsFill } from "react-icons/ri";
 import { AiFillSafetyCertificate } from "react-icons/ai";
+import NavBar from "../../NavBar/newNavBar";
 
 const useStyles = makeStyles({
   container: {
@@ -95,8 +94,6 @@ const Hotel = () => {
   const [fromTime, setFromTime] = useState(new Date());
   const [toTime, setToTime] = useState(new Date());
   const [availableRooms, setAvailableRooms] = useState([]);
-
-  const { authTokens } = useContext(AuthContext);
   const { id } = useParams();
   const [hotel, setHotel] = useState();
   console.log(hotel);
@@ -130,18 +127,17 @@ const Hotel = () => {
     e.preventDefault();
     console.log("fromTime: ", fromTime.toISOString().split("T")[0]);
     console.log("toTime: ", toTime.toISOString().split("T")[0]);
-    // console.log("test time: ", fromTime.toISOString().split("T")[0]);
     await axios
       .get(
-        `http://188.121.113.74/api/hotel/${id}/${fromTime.toISOString().split("T")[0]}/${toTime.toISOString().split("T")[0]}/available_rooms/`,
-        // {
-        //   headers: {
-        //     Authorization: `Bearer ${authTokens.access}`,
-        //   },
-        // }
+        `http://188.121.113.74/api/hotel/${id}/${
+          fromTime.toISOString().split("T")[0]
+        }/${toTime.toISOString().split("T")[0]}/available_rooms/`
       )
       .then((response) => {
-        console.log("the response from fetching the available rooms: ", response.data);
+        console.log(
+          "the response from fetching the available rooms: ",
+          response.data
+        );
         setAvailableRooms(response.data);
       })
       .catch((err) => console.log(err));
@@ -149,6 +145,7 @@ const Hotel = () => {
 
   return (
     <Container className={classes.container}>
+      <NavBar />
       <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           <Card className={classes.card}>
@@ -249,26 +246,19 @@ const Hotel = () => {
         <Grid item xs={12} md={6}>
           <Card className={classes.featureCard}>
             <div>
-              {/* <h2 className="h2_emkanat">امکانات و ویژگی ها</h2> */}
               <CardHeader
                 title="امکانات و ویژگی ها"
                 className="h2_emkanat"
                 sx={{ fontSize: "20px" }}
               />
               <CardContent>
-                {/* امکانات و ویژگی ها */}
-                {/* show feature of hotels */}
-                {/* <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}> */}
                 <Typography
                   noWrap
                   variant="subtitle2"
                   sx={{
                     fontSize: "18px",
-                    // display: "inline"
                   }}
                 >
-                  {/* {console.log(hotel?.features)} */}
                   {hotel?.features &&
                     hotel?.features.map((item, index) => {
                       return iconsFeatures.map((icon, index) => {
@@ -281,11 +271,8 @@ const Hotel = () => {
                           );
                         }
                       });
-                      // <p className="features_hotel" key={index}>{item.title}</p>
                     })}
                 </Typography>
-                {/* </Grid>
-                </Grid> */}
               </CardContent>
             </div>
           </Card>
@@ -294,16 +281,9 @@ const Hotel = () => {
         <Grid item xs={12} md={6}>
           <Card className={classes.availableRoomsCard}>
             <form onSubmit={handleSubmit}>
-              {/* <h2 className="roomReservation">مشاهده اتاق های موجود</h2> */}
-              {/* <CardHeader
-                title="مشاهده اتاق های موجود"
-                className="roomReservation"
-                sx={{ fontSize: "20px" }}
-              /> */}
               <CardContent>
                 <LocalizationProvider dateAdapter={AdapterJalali}>
                   <DatePicker
-                    // sx={{marginButtom: "20px"}}
                     label="تاریخ ورود"
                     mask="____/__/__"
                     value={fromTime}
@@ -317,8 +297,6 @@ const Hotel = () => {
                 >
                   <DatePicker
                     label="تاریخ خروج"
-                    // className={classes.toTimeDatePicker}
-                    // sx={{marginTop: "20px"}}
                     mask="____/__/__"
                     value={toTime}
                     onChange={(newValue) => setToTime(newValue)}
@@ -327,14 +305,6 @@ const Hotel = () => {
                 </LocalizationProvider>
               </CardContent>
               <CardActions>
-                {/* <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleClick}
-                  sx={{ width: "100%" }}
-                >
-                  مشاهده اتاق ها
-                </Button> */}
                 <Grid item md={12} xs={12}>
                   <button className={classes.button} type="submit">
                     مشاهده اتاق های موجود
@@ -346,12 +316,17 @@ const Hotel = () => {
         </Grid>
 
         <Grid item xs={12} md={12}>
-            {availableRooms && <AvailableRooms availableRooms={availableRooms} fromTime={fromTime} toTime={toTime}/> }
+          {availableRooms && (
+            <AvailableRooms
+              availableRooms={availableRooms}
+              fromTime={fromTime}
+              toTime={toTime}
+            />
+          )}
         </Grid>
         <Grid item xs={12} md={12}>
           <Card className={classes.rulesCard}>
             <div>
-              {/* <h2 className="h2_emkanat">قوانین هتل</h2> */}
               <CardHeader
                 title="قوانین هتل"
                 className="h2_emkanat"

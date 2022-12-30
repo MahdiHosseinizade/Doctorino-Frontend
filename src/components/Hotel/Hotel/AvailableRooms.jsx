@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardActions,
-  Button,
   Container,
   Grid,
   Typography,
-  TextField,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useHistory } from "react-router-dom";
@@ -23,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
   },
   cardHeader: {
-    // height: "29%",
     width: "80%",
     display: "flex",
     flexDirection: "column",
@@ -61,10 +58,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#dedede",
     width: "100%",
   },
-  //   reserveButton: {
-  //     marginTop: "10px",
-  //     marginBottom: "10px",
-  //   },
   reserveButton: {
     marginTop: "1px",
     marginBottom: "1px",
@@ -78,7 +71,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AvailableRooms({ availableRooms, fromTime, toTime }) {
-  //   const [selectedRoom, setSelectedRoom] = useState(null);
   const classes = useStyles();
   const history = useHistory();
 
@@ -92,8 +84,11 @@ export default function AvailableRooms({ availableRooms, fromTime, toTime }) {
 
   const handleSubmit = (e, room) => {
     e.preventDefault();
-    history.push("/hotel-reservation", { room: room, fromTime: fromTime, toTime: toTime });
-    // console.log("selectedRoom", selectedRoom);
+    history.push("/hotel-reservation", {
+      room: room,
+      fromTime: fromTime,
+      toTime: toTime,
+    });
   };
 
   return (
@@ -109,62 +104,55 @@ export default function AvailableRooms({ availableRooms, fromTime, toTime }) {
             sx={{ marginRight: "100px" }}
           >
             <form>
-            <Card sx={{ display: "flex", marginRight: "2px" }}>
-              <div className={classes.cardHeader}>
-                <div className={classes.roomTitle}>
-                  <CardHeader
-                    title={room.room_title}
-                    sx={{ fontSize: "20px" }}
-                  />
+              <Card sx={{ display: "flex", marginRight: "2px" }}>
+                <div className={classes.cardHeader}>
+                  <div className={classes.roomTitle}>
+                    <CardHeader
+                      title={room.room_title}
+                      sx={{ fontSize: "20px" }}
+                    />
+                  </div>
+                  <hr className={classes.horizontalLine} />
+                  <div className={classes.roomInformation}>
+                    <CardContent>
+                      <Typography variant="body2" color="text.secondary">
+                        قیمت هرشب: {room.price_per_night} تومان
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        تعداد تخت های اتاق: {room.bed_count} عدد
+                      </Typography>
+                    </CardContent>
+                  </div>
                 </div>
-                <hr className={classes.horizontalLine} />
-                <div className={classes.roomInformation}>
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                      قیمت هرشب: {room.price_per_night} تومان
+                <div className={classes.betweenLines}></div>
+                <div className={classes.cardContent}>
+                  <CardActions className={classes.cardActions}>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ marginBottom: "15px", marginTop: "10px" }}
+                    >
+                      {room.price_per_night *
+                        calculateNumberOfNightstoStay(fromTime, toTime)}{" "}
+                      تومان
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      تعداد تخت های اتاق: {room.bed_count} عدد
+                    <button
+                      onClick={(e, room) => handleSubmit(e, room)}
+                      className={classes.reserveButton}
+                    >
+                      رزرو اتاق
+                    </button>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ marginTop: "15px" }}
+                    >
+                      قیمت برای{" "}
+                      {calculateNumberOfNightstoStay(fromTime, toTime)} شب
                     </Typography>
-                  </CardContent>
+                  </CardActions>
                 </div>
-              </div>
-              <div className={classes.betweenLines}></div>
-              <div className={classes.cardContent}>
-                <CardActions className={classes.cardActions}>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ marginBottom: "15px", marginTop: "10px" }}
-                  >
-                    {room.price_per_night *
-                      calculateNumberOfNightstoStay(fromTime, toTime)}{" "}
-                    تومان
-                  </Typography>
-                  {/* <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setSelectedRoom(room.id)}
-                  >
-                    رزرو اتاق
-                  </Button> */}
-                  <button
-                    onClick={(e, room) => handleSubmit(e, room)}
-                    className={classes.reserveButton}
-                  >
-                    رزرو اتاق
-                  </button>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ marginTop: "15px" }}
-                  >
-                    قیمت برای {calculateNumberOfNightstoStay(fromTime, toTime)}{" "}
-                    شب
-                  </Typography>
-                </CardActions>
-              </div>
-            </Card>
+              </Card>
             </form>
           </Grid>
         ))}
