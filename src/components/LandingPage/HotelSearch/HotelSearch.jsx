@@ -12,7 +12,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { useHistory } from "react-router-dom";
-import { alignProperty } from "@mui/material/styles/cssUtils";
+// import { alignProperty } from "@mui/material/styles/cssUtils";
 
 // const useStyles = makeStyles({});
 
@@ -92,27 +92,6 @@ export default function HotelSearch() {
           <div className="searchBar"></div>
         </div>
       </form>
-    </div>
-  );
-}
-
-export default function HotelSearch() {
-  const classes = useStyles();
-  return (
-    <div className={classes.root}>
-      <NavBar />
-      <div className={classes.searchBox}>
-        <div className={classes.searchBox__input}>
-          <input type="text" placeholder="Search for hotels" />
-          <button>
-            {/* <BiSearch /> */}
-          </button>
-        </div>
-        <div className={classes.searchBox__location}>
-          {/* <MdPlace /> */}
-          <input type="text" placeholder="Location" />
-        </div>
-      </div>
     </div>
   );
 }
