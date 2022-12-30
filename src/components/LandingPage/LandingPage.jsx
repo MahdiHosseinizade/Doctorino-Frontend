@@ -65,7 +65,7 @@ export default function LandingPage() {
   useEffect(() => {
     getSpecialites();
     filteredScaleHandler(searchScale);
-  }, []);
+  }, [specialitie]);
 
   const getSpecialites = async () => {
     try {
@@ -84,7 +84,7 @@ export default function LandingPage() {
     await axios
       .post("http://188.121.113.74/api/doctor/search/", {
         specialties: [speciality.id],
-        city: city.id,
+        province: city.id,
       })
       .then((res) => {
         history.push('/SearchDoctor',{contact:res.data})
