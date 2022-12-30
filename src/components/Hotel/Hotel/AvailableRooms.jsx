@@ -88,6 +88,7 @@ export default function AvailableRooms({ availableRooms, fromTime, toTime }) {
       room: room,
       fromTime: fromTime,
       toTime: toTime,
+      finalPrice: calculateNumberOfNightstoStay(fromTime, toTime) * room.price_per_night,
     });
   };
 
@@ -137,7 +138,7 @@ export default function AvailableRooms({ availableRooms, fromTime, toTime }) {
                       تومان
                     </Typography>
                     <button
-                      onClick={(e, room) => handleSubmit(e, room)}
+                      onClick={(e) => handleSubmit(e, room)}
                       className={classes.reserveButton}
                     >
                       رزرو اتاق

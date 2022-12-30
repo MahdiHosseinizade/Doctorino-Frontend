@@ -43,10 +43,18 @@ const useStyles = makeStyles({
 const HotelReservation = () => {
 
     const location = useLocation();
-    const { room, fromTime, toTime } = location.state;
+    const { room, fromTime, toTime, finalPrice } = location.state;
     const [hotel, setHotel] = useState({});
-    const [finalPrice, setFinalPrice] = useState("_");
     const [loading, setLoading] = useState(true);
+    const [from_time, setFromTime] = useState(fromTime.toISOString().split("T")[0]);
+    const [to_time, setToTime] = useState(toTime.toISOString().split("T")[0]);
+
+    // console.log("here")
+    // console.log("room", room)
+    // console.log("fromTime", fromTime.toISOString().split("T")[0])
+    // console.log("toTime", toTime.toISOString().split("T")[0])
+    // console.log("finalPrice", finalPrice);
+    // console.log(location.state);
 
     const api = useAxios();
     const { user, authData } = useContext(AuthContext);
@@ -54,40 +62,37 @@ const HotelReservation = () => {
     useEffect(() => {
         if (loading) {
 
-            api.get(`api/hotel/${room.hotel}/`, {
-                headers: {
-                    "Authorization": "Bearer " + authData?.access,
-                }
-            })
-            .then(res => {
-                setHotel(res.data);
-
-                const from = moment(fromTime, "jYYYY/jMM/jDD");
-                const to = moment(toTime, "jYYYY/jMM/jDD");
-
-                const days = to.diff(from, "days");
-
-                setFinalPrice(days * room.price_per_night);
-
-            }).catch(err => {
-                console.log(err);
-            });
+            api.get(`api/hotel/${room.hotel}/`)
+                .then(res => {
+                    setHotel(res.data);
+                }).catch(err => {
+                    console.log(err);
+                });
 
             setLoading(false);
         }
     }, [loading, finalPrice])
 
     const reserveRoom = () => {
-        api.post(`api/hotel/hotel_reserve/`, {
-            from_date: fromTime,
-            to_date: toTime,
+        
+        console.log(user);
+
+        console.log({
+            from_date: from_time,
+            to_date: to_time,
             customer: user.id,
             hotel_room: room.id,
-        }).then(res => {
-            console.log(res);
-        }).catch(err => {
-            console.log(err);
         })
+        // api.post(`api/hotel/hotel_reserve/`, {
+        //     from_date: fromTime,
+        //     to_date: toTime,
+        //     customer: user.id,
+        //     hotel_room: room.id,
+        // }).then(res => {
+        //     console.log(res);
+        // }).catch(err => {
+        //     console.log(err);
+        // })
     }
 
     const classes = useStyles();
@@ -110,8 +115,6 @@ const HotelReservation = () => {
                         </div>
                     </Grid>
                 </Grid>
-            </Card>
-            <Card className={classes.card2}>
             </Card>
             <Card className={classes.card3}>
                 <Grid container sx={{ marginTop: "10px" }} >
