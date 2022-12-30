@@ -176,6 +176,7 @@ export default function DoctorProfileCompletion() {
 
   useEffect(() => {
     function handleCities() {
+      console.log("provinceInfo", provinceInfo);
       cities.map((city) => {
         if (city.province_id === provinceInfo.id) {
           setCitiesList([...citiesList, city]);
@@ -211,15 +212,28 @@ export default function DoctorProfileCompletion() {
           })
             .then((response) => {
               console.log("the response of doctor", response.data);
-              
-              setProvinceInfo({
-                ...provinceInfo,
-                id: provinces.filter((province) => {
-                  if (province.name === response.data.province) {
-                    return province.id;
-                  }
-                })[0]["id"],
-              });
+              console.log("availableSpecilaities", availableSpecilaities);
+              if (response.data.province !== "تعیین نشده") {
+                setProvinceInfo({
+                  ...provinceInfo,
+                  id: provinces.filter((province) => {
+                    if (province.name === response.data.province) {
+                      return province.id;
+                    }
+                  })[0]["id"],
+                });
+              } else {
+                setProvinceInfo({
+                  ...provinceInfo,
+                  id: 0,
+                });
+              }
+              // const temp = provinces.filter((province) => {
+              //   if (province.name === response.data.province) {
+              //     return province.id;
+              //   }
+              // });
+              // console.log("the temp", temp);
               setValues({
                 ...response.data,
                 first_name: response.data.user.first_name,
@@ -242,16 +256,27 @@ export default function DoctorProfileCompletion() {
                     return specialty.id;
                   }
                 })[0]["id"],
-                province: provinces.filter((province) => {
-                  if (province.name === response.data.province) {
-                    return province.id;
-                  }
-                })[0]["id"],
-                city: cities.filter((city) => {
-                  if (city.name === response.data.city) {
-                    return city.id;
-                  }
-                })[0]["id"],
+                province:
+                  response.data.province !== "تعیین نشده"
+                    ? provinces.filter((province) => {
+                        if (province.name === response.data.province) {
+                          return province.id;
+                        }
+                      })[0]["id"]
+                    : 0,
+                city:
+                  response.data.city !== "تعیین نشده"
+                    ? cities.filter((city) => {
+                        if (city.name === response.data.city) {
+                          return city.id;
+                        }
+                      })[0]["id"]
+                    : 0,
+                // city: cities.filter((city) => {
+                //   if (city.name === response.data.city) {
+                //     return city.id;
+                //   }
+                // })[0]["id"],
                 clinic_address: response.data.clinic_address,
                 work_periods: response.data.work_periods,
                 description: response.data.description,
@@ -316,7 +341,7 @@ export default function DoctorProfileCompletion() {
         "province",
         provinces.map((province) => {
           if (province.id === values.province) {
-            return province.name;
+            return province.id;
           }
         })[values.province - 1]
       );
@@ -324,7 +349,7 @@ export default function DoctorProfileCompletion() {
         "city",
         cities.map((city) => {
           if (city.id === values.city) {
-            return city.name;
+            return city.id;
           }
         })[values.city - 1]
       );
@@ -611,16 +636,8 @@ export default function DoctorProfileCompletion() {
                 helperText={errors.gender ? errors.gender : null}
                 fullWidth
               >
-                <FormControlLabel
-                  value={0}
-                  control={<Radio />}
-                  label="مرد"
-                />
-                <FormControlLabel
-                  value={1}
-                  control={<Radio />}
-                  label="زن"
-                />
+                <FormControlLabel value={0} control={<Radio />} label="مرد" />
+                <FormControlLabel value={1} control={<Radio />} label="زن" />
               </RadioGroup>
             </FormControl>
           </Grid>
