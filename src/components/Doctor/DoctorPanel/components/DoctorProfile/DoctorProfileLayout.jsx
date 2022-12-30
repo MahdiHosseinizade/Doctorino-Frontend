@@ -1,73 +1,159 @@
-// //dr prof layout
-// import React from "react";
-// import { Container, CssBaseline, Grid, Paper } from "@mui/material";
-// import DoctorProfile from "./Profile";
-// import ScheduleTime from "./scheduleTable";
-// import { useParams } from "react-router-dom";
-// import { useState } from "react";
+import React, { useState } from "react";
+import {
+  Container,
+  CssBaseline,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  CardMedia,
+  Typography,
+  Box,
+  Button,
+  TextField,
+} from "@mui/material";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import { useParams } from "react-router-dom";
 // import axios from "axios";
-// import { useEffect } from "react";
-// import NavBar from "../../NavBar/newNavBar"
-// import { Schedule } from "@mui/icons-material";
+import { useEffect } from "react";
+import AuthContext from "../../../../../context/AuthContext";
+import { useContext } from "react";
+import useAxios from "../../../../../utils/useAxios";
+import provinces from "../LocationInfo/Provinces";
+import cities from "../LocationInfo/Cities";
+import educations from "../EducationInfo/Education";
+import Tabs from "@mui/material/Tabs";
+import PropTypes from "prop-types";
+import Tab from "@mui/material/Tab";
+import { makeStyles } from "@mui/styles";
+import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import PhoneEnabledIcon from "@mui/icons-material/PhoneEnabled";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-// export default function DoctorProfileLayout() {
+const useStyles = makeStyles({
+  container: {
+    marginTop: "69px",
+    paddingTop: "30px",
+  },
+  card: {
+    display: "fix",
+    paddingInline: "13px",
+    marginBottom: "20px",
+  },
+  doctor_image: {
+    width: "100%",
+    height: "100%",
+    margin: "20px",
+    border: "7px solid #ccc",
+    borderRadius: "250px",
+    maxHeight: "250px",
+    maxWidth: "250px",
+    position: "static",
+    display: "inline-table",
+  },
+  button: {
+    backgroundColor: "#3b82f6",
+    marginRight: "2px",
+    contrastText: "#fff",
+    "&:hover": {
+      backgroundColor: "#2563eb",
+    },
+  },
+  uploadPhotoButton: {
+    // backgroundColor: "#3b82f6",
+    marginTop: "200px",
+    contrastText: "#fff",
+    // "&:hover": {
+    //   backgroundColor: "#2563eb",
+    // },
+  },
+});
 
-//     const { id } = useParams();
-//     const [doctor, setDoctor] = useState();
-//     // const [scheduleTime, setScheduleTime] = useState();
-//     const [loading, setLoading] = useState(true);
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
-//     function fetchData1() {
-//         axios.get(`http://188.121.113.74/api/doctor/${id}/`)
-//             .then(res => {
-//                 setDoctor(res.data);
-//             })
-//             .catch(err => console.log(err))
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 5 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 
-//         setLoading(false);
-//     }
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
-//     // function fetchData2() {
-//     //     axios.get(`http://188.121.113.74/api/doctor/workday/${id}/`)
-//     //         .then(res => {
-//     //             setScheduleTime(res.data);
-//     //         })
-//     //         .catch(err => console.log(err))
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
-//     //     setLoading(false);
-//     // }
+const formValues = {
+  // User Info
+  first_name: "",
+  email: "",
+  last_name: "",
+  username: "",
+  inner_id: 0,
 
-//     useEffect(() => {
+  id: 0,
+  gender: 2,
+  national_code: "",
+  medical_system_number: "",
+  is_active: false,
+  phone_number: "",
+  office_number: "",
+  specialties: "",
+  education: "",
+  description: null,
+  image: null,
+  province: "",
+  city: "",
+  clinic_address: "",
 
-//         if (loading) {
-//             fetchData1();
-//             // fetchData2();
-//         }
+  work_periods: [],
+  // license_proof: null,
+  // location: {
+  //   type: "",
+  //   coordinates: [0, 0],
+  // },
+};
 
-//     }, [loading, doctor, setLoading, setDoctor,
-//         //  scheduleTime, scheduleTime
-//         ])
+const provinceValues = {
+  id: 0,
+  name: "",
+};
 
-//     return (
-//         <Container>
-//             <NavBar />
-//             <CssBaseline />
-//             <Grid container spacing={4}>
-//                 <Grid
-//                     xs={7}
-//                     md={7}
-//                     lg={7}
-//                     item
-//                     sx={{
-//                         Width: "100%",
-//                         display: "static",
-//                         height: "auto",
-//                         alignItems: "center",
-//                         boxSizing: " border-box"
-//                     }}
-//                 >
-//                     <DoctorProfile doctor={doctor} />
-//                 </Grid>
+export default function DoctorProfileLayout() {
+  const classes = useStyles();
+  const [doctor, setDoctor] = useState({ ...formValues });
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [value, setValue] = React.useState(0);
+  const [checked, setChecked] = React.useState(false);
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState({ ...formValues });
+  const [availableSpecilaities, setAvailableSpecilaities] = useState([]);
+  const { id } = useParams();
+  const { user } = useContext(AuthContext);
+  const { authTokens } = useContext(AuthContext);
+  const API = useAxios();
 
   useEffect(() => {
     function fetchData() {
