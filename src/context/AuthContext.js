@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
       setUser(extractUserData(data));
 
       localStorage.setItem("authData", JSON.stringify(data));
-
+      history.push("/");
       toast.success(`با موفقیت وارد شدید`, {
         position: "top-right",
         autoClose: 2000,

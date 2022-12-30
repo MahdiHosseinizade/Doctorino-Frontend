@@ -18,11 +18,20 @@ import SearchDoctorResponse from "./components/LandingPage/SearchDocResponse";
 
 const routes = [
   { path: "/schedule-table", component: scheduleTable },
-  { path: "/doctor-layout", component: drLayout },
-  { path: "/doctor-layout", component: drLayout },
-  { path: "/signup", component: SignUpPage },
-  { path: "/hotel/:id", component: Hotel },
+  { path: "/doctor/:id", component: DoctorProfileLayout },
   { path: "/specialist/:id", component: DoctorSpecialitie },
+  { path: "/doctor-layout", component: drLayout },
+  { path: "/SearchDoctor", component: SearchDoctorResponse },
+  {
+    path: "/doctor-panel",
+    component: DoctorPanel,
+    private: true,
+    role: "doctor",
+  },
+  { path: "/list-of-doctors", component: ListOfDoctors },
+
+  { path: "/hotel/:id", component: Hotel },
+  { path: "/hotel-reservation", component: HotelReservation },
   {
     path: "/hotel-panel",
     component: HotelPanel,
@@ -32,14 +41,9 @@ const routes = [
   { path: "/hotels", component: Hotels },
   { path: "/hotel-search", component: HotelSearch },
   { path: "/found-hotels", component: FoundHotels },
-  {
-    path: "/doctor-panel",
-    component: DoctorPanel,
-    private: true,
-    role: "doctor",
-  },
-  { path: "/list-of-doctors", component: ListOfDoctors },
+
   { path: "/login", component: Login },
+  { path: "/signup", component: SignUpPage },
   { path: "/", component: LandingPage, exact: true },
   { component: NotFound },
 ];

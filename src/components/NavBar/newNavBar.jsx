@@ -20,7 +20,7 @@ const NavBar = () => {
   // console.log(user);
 
   const history = useHistory();
-  const pages = ["لیست پزشکان", "لیست هتل ها",];
+  const pages = ["لیست پزشکان", "جستجوی هتل",];
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -40,12 +40,12 @@ const NavBar = () => {
     setAnchorElNav(null);
     if (e.target.innerHTML === "لیست پزشکان")
       history.push("/list-of-doctors/")
-    else if (e.target.innerHTML === "لیست هتل ها")
-      history.push("/hotels/")
+    else if (e.target.innerHTML === "جستجوی هتل")
+      history.push("/hotel-search/")
     if (e.target.innerText === "لیست پزشکان")
       history.push("/list-of-doctors/")
-    else if (e.target.innerText === "لیست هتل ها")
-      history.push("/hotels/")
+    else if (e.target.innerText === "جستجوی هتل")
+      history.push("/hotel-search/")
     console.log(e)
   };
 

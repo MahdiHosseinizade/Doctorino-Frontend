@@ -106,7 +106,7 @@ export default function DoctorProfileCompletion() {
   const { user } = useContext(AuthContext);
   const { authData } = useContext(AuthContext);
   const API = useAxios();
-  const { authTokens } = useContext(AuthContext);
+  // const { authData } = useContext(AuthContext);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -201,7 +201,7 @@ export default function DoctorProfileCompletion() {
       // Fetching user's information from the database
       API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
         headers: {
-          Authorization: `Bearer ${authTokens.access}`,
+          Authorization: `Bearer ${authData?.access}`,
         },
       })
         .then((response) => {
@@ -305,12 +305,13 @@ export default function DoctorProfileCompletion() {
   }, [
     loading,
     API,
-    authTokens.access,
+    authData?.access,
     user.user_id,
     values,
     provinceInfo,
     citiesList,
     availableSpecilaities,
+    
   ]);
 
   const handleSubmit = (e) => {
@@ -375,7 +376,7 @@ export default function DoctorProfileCompletion() {
       axios
         .put(`http://188.121.113.74/api/doctor/${values.id}/`, formData, {
           headers: {
-            Authorization: `Bearer ${authTokens.access}`,
+            Authorization: `Bearer ${authData?.access}`,
           },
         })
         .then((response) => {
