@@ -1,3 +1,4 @@
+//profile
 import React from 'react'
 import {
   Container,
@@ -19,6 +20,7 @@ import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { flexbox } from '@mui/system';
 
 
 // show the directory to the use with <basic breadcrums (mui)>
@@ -52,7 +54,7 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -64,7 +66,7 @@ function TabPanel(props) {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -87,7 +89,7 @@ function a11yProps(index) {
 const Profile = (props) => {
 
   const [value, setValue] = React.useState(0);
-
+  
   const secondaryHandleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -131,14 +133,8 @@ const Profile = (props) => {
                       }}
                     >
                       {/* متخصص {props.doctor?.specialties.name} */}
+                      <br /><br />
 
-                      متخصص {props.doctor?.specialties.map(({id, name}, index) => {
-                        if (index === props.doctor?.specialties.length - 1) {
-                          return name
-                        } else {
-                          return name + " و "
-                        }
-                      })}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -193,65 +189,33 @@ const Profile = (props) => {
                   }
                 }}
               >
-                <div>
                   <Collapse in={checked} collapsedSize={40}>
-                    {/* example */}
-                    <p>
-                      <p>دکتر مژگان صیادی در سال 1379 موفق به دریافت مدرک دکترای پزشکی عمومی از دانشگاه علوم پزشکی شیراز شدند و سپس دکترای تخصصی زنان، زایمان و نازایی را در سال 1387 از دانشگاه علوم پزشکی شیراز اخذ نمودند. ایشان دارای فلوشیپ نازایی، IVF و لاپاراسکوپی از دانشگاه علوم پزشکی یزد می باشند.
-                      </p>
-
-                      <p> سوابق و افتخارات دکتر مژگان صیادی
-                        تدریس در دانشگاه بوشهر در سالهای 1387 تا 1391
-                        استاد نمونه دانشگاه بوشهر در سال 1390
-                        سابقه نگارش و چاپ چندین مقاله در ISI
-                        مسئول بخش علمی بیمارستان شهریار
-                        عضو انجمن جراحان و متخصصین زنان، زایمان و نازایی ایران
-                        عضو انجمن متخصصین زنان و زایمان شیراز
-
-                      </p>
-
-
-                      <p>
-                        خدمات ارائه شده توسط دکتر مژگان صیادی
-                        تشخیص و درمان انواع نازایی (IVF,IUI)
-                        تعیین جنسیت (PGD)
-                      </p>
-                      <p>
-                        بیمارستان‌های همکار
-                        بیمارستان MRI
-                        شهر
-                        میر
-                        شهریار
-                        میرحسینی
-                        بعثت
-                      </p>
-                    </p>
+                    <Typography>{props.doctor?.description}</Typography>
                   </Collapse>
-                </div>
 
               </Box>
-              <Box sx={{ height: "auto",}}>
-                {/* how to mv it to left? */}
+
+              {/* <Box sx={{height: "auto", display:'flex'}}>
                 <FormControlLabel
-                  control={<Button onClick={thiredHandleChange} label="▾بیشتر">بیشتر▾</Button>}
+                  control={<Button sx={{ left :'10%'}} onClick={thiredHandleChange} label="▾بیشتر">بیشتر▾</Button>}
                 />
-              </Box>
+              </Box> */}
 
             </Box>
 
           </TabPanel>
           <TabPanel value={value} index={1}>
             <h4 style={{ marginBottom: "15px" }}>  شماره تماس</h4>
-            <p>
+            <Typography>
               <PhoneEnabledIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
               {props.doctor?.office_number}
-            </p>
+            </Typography>
             <br />
             <h4 style={{ marginBottom: "15px" }}> نشانی مطب</h4>
-            <p>
+            <Typography>
               <LocationOnIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
               {`${props.doctor?.province}، ${props.doctor?.city}، ${props.doctor?.clinic_address}`}
-            </p>
+            </Typography>
           </TabPanel>
           <TabPanel value={value} index={2}>
             نظرات و امتیاز

@@ -35,7 +35,6 @@ export default function DoctorCard({ doctor }) {
   const history = useHistory();
   const classes = useStyles();
 
-
   return (
     <Card
       sx={{
@@ -83,6 +82,7 @@ export default function DoctorCard({ doctor }) {
                   href={`/list-of-doctors/${doctor?.id}`}
                 >
                   <Typography
+                    noWrap
                     component="div"
                     variant="h6"
                     sx={{

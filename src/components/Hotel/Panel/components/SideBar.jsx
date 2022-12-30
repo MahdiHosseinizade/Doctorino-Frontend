@@ -83,37 +83,37 @@ export default function SideBar() {
         {
             text: "داشبورد",
             path: "/hotel-panel/dashboard",
-            icon: <DashboardIcon color="f4f4f4" />
+            icon: <DashboardIcon color="hotel" />
         },
         {
             text: "اضافه کردن هتل",
             path: "/hotel-panel/add-hotel",
-            icon: <AddHomeIcon color="f4f4f4" />
+            icon: <AddHomeIcon color="hotel" />
         },
         {
             text: "پروفایل",
             path: "/hotel-panel/profile-completion",
-            icon: <AccountCircleIcon color="f4f4f4" />
+            icon: <AccountCircleIcon color="hotel" />
         },
         {
             text: "اطلاعات تکمیلی هتل",
             path: "/hotel-panel/hotel-info",
-            icon: <MenuIcon color="f4f4f4" />
+            icon: <MenuIcon color="hotel" />
         },
         {
             text: "گزارش رزرو ها",
             path: "/hotel-panel/booking-reports",
-            icon: <SummarizeIcon color="f4f4f4" />
+            icon: <SummarizeIcon color="hotel" />
         },
         {
             text: "امور مالی",
             path: "/hotel-panel/finances",
-            icon: <AccountBalanceIcon color="f4f4f4" />
+            icon: <AccountBalanceIcon color="hotel" />
         },
         {
             text: "تغییر رمزعبور",
             path: "/hotel-panel/change-password",
-            icon: <PasswordIcon color="f4f4f4" />
+            icon: <PasswordIcon color="hotel" />
         }
     ]
 
@@ -139,7 +139,7 @@ export default function SideBar() {
                             onClick={() => history.push(item.path)}
                             sx={{
                                 display: 'block',
-                                background: location.pathname == item.path ? '#f4f4f4' : null,
+                                background: location.pathname == item.path ? '#FFF6E7' : null,
                             }}
                         >
                             <ListItemButton
@@ -187,7 +187,7 @@ export default function SideBar() {
                                 justifyContent: 'center',
                             }}
                         >
-                            <LogoutIcon color="f4f4f4" />
+                            <LogoutIcon color="black" />
                         </ListItemIcon>
                         <ListItemText primary={"خروج"} sx={{ opacity: open ? 1 : 0 }} />
                     </ListItemButton>

@@ -284,7 +284,7 @@ export default function AppointmentReports() {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
-  const { authTokens } = useContext(AuthContext);
+  const { authData } = useContext(AuthContext);
   const API = useAxios();
   const [startTime, setStartTime] = React.useState(
     dayjs("2014-08-18T21:11:54")
@@ -307,6 +307,7 @@ export default function AppointmentReports() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const { authTokens } = useContext(AuthContext);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -525,13 +526,13 @@ export default function AppointmentReports() {
       // Fetching the doctor id from the user id
       API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
         headers: {
-          Authorization: `Bearer ${authTokens.access}`,
+          Authorization: `Bearer ${authData.access}`,
         },
       })
         .then((res) => {
           // API.get(`http://188.121.113.74/api/doctor/workday/`, {
           //   headers: {
-          //     Authorization: `Bearer ${authTokens.access}`,
+          //     Authorization: `Bearer ${authData.access}`,
           //   },
           // })
           //   .then((response) => {

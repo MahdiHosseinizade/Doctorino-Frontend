@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { Box } from "@mui/material";
 import { AppBar } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,27 +12,45 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/LocalHospitalTwoTone";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Link, useHistory } from "react-router-dom";
+import AuthContext from '../../context/AuthContext';
+
 
 const NavBar = () => {
+  let { user, authTokens, logOut } = useContext(AuthContext);
+  // console.log(user);
+
   const history = useHistory();
-  const pages = ["نوبت دهی مطب", "مشاوره پزشکی", "مراکز درمانی"];
+  const pages = ["لیست پزشکان", "لیست هتل ها",];
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
+
     setAnchorElNav(event.currentTarget);
+
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (e) => {
     setAnchorElNav(null);
+    if (e.target.innerHTML === "لیست پزشکان")
+      history.push("/list-of-doctors/")
+    else if (e.target.innerHTML === "لیست هتل ها")
+      history.push("/hotels/")
+    if (e.target.innerText === "لیست پزشکان")
+      history.push("/list-of-doctors/")
+    else if (e.target.innerText === "لیست هتل ها")
+      history.push("/hotels/")
+    console.log(e)
   };
 
   const handleCloseUserMenu = () => {
+
     setAnchorElUser(null);
   };
 
@@ -57,7 +75,6 @@ const NavBar = () => {
         <Toolbar disableGutters>
           <Typography
             variant="h4"
-            noWrap
             component="a"
             href="/"
             sx={{
@@ -132,7 +149,6 @@ const NavBar = () => {
               <AdbIcon color="primary" sx={{ fontSize: 45, mr: 1 }} />
               <Typography
                 variant="h4"
-                noWrap
                 sx={{
                   display: "inline-block",
                   fontSize: "35px",
@@ -153,12 +169,11 @@ const NavBar = () => {
               sx={{ mr: 5, with: "20px", padding: "7px 7px 0px 0px" }}
               variant="inline"
             >
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               {pages.map((page) => (
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
-                  // sx={{padding: "2px 0px 2px", my:2 , color: "black", display: "block", innerWidth: "30px", outerWidth: "40px" }}
                   sx={{
                     width: "140px",
                     color: "black",
@@ -171,10 +186,9 @@ const NavBar = () => {
               ))}
             </ButtonGroup>
           </Box>
-          {/*///////////////////////*/}
           <Box
             sx={{
-              display: "flex",
+              display: 'flex',
               flexDirection: "column",
               alignItems: "center",
               size: "medium",
@@ -183,33 +197,79 @@ const NavBar = () => {
               },
             }}
           >
+
             <ButtonGroup
               variant="text"
               size="medium"
               aria-label="text button group"
               sx={{
+                width: 'auto',
+                margin: '0px 20px 0px 0px',
                 padding: "4px  3px 2px 0px",
+                display: user ? 'none' : 'flex',
               }}
             >
               <Button
                 onClick={() => {
+                  history.push("/signup");
+                }}
+                sx={{ width: 'auto', }}
+              >
+                &nbsp;ثبت نام
+              </Button>
+
+              <Button
+                onClick={() => {
                   history.push("/login");
                 }}
+                sx={{ width: 'auto', }}
               >
                 &nbsp;ورود
               </Button>
+            </ButtonGroup>
+
+            <ButtonGroup
+              variant="text"
+              size="medium"
+              aria-label="text button group"
+              sx={{
+                width: 'auto',
+                margin: '0px 20px 0px 0px',
+                padding: "4px  3px 2px 0px",
+                display: !user ? 'none' : 'flex',
+              }}
+            >
               <Button
                 onClick={() => {
-                  history.push("/signup");
+                  if (user.role === "doctor") {
+                    history.push("/doctor-panel/dashboard");
+                  } else if (user.role === "hotel_owner") {
+                    history.push("/hotel-panel/dashboard");
+                  } else {
+                    history.push("/patient-panel/dashboard");
+                  }
                 }}
+                sx={{ width: 'auto', }}
               >
-                &nbsp;&nbsp;&nbsp;عضویت
+                پنل کاربری
+              </Button>
+              <Button
+                onClick={() => {
+                  logOut();
+                }}
+                sx={{ width: 'auto', }}
+              >
+                خروج
               </Button>
             </ButtonGroup>
+
           </Box>
+
+
+
         </Toolbar>
-      </Container>
-    </AppBar>
+      </Container >
+    </AppBar >
   );
 };
 

@@ -62,8 +62,10 @@ import NavBar from "../../NavBar/newNavBar";
 
 export default function PanelLayout({ children }) {
   return (
-    <Container>
-      <Container
+    <div>
+      <CssBaseline />
+      <Box
+        mt = {10}
         sx={{
           position: "static",
           top: "0",
@@ -77,9 +79,9 @@ export default function PanelLayout({ children }) {
         }}
       >
         <NavBar />
-      </Container>
+      </Box>
 
-      <Container sx={{ width: "100%", position: "sticky", display: "flex" }}>
+      <Box  sx={{ width: "100%", position: "sticky", display: "flex", justifyContent: "center"}}>
         <SideBar />
         <Box
           sx={{
@@ -90,7 +92,8 @@ export default function PanelLayout({ children }) {
         >
           {children}
         </Box>
-      </Container>
-    </Container>
+      </Box>
+      <br/><br/><br/>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
     Container,
     Grid,
@@ -18,7 +18,14 @@ import {
 import { useFormik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
-import { styled } from '@mui/system';
+import { styled, border } from '@mui/system';
+import useAxios from '../../../../utils/useAxios';
+import AuthContext from '../../../../context/AuthContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { baseURL } from '../../../../utils/useAxios';
+
+
 
 const STextField = styled(TextField)({
     "& .MuiFilledInput-root": {
@@ -42,6 +49,9 @@ export default function ManagerProfile(props) {
     const [month, setMonth] = useState([]);
     const [year, setYear] = useState([]);
 
+    let { user, authData, logoutUser } = useContext(AuthContext);
+    let api = useAxios();
+
     const handleGender = (event) => {
         const {
             target: { value },
@@ -51,7 +61,11 @@ export default function ManagerProfile(props) {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
-    
+
+    const reHandleGender = (e) => {
+        setGenders(e.target.value);
+    };
+
     const handleDay = (event) => {
         const {
             target: { value },
@@ -60,6 +74,10 @@ export default function ManagerProfile(props) {
             // On autofill we get a stringified value.
             typeof value === 'string' ? value.split(',') : value,
         );
+    };
+
+    const reHandleDay = (e) => {
+        setDay(e.target.value);
     };
 
     const handleMonth = (event) => {
@@ -72,6 +90,10 @@ export default function ManagerProfile(props) {
         );
     };
 
+    const reHandleMonth = (e) => {
+        setMonth(e.target.value);
+    };
+
     const handleYear = (event) => {
         const {
             target: { value },
@@ -80,6 +102,10 @@ export default function ManagerProfile(props) {
             // On autofill we get a stringified value.
             typeof value === 'string' ? value.split(',') : value,
         );
+    };
+
+    const reHandleYear = (e) => {
+        setYear(e.target.value);
     };
 
 
@@ -94,9 +120,11 @@ export default function ManagerProfile(props) {
         secondPhoneNumber: "",
         areaCode: "", // code telephone shahrestan 
         telephoneNumber: "", // telephone sabet
+        address: "",
         birthYear: [],
         birthMonth: [],
         birthDay: [],
+        shaba: "",
     }
 
 
@@ -111,29 +139,86 @@ export default function ManagerProfile(props) {
         secondPhoneNumber: Yup.string(),
         areaCode: Yup.string(),
         telephoneNumber: Yup.string(),
+        address: Yup.string(),
         birthYear: Yup.string().required("سال تولد ضروری است"),
         birthMonth: Yup.string().required("ماه تولد ضروری است"),
         birthDay: Yup.string().required("روز تولد ضروری است"),
+        shaba: Yup.string().required("شماره شبا ضروری است"),
     })
 
-    const gender = ["مونث" , "مذکر"]
+    const gender = ["مونث", "مذکر"]
     const days = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
     const months = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"]
     const years = ["1300", "1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309", "1310", "1311", "1312", "1313", "1314", "1315", "1316", "1317", "1318", "1319", "1320", "1321", "1322", "1323", "1324", "1325", "1326", "1327", "1328", "1329", "1330", "1331", "1332", "1333", "1334", "1335", "1336", "1337", "1338", "1339", "1340", "1341", "1342", "1343", "1344", "1345", "1346", "1347", "1348", "1349", "1350", "1351", "1352", "1353", "1354", "1355", "1356", "1357", "1358", "1359", "1360", "1361", "1362", "1363", "1364", "1365", "1366", "1367", "1368", "1369", "1370", "1371", "1372", "1373", "1374", "1375", "1376", "1377", "1378", "1379", "1380", "1381"]
 
     const formik = useFormik({
         initialValues: formValue,
-        onSubmit: (values) => setHotel([...hotel, values]),
+        onSubmit: (values) => postHotel([...hotel, values]),
         validationSchema: validationSchema,
     })
+
+
+    function postHotel(hotel) {
+        let formData = new FormData();
+
+        formData.append('firstName', hotel.firstName);
+        formData.append('lastName', hotel.lastName);
+        formData.append('fatherName', hotel.fatherName);
+        formData.append('identityNumber', hotel.identityNumber);
+        formData.append('socialNumber', hotel.socialNumber);
+        formData.append('sex', hotel.sex);
+        formData.append('firstPhoneNumber', hotel.firstPhoneNumber);
+        formData.append('secondPhoneNumber', hotel.secondPhoneNumber); formData.append('firstName', hotel.firstName);
+        formData.append('areaCode', hotel.areaCode);
+        formData.append('telephoneNumber', hotel.telephoneNumber);
+        formData.append('address', hotel.address);
+        formData.append('birthYear', hotel.birthYear);
+        formData.append('birthMonth', hotel.birthMonth);
+        formData.append('birthDay', hotel.birthDay);
+        formData.append('shaba', hotel.shaba);
+
+
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1])
+        }
+
+        api.post('/api/hotel/new/',
+            formData,
+            {
+                // set the type of the request to multipart/form-data
+                // so that the server can handle the request properly
+                // features: array of integers
+                // cover_image: image file
+                // stars: integer
+                // other fields: string
+
+                headers:
+                {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${authData.access}`
+                }
+            }
+        )
+            .then(res => toast.success('هتل با موفقیت ایجاد شد', {
+                position: "top-right",
+                autoClose: 2000,
+            }))
+            .catch(err => toast.error('مشکلی پیش آمده', {
+                position: "top-right",
+                autoClose: 2000,
+            }))
+    }
 
 
 
     return (
         <Container>
             <Box
+                onSubmit={formik.handleSubmit}
+                component="form"
+                autoComplete="off"
+                mt={5}
                 sx={{
-                    marginTop: "120px",
                     bgcolor: 'rgb(245, 246, 248)',
                     height: '80%',
                     width: "100%",
@@ -143,9 +228,7 @@ export default function ManagerProfile(props) {
                     '& .MuiTextField-root': { m: 0.5 },
                     boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
                 }}
-                onSubmit={formik.handleSubmit}
-                component="form"
-                autoComplete="off"
+                
             >
                 <Typography
                     sx={{
@@ -162,6 +245,13 @@ export default function ManagerProfile(props) {
 
 
                 <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Box ml={1} sx={{ borderBottom: 1, boredrColor: "error.main", width: '20%', display: 'flex' }}>
+                            <p>
+                                مشخصات فردی&nbsp;&nbsp;&nbsp;
+                            </p>
+                        </Box>
+                    </Grid>
                     <Grid item xs={12} md={6} lg={4} >
                         <STextField
                             fullWidth
@@ -206,12 +296,13 @@ export default function ManagerProfile(props) {
                         <FormControl fullWidth>
                             <InputLabel>جنسیت</InputLabel>
                             <SSelect
-                                {...formik.getFieldProps('sex')}
-                                renderValue={(selected) => selected.join(', ')}
+                                required
+                                defaultValue={0}
+                                value={gender}
+                                label='جنسیت'
+                                onChange={reHandleDay}
                                 error={formik.errors["sex"] && formik.touched["sex"]}
-                                value={genders}
-                                onChange={handleGender}
-                                input={<OutlinedInput label="جنسیت" />}
+                                {...formik.getFieldProps('gender')}
                             >
                                 {gender.map((feat, ind) => (
                                     <MenuItem key={ind} value={feat}>
@@ -277,6 +368,82 @@ export default function ManagerProfile(props) {
                         />
                     </Grid>
 
+                    <Grid item xs={12} md={4} >
+                        <FormControl fullWidth>
+                            <InputLabel>روز تولد</InputLabel>
+                            <SSelect
+                                required
+                                defaultValue={0}
+                                value={day}
+                                label="روز تولد"
+                                onChange={reHandleDay}
+                                error={formik.errors["birthDay"] && formik.touched["birthDay"]}
+                                {...formik.getFieldProps('day')}
+                            >
+                                {days.map((feat, ind) => (
+                                    <MenuItem key={ind} value={feat}>
+                                        {/* <Checkbox checked={days.indexOf(feat) > -1} /> */}
+                                        <ListItemText primary={feat} />
+                                    </MenuItem>
+                                ))}
+                            </SSelect>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} md={4} >
+                        <FormControl fullWidth>
+                            <InputLabel>ماه تولد</InputLabel>
+                            <SSelect
+                                required
+                                defaultValue={0}
+                                value={month}
+                                label="ماه تولد"
+                                onChange={reHandleMonth}
+                                error={formik.errors["birthMonth"] && formik.touched["birthMonth"]}
+                                {...formik.getFieldProps('month')}
+                            >
+                                {months.map((feat, ind) => (
+                                    <MenuItem key={ind} value={feat}>
+                                        {/* <Checkbox checked={months.indexOf(feat) > -1} /> */}
+                                        <ListItemText primary={feat} />
+                                    </MenuItem>
+                                ))}
+                            </SSelect>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} md={4} >
+                        <FormControl fullWidth>
+                            <InputLabel>سال تولد</InputLabel>
+                            <SSelect
+
+                                required
+                                defaultValue={0}
+                                value={year}
+                                label="سال تولد"
+                                onChange={reHandleYear}
+                                error={formik.errors["birthYear"] && formik.touched["birthYear"]}
+                                {...formik.getFieldProps('birthYear')}
+                            >
+                                {years.map((feat, ind) => (
+                                    <MenuItem key={ind} value={feat}>
+                                        {/* <Checkbox checked={years.indexOf(feat) > -1} /> */}
+                                        <ListItemText primary={feat} />
+                                    </MenuItem>
+                                ))}
+                            </SSelect>
+                        </FormControl>
+                    </Grid>
+
+
+                    <Grid item xs={12}>
+                        <Box ml={1} sx={{ borderBottom: 1, boredrColor: "error.main", width: '20%', display: 'flex' }}>
+                            <p>
+                                اطلاعات محل اسکان &nbsp;&nbsp;&nbsp;
+                            </p>
+                        </Box>
+                    </Grid>
+
                     <Grid item xs={12} md={6} >
                         <STextField
                             fullWidth
@@ -302,77 +469,65 @@ export default function ManagerProfile(props) {
                             {...formik.getFieldProps('telephoneNumber')}
                         />
                     </Grid>
-                    
-                </Grid>
-                <Grid container spacing={2} mt={0}>
-                    <Grid item xs={12} md={4} >
-                    <FormControl fullWidth>
-                            <InputLabel>روز تولد</InputLabel>
-                            <SSelect
-                                {...formik.getFieldProps('birthDay')}
-                                renderValue={(selected) => selected.join(', ')}
-                                error={formik.errors["birthDay"] && formik.touched["birthDay"]}
-                                value={day}
-                                onChange={handleDay}
-                                input={<OutlinedInput label="روز تولد" />}
-                            >
-                                {days.map((feat, ind) => (
-                                    <MenuItem key={ind} value={feat}>
-                                        {/* <Checkbox checked={days.indexOf(feat) > -1} /> */}
-                                        <ListItemText primary={feat} />
-                                    </MenuItem>
-                                ))}
-                            </SSelect>
-                        </FormControl>
+
+                    <Grid item xs={12} >
+                        <STextField
+                            fullWidth
+                            error={formik.errors["adress"] && formik.touched["adress"]}
+                            variant='filled'
+                            label="آدرس"
+                            name='adress'
+                            type="text"
+                            helperText={formik.errors["adress"]}
+                            {...formik.getFieldProps('adress')}
+                        />
                     </Grid>
 
-                    <Grid item xs={12} md={4} >
-                    <FormControl fullWidth>
-                            <InputLabel>ماه تولد</InputLabel>
-                            <SSelect
-                                {...formik.getFieldProps('birthMonth')}
-                                renderValue={(selected) => selected.join(', ')}
-                                error={formik.errors["birthMonth"] && formik.touched["birthMonth"]}
-                                value={month}
-                                onChange={handleMonth}
-                                input={<OutlinedInput label="ماه تولد" />}
-                            >
-                                {months.map((feat, ind) => (
-                                    <MenuItem key={ind} value={feat}>
-                                        {/* <Checkbox checked={months.indexOf(feat) > -1} /> */}
-                                        <ListItemText primary={feat} />
-                                    </MenuItem>
-                                ))}
-                            </SSelect>
-                        </FormControl>
+                    <Grid item xs={12}>
+                        <Box ml={1} sx={{ borderBottom: 1, boredrColor: "error.main", width: '20%', display: 'flex' }}>
+                            <p>
+                                تکمیل حساب بانکی&nbsp;&nbsp;&nbsp;
+                            </p>
+                        </Box>
                     </Grid>
 
-                    <Grid item xs={12} md={4} >
-                    <FormControl fullWidth>
-                            <InputLabel>سال تولد</InputLabel>
-                            <SSelect
-                                {...formik.getFieldProps('birthYear')}
-                                renderValue={(selected) => selected.join(', ')}
-                                error={formik.errors["birthYear"] && formik.touched["birthYear"]}
-                                value={year}
-                                onChange={handleYear}
-                                input={<OutlinedInput label="سال تولد" />}
-                            >
-                                {years.map((feat, ind) => (
-                                    <MenuItem key={ind} value={feat}>
-                                        {/* <Checkbox checked={years.indexOf(feat) > -1} /> */}
-                                        <ListItemText primary={feat} />
-                                    </MenuItem>
-                                ))}
-                            </SSelect>
-                        </FormControl>
+                    <Grid item xs={12} md={6} >
+                        <STextField
+                            fullWidth
+                            error={formik.errors["shaba"] && formik.touched["shaba"]}
+                            variant='filled'
+                            label="شماره شبا"
+                            name='shaba'
+                            type="text"
+                            helperText={formik.errors["shaba"]}
+                            {...formik.getFieldProps('shaba')}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sx={{ marginTop: '20px' }}>
+                        <Button type="submit"
+                            disabled={(formik.isValid)}
+                            variant="contained"
+                            color='hotel'
+                            style={{ fontSize: '15px' }}
+                        >ثبت اطلاعات
+                        </Button>
                     </Grid>
                 </Grid>
-
             </Box>
         </Container>
     );
 }
+
+
+// *new:
+// disable button
+// year,...
+// map in year,...
+
+
+
+
 
 
 // failiures:

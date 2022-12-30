@@ -105,8 +105,9 @@ export default function DoctorProfileCompletion() {
   const [provinceInfo, setProvinceInfo] = useState({ ...provinceValues });
   const [citiesList, setCitiesList] = useState([]);
   const { user } = useContext(AuthContext);
-  const { authTokens } = useContext(AuthContext);
+  const { authData } = useContext(AuthContext);
   const API = useAxios();
+  const { authTokens } = useContext(AuthContext);
 
   // const handleSpecilaities = (e) => {
   //   setAvailableSpecilaities([...availableSpecilaities, e.target.value]);
@@ -223,7 +224,7 @@ export default function DoctorProfileCompletion() {
       // Fetching available specialties from the database
       API.get(`http://188.121.113.74/api/doctor/specialties/`, {
         headers: {
-          Authorization: `Bearer ${authTokens.access}`,
+          Authorization: `Bearer ${authData.access}`,
         },
       })
         .then((response) => {
@@ -245,7 +246,7 @@ export default function DoctorProfileCompletion() {
           // console.log("this is the response of doctor id", response.data);
           API.get(`/api/doctor/${response.data.id}/`, {
             headers: {
-              Authorization: `Bearer ${authTokens.access}`,
+              Authorization: `Bearer ${authData.access}`,
             },
           })
             .then((response) => {

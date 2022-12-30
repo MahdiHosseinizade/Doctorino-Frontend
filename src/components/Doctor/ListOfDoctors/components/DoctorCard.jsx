@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 export default function DoctorCard({ doctor }) {
   const history = useHistory();
 
-  console.log(doctor)
+  // console.log(doctor)
   const {url} = useRouteMatch();
   const classes = useStyles();
 
