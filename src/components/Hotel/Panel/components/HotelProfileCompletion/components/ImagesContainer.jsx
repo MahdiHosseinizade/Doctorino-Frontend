@@ -1,6 +1,8 @@
 import React from 'react';
 import './ImagesContainerStyles.css'
 import { Grid } from "@mui/material";
+import { baseURL } from "../../../../../../utils/useAxios";
+
 
 
 const ImagesSwiper = ({ images, deleteImage, ...props }) => {
@@ -13,12 +15,12 @@ const ImagesSwiper = ({ images, deleteImage, ...props }) => {
             direction="row-reverse"
             spacing={2}
         >
-            {images?.map((image, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                    <img src={URL.createObjectURL(image)}
+            {images?.map(({id, image, hotel}, index) => (
+                <Grid item xs={12} sm={6} md={6} key={index}>
+                    <img src={image.includes(baseURL) ? image : `${baseURL}${image}`}
                         alt="hotel image"
                         className="hotel-image"
-                        onClick={() => deleteImage(image)}
+                        onClick={() => deleteImage({id, image, hotel})}
                     />
                 </Grid>
             ))}

@@ -178,6 +178,7 @@ function a11yProps(index) {
 export default function HotelProfileCompletion() {
   const { authData } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
+  const [loading4, setLoading4] = useState(false);
   const [hotel, setHotel] = useState('');
   const [stars, setStars] = useState("");
   const [features, setFeatures] = useState([]);
@@ -294,6 +295,10 @@ export default function HotelProfileCompletion() {
       })
       .catch(err => console.error(err))
 
+    if (value === 3) {
+      setLoading4(true);
+    }
+
     api.get(`/api/hotel/${hotel_id}/room/`)
       .then(res => {
         setRooms(res.data);
@@ -342,28 +347,27 @@ export default function HotelProfileCompletion() {
           autoClose: 2000,
         });
       } else {
-        const data = new URLSearchParams();
         let formData = new FormData();
 
-        // formData.append("cover_image", values.cover_image, "cover_image.jpg");
         formData.append("hotel_name", values.hotel_name);
         formData.append("trade_code", values.trade_code);
+        formData.append("phone_number", values.phone_number);
         formData.append("hotel_description", values.hotel_description);
         formData.append("address", values.address);
         formData.append("rules", values.rules);
         formData.append("stars", values.stars);
-        console.log("values: ", values.cover_image)
-        console.log("coverImage: ", coverImage)
 
         values.features.forEach(feat => {
           formData.append("features", feat);
         })
 
-        for (var pair of formData.entries()) {
-          data.append(pair[0], pair[1]);
+        if (values.cover_image) {
+          formData.append("cover_image", values.cover_image);
         }
-        api.put(`/api/hotel/${values.hotel_id}/`, data, {
+
+        api.put(`/api/hotel/${values.hotel_id}/`, formData, {
           headers: {
+            "Content-Type": "multipart/form-data",
             "Authorization": "Bearer " + authData?.access,
           }
         }).then(res => {
@@ -377,6 +381,7 @@ export default function HotelProfileCompletion() {
             autoClose: 2000,
           })
         })
+
         formik.resetForm();
         setLoading(true);
       }
@@ -396,6 +401,10 @@ export default function HotelProfileCompletion() {
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if (newValue === 3) {
+      setLoading4(true);
+      setLoading(false);
+    }
   };
 
 
@@ -442,12 +451,6 @@ export default function HotelProfileCompletion() {
     },
     validationSchema: validationSchemaRoom,
   });
-
-
-  function handle(e) {
-    e.preventDefault();
-    console.log(e);
-  }
 
   return (
     <Container>
@@ -499,9 +502,9 @@ export default function HotelProfileCompletion() {
           }}>
             <Grid container spacing={2}>
 
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={5}>
                 <Box sx={{
-                  marginTop: { xs: "10px", md: "10px" },
+                  marginTop: { xs: "10px", md: "35px" },
                   borderRadius: "10px",
                   padding: 1,
                 }}>
@@ -528,7 +531,7 @@ export default function HotelProfileCompletion() {
                     sx={{
                       width: "100%",
                       marginTop: 2,
-                      height: { xs: "300px", md: "450px" },
+                      height: "100%",
                       objectFit: "fill",
                       borderRadius: "10px",
                       border: `5px solid ${theme.palette.hotel.main}`,
@@ -536,20 +539,20 @@ export default function HotelProfileCompletion() {
                   />
                 </Box>
               </Grid>
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={7}>
                 <TabPanel value={value} index={0}>
                   <Box
                     sx={{
                       color: theme.palette.hotel.dark,
-                      marginTop: { xs: "20px", md: "20px" },
-                      bgcolor: "rgb(245, 246, 248)",
-                      border: "1px solid #ccc",
-                      marginBottom: "50px",
-                      borderRadius: "10px",
+                      marginTop: { xs: 1, md: "20px" },
+                      border: `2px solid ${theme.palette.hotel.dark}`,
+                      borderRadius: "5px",
                       padding: "20px",
                       "& .MuiTextField-root": { m: 0.5 },
-                      boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+                      boxShadow: "0 0 5px 0 rgba(0,0,0,0.5)",
                     }}
+                    onSubmit={formik.handleSubmit}
+                    component="form"
                   >
                     <Typography
                       sx={{
@@ -569,9 +572,7 @@ export default function HotelProfileCompletion() {
                       }}
                     />
 
-                    <Grid container spacing={2}
-                      onSubmit={formik.handleSubmit}
-                      component="form">
+                    <Grid container spacing={2}>
                       <Grid item xs={12} md={12}>
                         <Dropzone CssBaseLine={true} handleFile={handleCoverImage} iconColor={'hotel'} />
                       </Grid>
@@ -715,14 +716,12 @@ export default function HotelProfileCompletion() {
                   <Box
                     sx={{
                       color: theme.palette.hotel.dark,
-                      marginTop: { xs: "20px", md: "20px" },
-                      bgcolor: "rgb(245, 246, 248)",
-                      border: "1px solid #ccc",
-                      marginBottom: "50px",
-                      borderRadius: "10px",
+                      marginTop: { xs: 1, md: "20px" },
+                      border: `2px solid ${theme.palette.hotel.dark}`,
+                      borderRadius: "5px",
                       padding: "20px",
                       "& .MuiTextField-root": { m: 0.5 },
-                      boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+                      boxShadow: "0 0 5px 0 rgba(0,0,0,0.5)",
                     }}
                   >
                     <Typography
@@ -755,7 +754,7 @@ export default function HotelProfileCompletion() {
                                   aria-controls={`aria${room.id}`}
                                   id={`id${room.id}`}
                                 >
-                                
+
                                   <Typography>اتاق نوع {rooms.indexOf(room) + 1}</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
@@ -800,14 +799,12 @@ export default function HotelProfileCompletion() {
                   <Box
                     sx={{
                       color: theme.palette.hotel.dark,
-                      marginTop: { xs: "20px", md: "20px" },
-                      bgcolor: "rgb(245, 246, 248)",
-                      border: "1px solid #ccc",
-                      marginBottom: "50px",
-                      borderRadius: "10px",
+                      marginTop: { xs: 1, md: "20px" },
+                      border: `2px solid ${theme.palette.hotel.dark}`,
+                      borderRadius: "5px",
                       padding: "20px",
                       "& .MuiTextField-root": { m: 0.5 },
-                      boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+                      boxShadow: "0 0 5px 0 rgba(0,0,0,0.5)",
                     }}
                     component="form"
                     onSubmit={formikRoom.handleSubmit}
@@ -931,14 +928,12 @@ export default function HotelProfileCompletion() {
                   <Box
                     sx={{
                       color: theme.palette.hotel.dark,
-                      marginTop: { xs: "20px", md: "20px" },
-                      bgcolor: "rgb(245, 246, 248)",
-                      border: "1px solid #ccc",
-                      marginBottom: "50px",
-                      borderRadius: "10px",
+                      marginTop: { xs: 1, md: "20px" },
+                      border: `2px solid ${theme.palette.hotel.dark}`,
+                      borderRadius: "5px",
                       padding: "20px",
                       "& .MuiTextField-root": { m: 0.5 },
-                      boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+                      boxShadow: "0 0 5px 0 rgba(0,0,0,0.5)",
                     }}
                   >
                     <Typography
@@ -958,10 +953,7 @@ export default function HotelProfileCompletion() {
                         marginTop: "1rem",
                       }}
                     />
-
-                    <Grid container spacing={2}>
-                      <ImageGallery />
-                    </Grid>
+                    <ImageGallery hotel_id={hotel} loading={loading4} setLoading={setLoading4} />
                   </Box>
                 </TabPanel>
               </Grid>
