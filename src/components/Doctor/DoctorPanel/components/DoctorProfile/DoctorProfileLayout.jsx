@@ -171,7 +171,7 @@ export default function DoctorProfileLayout() {
               "this is the available specialties: ",
               availableSpecilaities
             );
-          }, 5000);
+          }, 1000);
         })
         .catch((error) => {
           console.log("Error returned from fetching specialties: ", error);
@@ -219,16 +219,33 @@ export default function DoctorProfileLayout() {
                     return specialty.name;
                   }
                 })[0]["name"],
-                province: provinces.filter((province) => {
-                  if (province.name === response.data.province) {
-                    return province.name;
-                  }
-                })[0]["name"],
-                city: cities.filter((city) => {
-                  if (city.name === response.data.city) {
-                    return city.name;
-                  }
-                })[0]["name"],
+                // province: provinces.filter((province) => {
+                //   if (province.name === response.data.province) {
+                //     return province.name;
+                //   }
+                // })[0]["name"],
+                province:
+                  response.data.province !== "تعیین نشده"
+                    ? provinces.filter((province) => {
+                        if (province.name === response.data.province) {
+                          return province.name;
+                        }
+                      })[0]["name"]
+                    : "تعیین نشده",
+                // city: cities.filter((city) => {
+                //   if (city.name === response.data.city) {
+                //     return city.name;
+                //   }
+                // })[0]["name"],
+                city:
+                  response.data.city !== "تعیین نشده"
+                    ? cities.filter((city) => {
+                        if (city.name === response.data.city) {
+                          return city.name;
+                        }
+                      })[0]["name"]
+                    : 0,
+
                 clinic_address: response.data.clinic_address,
                 work_periods: response.data.work_periods,
                 description: response.data.description,
@@ -310,6 +327,8 @@ export default function DoctorProfileLayout() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("in handle submit");
+    console.log("this is the profile photo: ", profilePhoto);
     // if (validate()) {
     //   const sendingList = {
     //     ...doctor,
@@ -372,8 +391,18 @@ export default function DoctorProfileLayout() {
       formData.append("phone_number", doctor.phone_number);
       formData.append("office_number", doctor.office_number);
       formData.append("education", doctor.education);
-      formData.append("province", doctor.province);
-      formData.append("city", doctor.city);
+      // formData.append("province", doctor.province);
+      formData.append("province", provinces.filter((province) => {
+        if (province.name === doctor.province) {
+          return province.id;
+        }
+      })[0]["id"]);
+      // formData.append("city", doctor.city);
+      formData.append("city", cities.filter((city) => {
+        if (city.name === doctor.city) {
+          return city.id;
+        }
+      })[0]["id"]);
       formData.append("clinic_address", doctor.clinic_address);
       formData.append("work_periods", doctor.work_periods);
       formData.append("description", doctor.description);
