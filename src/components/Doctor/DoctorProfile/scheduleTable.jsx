@@ -3,13 +3,19 @@ import React, { useState, useEffect, useContext } from 'react';
 import {
     Container,
     Card,
+    Button,
     Box,
     Typography,
-    Button,
     Grid,
     Stack,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
 } from "@mui/material"
 import { useTheme } from '@mui/material/styles';
+import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import MobileStepper from '@mui/material/MobileStepper';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -66,8 +72,10 @@ export default function ScheduleTime({ doctor, ...props }) {
         0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [],
     }
 
+    const [flag, setFlag] = React.useState(true);
     let show_time = [];
-
+    const [open, setOpen] = React.useState(false);
+    const history = useHistory();
     const [_from_time, set_from_time] = useState('');
     const [_to_time, set_to_time] = useState('');
     const theme = useTheme();
@@ -80,6 +88,15 @@ export default function ScheduleTime({ doctor, ...props }) {
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+
     };
 
     const [reservation, setReservation] = useState([]);
@@ -305,11 +322,13 @@ export default function ScheduleTime({ doctor, ...props }) {
     }
 
     let today = new Date().toLocaleDateString('fa-IR-u-nu-latn');
-    formValue.date_reserved = `${today.substring(0, 4)}-${today.substring(5, 7)}-${today.substring(8, 9)}`;
+    formValue.date_reserved = `${today.substring(0, 4)}-${today.substring(5, 7)}-${Number(today.substring(8, 9))+activeStep}`;
+    console.log()
 
     const [form, setForm] = useState('');
     const { authData } = useContext(AuthContext);
-    
+    const { user, authTokens, logoutUser } = useContext(AuthContext);
+
 
     // console.log(formValue.doctorID)
     // console.log(typeof(doctor?.id))
@@ -322,29 +341,29 @@ export default function ScheduleTime({ doctor, ...props }) {
         },
 
         onSubmit: (values) => {
-          
-            // console.log(
-            //     {
-            //         "date_reserved": values.date_reserved,
-            //         "from_time": _from_time,
-            //         "to_time": _to_time,
-            //         "patient_name": authData['first-name'] + authData['last-name'], //
-            //         "national_code": '0987654321', //
-            //         "doctorID": doctor?.id,
-            //         "patient": authData['child-id'], //
-            //     }
-            // )
 
-            api.post(`/api/doctor/appointment/`, 
-            {
-                "date_reserved": values.date_reserved,
-                 "from_time": _from_time,
-                "to_time": _to_time,
-                "patient_name": authData['first-name'] + authData['last-name'], //
-                "national_code": '0987654321', //
-                "doctorID": doctor?.id,
-                "patient": authData['child-id'], //
-            }, {
+            console.log(
+                {
+                    "date_reserved":  values.date_reserved,
+                    "from_time": _from_time,
+                    "to_time": _to_time,
+                    "patient_name": `${authData['first-name'] + authData['last-name']}`, //
+                    "national_code": '0987654321', //
+                    "doctor": doctor?.id,
+                    "patient": authData['child-id'], //
+                }
+            )
+
+            api.post(`/api/doctor/appointment/`,
+                {
+                    "date_reserved": values.date_reserved,
+                    "from_time": _from_time,
+                    "to_time": _to_time,
+                    "patient_name": authData['first-name'] + authData['last-name'], //
+                    "national_code": '0987654321', //
+                    "doctor": doctor?.id,
+                    "patient": authData['child-id'], //
+                }, {
                 headers: {
                     "Authorization": "Bearer " + authData?.access,
                 }
@@ -366,11 +385,64 @@ export default function ScheduleTime({ doctor, ...props }) {
         validationSchema: validationSchema,
     });
 
+    function ReservePopUp() {
+        return (
+            <Box
+                onSubmit={formik.handleSubmit}
+                component="form">
+                <DialogContent>
+                    <DialogContentText
+                        id="alert-dialog-description"
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>
+                        {/* جهت رزرو نهایی نوبت برای دکتر { }، { } در زمان { } ، لطفا روی <span>&nbsp;<b>تایید نهایی رزرو</b>&nbsp;</span> کلیک کنید */}
+                        {/* {console.log(props?.scheduleTime[0])} */}
+                        جهت ثبت نهایی نوبت پزشک خود لطفا روی <span>&nbsp;<b>تایید نهایی رزرو</b>&nbsp;</span> کلیک کنید
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button type="submit" onClick={handleClose} autoFocus>
+                        تایید نهایی رزرو
+                    </Button>
+                </DialogActions>
+            </Box>
+        );
+    }
 
-
-
-
-
+    function logInPopUp() {
+        return (
+            <div>
+                <DialogContent>
+                    <DialogContentText
+                        id="alert-dialog-description"
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>
+                        جهت ثبت نهایی نوبت خود ابتدا باید به دکترینو وارد شوید
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => {
+                            history.push("/login");
+                        }}
+                    >
+                        &nbsp;ورود
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            history.push("/signup");
+                        }}
+                    >
+                        &nbsp;&nbsp;&nbsp;عضویت
+                    </Button>
+                </DialogActions>
+            </div>
+        );
+    }
 
 
     return (
@@ -441,21 +513,27 @@ export default function ScheduleTime({ doctor, ...props }) {
                 <Grid item>
                     <Stack>
                         <Box
-                            onSubmit={formik.handleSubmit}
-                            component="form"
-                            sx={{ }}>
+                            sx={{}}>
                             <Grid container spacing={1}>
                                 {show_time.filter((item) => (item[0] == day[activeStep]))[0][1].map((time, index) => {
                                     return (
                                         <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
-                                            <button type="submit" id={`${time}`}
+                                            <Button type="submit" id={`${time}`} variant={!flag ? "contained" : 'outlined'}
+                                                sx={{
+                                                    // "& :hover": {
+                                                    //     backgroundColor: 'white'
+                                                    // },
+                                                    // backgroundColor: 'darkblue',
+                                                }}
                                                 onClick={() => {
                                                     set_from_time(time + ':00')
                                                     if (time.substring(3, 5) == '45') { set_to_time(`${Number(time.substring(0, 2)) + 1}:00:00`) }
                                                     else { set_to_time(`${Number(time.substring(0, 2))}:${Number(time.substring(3, 5)) + 15}:00`) }
+                                                    setFlag(!flag)
+                                                    
                                                 }}
                                             >
-                                                <Typography textAlign="center">{time}</Typography></button>
+                                                <Typography textAlign="center">{time}</Typography></Button>
                                         </Grid>
                                     );
                                 })}
@@ -465,14 +543,33 @@ export default function ScheduleTime({ doctor, ...props }) {
                     </Stack>
                 </Grid>
                 <Grid item xs={12}>
-                    <br />
-                    <Button sx={{
-                        width: "100%",
-                        backgroundColor: "primary"
-                    }}>
-                        رزرو کنید
-                    </Button>
+                    <Box>
+                        <br />
+                        <Button sx={{
+                            width: "100%",
+                            backgroundColor: "primary"
+                        }}
+                            onClick={handleClickOpen}
+                        >
+                            رزرو کنید
+                        </Button>
+                    </Box>
                 </Grid>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        <Typography sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}>{"رزرو نهایی"}</Typography>
+                    </DialogTitle>
+                    {user && ReservePopUp()}
+                    {!user && logInPopUp()}
+                </Dialog>
             </Grid>
         </Card>
     );
