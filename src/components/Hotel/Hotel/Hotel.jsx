@@ -30,6 +30,7 @@ import { FaChild } from "react-icons/fa";
 import { RiBilliardsFill } from "react-icons/ri";
 import { AiFillSafetyCertificate } from "react-icons/ai";
 import NavBar from "../../NavBar/newNavBar";
+import { toast } from "react-toastify";
 // import moment from "jalali-moment";
 // import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
 // import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
@@ -157,7 +158,7 @@ const Hotel = () => {
         );
         setAvailableRooms(response.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err.response.data));
   };
 
   return (
