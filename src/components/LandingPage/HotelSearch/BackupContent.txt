@@ -1,0 +1,461 @@
+
+const useStyles = makeStyles({
+  root: {
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100vh",
+    width: "100vw",
+    backgroundColor: "#f5f5f5",
+  },
+  searchBox: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    maxWidth: "500px",
+    height: "100%",
+    maxHeight: "300px",
+
+    "& input": {
+      width: "100%",
+      height: "50px",
+      padding: "0 20px",
+      border: "none",
+      outline: "none",
+      borderRadius: "5px 0 0 5px",
+      fontSize: "1.2rem",
+    },
+    "& button": {
+      width: "50px",
+      height: "50px",
+      border: "none",
+      outline: "none",
+      borderRadius: "0 5px 5px 0",
+      backgroundColor: "#f5f5f5",
+      cursor: "pointer",
+      "& svg": {
+        fontSize: "1.5rem",
+      },
+    },
+  },
+});
+
+const data = [
+  "Paris",
+  "London",
+  "New York",
+  "Tokyo",
+  "Berlin",
+  "Buenos Aires",
+  "Cairo",
+  "Canberra",
+  "Rio de Janeiro",
+  "Dublin",
+];
+
+const SearchBar = ({ setSearchQuery, handleSearch }) => (
+  <form onSubmit={handleSearch}>
+    <TextField
+      id="search-bar"
+      className="text"
+      onInput={(e) => {
+        setSearchQuery(e.target.value);
+      }}
+      label="شهر مورد نظر را وارد کنید"
+      variant="outlined"
+      placeholder="مثال: تهران"
+      size="small"
+    />
+    <IconButton type="submit" aria-label="search">
+      <SearchIcon style={{ fill: "blue" }} />
+    </IconButton>
+  </form>
+);
+
+const filterData = (query, data) => {
+  if (!query) {
+    return data;
+  } else {
+    return data.filter((d) => d.toLowerCase().includes(query));
+  }
+};
+
+
+***************************************************
+
+
+import React, { useState, useContext, useEffect } from "react";
+import "./HotelSearch.css";
+import NavBar from "../../NavBar/newNavBar";
+import { makeStyles } from "@mui/styles";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+import { TextField, FormControl, Grid } from "@mui/material";
+import { MdPlace } from "react-icons/md";
+import { BiSearch } from "react-icons/bi";
+import { cities } from "../../../db/cities";
+import AuthContext from "../../../context/AuthContext";
+import axios from "axios";
+import { toast } from "react-toastify";
+import Select from "react-select";
+import { Link, Redirect, useHistory } from "react-router-dom";
+
+const useStyles = makeStyles({});
+
+export default function HotelSearch() {
+  const [hotelsResponse, setHotelsResponse] = useState([]);
+  const [city, setCity] = useState("");
+  const classes = useStyles();
+  const history = useHistory();
+
+  const handleCity = (e) => {
+    setCity(e);
+  };
+
+  const handleSubmit = (e) => {
+    // e.preventDefault();
+    console.log("this is the city: ", city);
+    axios
+      .post("http://188.121.113.74/api/hotel/search/", {
+        city: city.id,
+      })
+      .then((response) => {
+        console.log("the response of found hotels: ", response.data);
+        // history.replace({
+        //   pathname: "/found-hotels",
+        //   state: {
+        //     hotels: response.data,
+        //   },
+        // });
+        setHotelsResponse([...response.data]);
+      })
+      .catch((err) => {
+        // toast.error(err.response.data.message);
+        console.log("error");
+      });
+    console.log("this is the available hotels: ", hotelsResponse);
+  };
+
+  return (
+    <div className="ContainerLandingPage">
+      <NavBar />
+      <form
+      // onSubmit={handleSubmit}
+      >
+        <div className="Title">
+          {/* <h2>راه حلی مناسب برای رزرو دکتر</h2> */}
+          <h1>دکترینو</h1>
+        </div>
+        <FormControl className="FormControlCity" fullWidth>
+          <Select
+            value={city}
+            onChange={(e) => handleCity(e)}
+            options={cities}
+            //   menuPortalTarget={document.body}
+            //   styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+          />
+        </FormControl>
+        <div className="SearchBar_Container">
+          <div className="chooseLocation">
+            <div className="LocationIcon">
+              <h2>مقصد</h2>
+              <MdPlace className="MdPlace" />
+            </div>
+            <div className="EnterCity">
+              <FormControl className="FormControlCity" fullWidth>
+                <Select
+                  value={city}
+                  onChange={(e) => handleCity(e)}
+                  options={cities}
+                  //   menuPortalTarget={document.body}
+                  //   styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                />
+              </FormControl>
+            </div>
+          </div>
+          <div className="vl"></div>
+          <div className="searchScale">
+            {/* <button
+              type="submit"
+              // onClick={searchHotel}
+              className="ZareBin"
+            >
+              {<BiSearch className="ZarebinIcon" />}
+            </button>
+             */}
+            <Link
+              to={{
+                pathname: "/hotel-search/found-hotels",
+                state: { hotels: hotelsResponse },
+              }}
+            >
+              <button onClick={handleSubmit} className="ZareBin">
+                {<BiSearch className="ZarebinIcon" />}
+              </button>
+            </Link>
+          </div>
+        </div>
+        <div className="landingPage">
+          <div className="searchBar"></div>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+**********************************************
+
+.searchBar{
+    margin-bottom: 60px;
+    /* background-image: url('https://www.finds.ir/img/2020081384124649.jpg'); */
+    background-color: #096085;
+    width: 60vw;
+    height: 60vh;
+    padding: 10px;
+    font-size: 16px;
+    outline: none;
+    border-radius: 10px;
+    z-index: -1;
+}
+
+.search{
+    width: 100%;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 4px;
+    /* margin: 0; */
+    /* margin: 0 auto; */
+}
+
+.searchIcon{
+    height: 32px;
+    margin: 4px;
+    background-color: #556a85;
+    display: flex;
+}
+.placeIcon{
+    display: flex;
+    height: 32px;
+    margin: 0;
+    text-align: center;
+    background-color: #556a85;
+}
+
+.SearchBar_Container{
+    margin-right: 72px;
+    display: flex;
+    width: 50%;
+    
+    height: 115px;
+    background-color: white;
+    position: absolute;
+    bottom: 17%;
+    border-radius: 16px;
+    /* overflow: hidden; */
+}
+
+.ContainerLandingPage{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f5f5f5;
+}
+.chooseLocation{
+    width: 300%;
+    cursor: pointer;
+    background-color: #ffffff;
+}
+
+.searchScale{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 8px;
+    width: 70%;
+    background-color: #ffffff;
+}
+.typeScale{
+    /* background-color: #03056f; */
+}
+.scaleInput{
+    width: 200px;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 12px;
+    font-family: 'IranYekan';
+    color: #03045e;
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 0 10px;
+    margin-bottom: 20px;
+}
+.vl{
+    border-left: 1px solid #03056f;
+    height: 100px;
+}
+.ZareBin{
+    cursor: pointer;
+    background-color: #096085;
+    width: 90px;
+    height:90px;
+    border-radius:35px ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 26px 54px;
+    /* margin: 0 auto; */
+}
+.ZarebinIcon{
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    color: #ffffff;
+}
+
+.Title{
+    position: absolute;
+    top: 20%;
+    right: 25%;
+    color: white;
+}
+.LocationIcon{
+    display: flex;
+    flex-direction: space-around;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 10px;
+}
+.MdPlace{
+    color:#096085;
+    font-size: 25px;
+    margin-right: 20px;
+}
+.EnterCityInput{
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: 'IranYekan';
+    color: #096085;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 0 10px;
+}
+
+.EnterCityInput::placeholder{
+    font-family: 'IranYekan';
+    color: #ffffff ba;
+    font-size: 14px;
+}
+
+.place{
+    cursor: pointer;
+    min-width: max-content;
+    display: flex;
+    justify-content: center;
+    border: none;
+    margin: 4px;
+}
+.place h6{
+    min-width: max-content;
+    display: flex;
+    margin: 2px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.searchDoctor{
+    margin : 0;
+    border: 1px solid #ccc;
+    font-family: 'IranYekan';
+}
+.searchDoctor::placeholder{
+    font-family: 'IranYekan';
+}
+
+.IconSelect{
+    display: flex;
+}
+.selectScale{
+    font-family: 'IranYekan';
+    font-size: 12px;
+    height: 30px;
+    margin-top: 5px;
+    border-radius: 10px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+.item{
+    background-color: darkgray;
+    width: 600px;
+    height: 500px;
+    /* center the page */
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 10px;
+    padding: 10px;
+}
+
+.showSpecialieties{
+    justify-content: space-around;
+    /* align-items: center;  */
+    background-color: rgb(199, 226, 226);
+    margin-bottom: 2%;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 15px  ;
+    border-radius: 10px;
+    margin-bottom: 50px;
+}
+
+.doctorScale{
+    background-color: #096085;
+    display: flex;
+    width: 400px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    font-family: 'IranYekan';
+    font-size: 14px;
+    margin: 5px 10px;    
+    height: 60px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: white;
+    /* margin-right: 10px; */
+}
+
+/* .SelectSpeciality{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    margin: 5px 10px;
+    font-family: 'IranYekan';
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+} */
