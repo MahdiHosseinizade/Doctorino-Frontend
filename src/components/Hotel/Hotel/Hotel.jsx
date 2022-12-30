@@ -30,6 +30,11 @@ import { FaChild } from "react-icons/fa";
 import { RiBilliardsFill } from "react-icons/ri";
 import { AiFillSafetyCertificate } from "react-icons/ai";
 import NavBar from "../../NavBar/newNavBar";
+// import moment from "jalali-moment";
+// import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
+// import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
+// import "react-modern-calendar-datepicker/lib/DatePicker.css";
+// import DatePicker from "react-modern-calendar-datepicker";
 
 const useStyles = makeStyles({
   container: {
@@ -90,6 +95,18 @@ const useStyles = makeStyles({
   },
 });
 const Hotel = () => {
+  // let date = new Date();
+  // date = moment(date).locale("fa").format("YYYY/MM/DD").split("/");
+  // console.log("the date", date.split("/"));
+  // console.log("this is the day", date.jDay());
+  // const [fromTime, setFromTime] = useState({day: 9, month: 10, year: 1401});
+  // const [fromTime, setFromTime] = useState({day: date[2], month: date[1], year: date[0]});
+  // const [toTime, setToTime] = useState({day: date[2], month: date[1], year: date[0]});
+  // const [toTime, setToTime] = useState({day: 10, month: 10, year: 1401});
+  // const [selectedDayRange, setSelectedDayRange] = useState({
+  //   fromTime: null,
+  //   toTime: null,
+  // });
   const classes = useStyles();
   const [fromTime, setFromTime] = useState(new Date());
   const [toTime, setToTime] = useState(new Date());
@@ -125,8 +142,8 @@ const Hotel = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("fromTime: ", fromTime.toISOString().split("T")[0]);
-    console.log("toTime: ", toTime.toISOString().split("T")[0]);
+    // console.log("fromTime: ", fromTime.toISOString().split("T")[0]);
+    // console.log("toTime: ", toTime.toISOString().split("T")[0]);
     await axios
       .get(
         `http://188.121.113.74/api/hotel/${id}/${
@@ -303,6 +320,34 @@ const Hotel = () => {
                     renderInput={(params) => <TextField {...params} />}
                   />
                 </LocalizationProvider>
+                {/* <Grid item xs={6} md={6}> */}
+                {/* <DatePicker
+                  inputPlaceholder="تاریخ ورود"
+                  value={fromTime}
+                  colorPrimary="#3f51b5"
+                  colorPrimaryLight="#757ce8"
+                  // onChange={(newValue) => setFromTime(newValue)}
+                  onChange={setFromTime}
+                  shouldHighlightWeekends
+                  locale="fa"
+                  calendarPopperPosition="bottom"
+                  calendarSelectedDayClassName="selected-day"
+                  calendarClassName="custom-calendar"
+                />
+                <DatePicker
+                  inputPlaceholder="تاریخ خروج"
+                  value={toTime}
+                  colorPrimary="#3f51b5"
+                  colorPrimaryLight="#757ce8"
+                  // onChange={(newValue) => setToTime(newValue)}
+                  onChange={setToTime}
+                  shouldHighlightWeekends
+                  locale="fa"
+                  calendarPopperPosition="bottom"
+                  calendarSelectedDayClassName="selected-day"
+                  calendarClassName="custom-calendar"
+                /> */}
+                {/* </Grid> */}
               </CardContent>
               <CardActions>
                 <Grid item md={12} xs={12}>
