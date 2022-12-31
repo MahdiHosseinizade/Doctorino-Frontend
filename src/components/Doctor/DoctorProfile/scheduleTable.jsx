@@ -323,15 +323,12 @@ export default function ScheduleTime({ doctor, ...props }) {
 
     let today = new Date().toLocaleDateString('fa-IR-u-nu-latn');
     formValue.date_reserved = `${today.substring(0, 4)}-${today.substring(5, 7)}-${Number(today.substring(8, 9)) + activeStep}`;
-    console.log()
+    console.log(today, formValue.date_reserved)
 
     const [form, setForm] = useState('');
     const { authData } = useContext(AuthContext);
     const { user, authTokens, logoutUser } = useContext(AuthContext);
 
-
-    // console.log(formValue.doctorID)
-    // console.log(typeof(doctor?.id))
 
     const formik = useFormik({
         initialValues: formValue,
@@ -347,10 +344,10 @@ export default function ScheduleTime({ doctor, ...props }) {
                     "date_reserved": values.date_reserved,
                     "from_time": _from_time,
                     "to_time": _to_time,
-                    "patient_name": `${authData['first-name'] + " " + authData['last-name']}`, //
-                    "national_code": '0987654321', //
+                    "patient_name": `${authData['first-name'] + " " + authData['last-name']}`, 
+                    "national_code": '0987654321', 
                     "doctor": doctor?.id,
-                    "patient": authData['child-id'], //
+                    "patient": authData['child-id'], 
                 }
             )
 
@@ -532,8 +529,9 @@ export default function ScheduleTime({ doctor, ...props }) {
                                                 }}
                                                 onClick={() => {
                                                     set_from_time(time + ':00')
-                                                    if (time.substring(3, 5) == '45') { set_to_time(`${Number(time.substring(0, 2)) + 1}:00:00`) }
-                                                    else { set_to_time(`${Number(time.substring(0, 2))}:${Number(time.substring(3, 5)) + 15}:00`) }
+                                                    set_from_time(time + ':00')
+                                                    if (time.substring(time.indexOf(':')+1,time.indexOf(':')+3) == '45') { set_to_time(`${Number(time.substring(0, time.indexOf(':'))) + 1}:00:00`) }
+                                                    else { set_to_time(`${Number(time.substring(0, time.indexOf(':')))}:${Number(time.substring(time.indexOf(':')+1,time.indexOf(':')+3)) + 15}:00`) }
                                                     // setFlag(!flag)
                                                     // console.log(_from_time, _to_time)
                                                 }}
@@ -544,16 +542,18 @@ export default function ScheduleTime({ doctor, ...props }) {
                                 })}
                                 {show_time.filter((item) => (item[0] == day[activeStep]))[0][1].length === 0 &&
                                     <Grid item xs={12} md={12} sx={{ justifyContent: 'center', display: 'flex' }}>
-                                        <Box fullWidth
+                                        <Box 
                                             sx={{
                                                 diasplay: 'flex',
                                                 width: '100%'
                                             }}>
-                                            <Typography sx={{
+                                            <Typography 
+                                            textAlign="center"
+                                            sx={{
                                                 fontWeight: '550',
                                                 fontSize: '14px',
-                                                justifyContent: 'flex-end',
-                                                center: '10%',
+                                                justifyContent: 'center',
+                                                display: 'flex',
                                                 marginTop: '50px',
                                                 marginBottom: '40px',
                                             }}>
