@@ -157,8 +157,8 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box 
-        sx={{ p: 3 }}
+        <Box
+          sx={{ p: 3 }}
         >
           <Typography>{children}</Typography>
         </Box>
@@ -200,6 +200,7 @@ export default function HotelProfileCompletion() {
   const history = useHistory();
   const api = useAxios();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   function fetchData() {
     api
       .get("/api/hotel/owner/hotel-list/", {
@@ -236,7 +237,7 @@ export default function HotelProfileCompletion() {
 
     return () => clearInterval(id);
 
-  }, [availableHotels, availableFeatures, loading]);
+  }, [availableHotels, setRoomForm, availableFeatures, loading, fetchData]);
 
   const handleFeatures = (event) => {
     const value = event.target.value;
@@ -249,7 +250,7 @@ export default function HotelProfileCompletion() {
     const citiesLST = cities.filter((city) => city.province_id === province);
     setCityList(citiesLST);
   }
-  
+
   const handleProvince = (event) => {
     const value = event.target.value;
     setProvince(value);
@@ -298,7 +299,7 @@ export default function HotelProfileCompletion() {
 
         setHotel(hotel_id);
         formRoomValue.hotel = hotel;
-        
+
 
         formik.setFieldValue("hotel_id", hotel_id);
 
@@ -375,7 +376,6 @@ export default function HotelProfileCompletion() {
           position: "top-right",
           autoClose: 2000,
         })
-
         formik.resetForm();
         setLoading(true);
       })
@@ -397,8 +397,7 @@ export default function HotelProfileCompletion() {
       setCityList([]);
       setProvince('');
       setCity('');
-      setHotel('');
-      formRoomValue.hotel = hotel;
+      // setHotel('');
       setStars('');
     },
 
@@ -439,6 +438,7 @@ export default function HotelProfileCompletion() {
             position: "top-right",
             autoClose: 2000,
           })
+          setLoading(true);
         }).catch(err => {
           toast.error("خطایی رخ داده است", {
             position: "top-right",
@@ -486,7 +486,6 @@ export default function HotelProfileCompletion() {
           autoClose: 2000,
         });
       } else {
-        const roomData = new URLSearchParams();
         let roomFormData = new FormData();
 
         roomFormData.append("bed_count", values.bed_count);
@@ -502,10 +501,16 @@ export default function HotelProfileCompletion() {
             "Authorization": "Bearer " + authData?.access,
           }
         }).then(res => {
+          setRooms(prev => [
+            ...prev,
+            roomFormData
+          ])
           toast.success("اتاق با موفقیت اضافه شد", {
             position: "top-right",
             autoClose: 2000,
           })
+          setLoading(true);
+          formikRoom.resetForm();
         }).catch(err => {
           toast.error("خطایی رخ داده است", {
             position: "top-right",
@@ -514,6 +519,7 @@ export default function HotelProfileCompletion() {
         })
         formikRoom.resetForm();
         setLoading(true);
+        // window.location.reload();
       }
     },
     validationSchema: validationSchemaRoom,
@@ -535,18 +541,21 @@ export default function HotelProfileCompletion() {
       >
         <Box sx={{ width: '100%' }}>
           <Box sx={{ marginLeft: '10px', borderBottom: 0, borderColor: 'divider' }}>
-            <Tabs sx={{
-              marginBottom: '10px',
-              '& .MuiTab-root': {
-                color: theme.palette.grey[700],
-              },
-              '& .Mui-selected': {
-                color: theme.palette.hotel.dark,
-              },
-              '& .MuiTabs-indicator': {
-                backgroundColor: theme.palette.hotel.dark,
-              },
-            }} value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tabs
+              variant="scrollable"
+              scrollButtons="auto"
+              sx={{
+                marginBottom: '10px',
+                '& .MuiTab-root': {
+                  color: theme.palette.grey[700],
+                },
+                '& .Mui-selected': {
+                  color: theme.palette.hotel.dark,
+                },
+                '& .MuiTabs-indicator': {
+                  backgroundColor: theme.palette.hotel.dark,
+                },
+              }} value={value} onChange={handleChange} aria-label="basic tabs example">
               <Tab sx={{ width: '25%' }} label="اطلاعات جامع هتل" {...a11yProps(0)} />
               <Tab sx={{ width: '25%' }} label="اتاق ها" {...a11yProps(1)} />
               <Tab sx={{ width: '25%' }} label="اتاق جدید" {...a11yProps(2)} />
@@ -596,7 +605,7 @@ export default function HotelProfileCompletion() {
 
                   <Box component="img" src={coverImage ? coverImage : "./src/assets/img/default_hotel_image.jpg"}
                     sx={{
-                      display: {xs: "none", md: "block"},
+                      display: { xs: "none", md: "block" },
                       width: "100%",
                       marginTop: 2,
                       height: "100%",
@@ -870,12 +879,12 @@ export default function HotelProfileCompletion() {
                                       }
                                     })
                                       .then(res => {
+                                        setRooms(rooms.filter((rm) => rm.id !== room.id))
                                         toast.success("اتاق با موفقیت حذف شد", {
                                           position: "top-right",
                                           autoClose: 2000,
                                         })
-
-                                        formik.resetForm();
+                                        formikRoom.resetForm();
                                         setLoading(true);
                                       })
                                       .catch(err => {
@@ -884,7 +893,7 @@ export default function HotelProfileCompletion() {
                                           autoClose: 2000,
                                         })
                                       })
-                                    { window.location.reload(false) }
+                                    // { window.location.reload(false) }
                                   }
                                   }>حذف اتاق</Button>
                                 </AccordionDetails>
