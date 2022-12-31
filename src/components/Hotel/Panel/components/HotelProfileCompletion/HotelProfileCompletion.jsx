@@ -333,17 +333,19 @@ export default function HotelProfileCompletion() {
 
         setProvinceList(provinces);
 
+        let citiesLST = [];
         if (province) {
           const provinceObj = provinces.find(prov => prov.name === province);
           if (provinceObj) {
-            setCitiesByProvince(provinceObj.id);
+            citiesLST = cities.filter((city) => city.province_id === provinceObj.id);
+            setCityList(citiesLST);
             setProvince(provinceObj.id);
             formik.setFieldValue("province", provinceObj.id);
           }
         }
 
-        if (city && cityList.length > 0) {
-          const cityObj = cityList.find(cty => cty.name === city);
+        if (city && citiesLST.length > 0) {
+          const cityObj = citiesLST.find(cty => cty.name === city);
           if (cityObj) {
             setCity(cityObj.id);
             formik.setFieldValue("city", cityObj.id);
