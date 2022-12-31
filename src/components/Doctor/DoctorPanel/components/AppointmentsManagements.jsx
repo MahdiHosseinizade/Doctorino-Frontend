@@ -497,11 +497,40 @@ export default function AppointmentReports() {
     return () => clearInterval(id);
   }, [loading, API, authData.access, user.id, values, availableTimes]);
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
       console.log("in submit func: ", values);
+      console.log("fromTime checking: ", typeof values.fromTime.$H)
+      const temp = {
+        // ...values,
+        // from_time: startTime,
+        // to_time: endTime,
+        // from_time: `{values.fromTime.$H}:${values.fromTime.$m}:00`,
+        from_time:
+          (String(values.fromTime.$H).length !== 2
+            ? `0${values.fromTime.$H}`
+            : values.fromTime.$H) +
+          ":" +
+          (String(values.fromTime.$m).length !== 2
+            ? `0${values.fromTime.$m}`
+            : values.fromTime.$m) +
+          ":00",
+        // to_time: `{values.toTime.$H}:${values.toTime.$m}:00`,
+        to_time:
+          (String(values.toTime.$H).length !== 2
+            ? `0${values.toTime.$H}`
+            : values.toTime.$H) +
+          ":" +
+          (String(values.toTime.$m).length !== 2
+            ? `0${values.toTime.$m}`
+            : values.toTime.$m) +
+          ":00",
+        day: values.day - 1,
+        doctor: values.doctorId,
+        id: values.id,
+      };
+      console.log("this is the temp values when sending the time: ", temp);
       axios
         .post(
           // `http://188.121.113.74/api/doctor/workday/${values.id}/`,
@@ -511,9 +540,25 @@ export default function AppointmentReports() {
             // from_time: startTime,
             // to_time: endTime,
             // from_time: `{values.fromTime.$H}:${values.fromTime.$m}:00`,
-            from_time: values.fromTime.$H + ":" + values.fromTime.$m + ":00",
+            from_time:
+              (String(values.fromTime.$H).length !== 2
+                ? `0${values.fromTime.$H}`
+                : values.fromTime.$H) +
+              ":" +
+              (String(values.fromTime.$m).length !== 2
+                ? `0${values.fromTime.$m}`
+                : values.fromTime.$m) +
+              ":00",
             // to_time: `{values.toTime.$H}:${values.toTime.$m}:00`,
-            to_time: values.toTime.$H + ":" + values.toTime.$m + ":00",
+            to_time:
+              (String(values.toTime.$H).length !== 2
+                ? `0${values.toTime.$H}`
+                : values.toTime.$H) +
+              ":" +
+              (String(values.toTime.$m).length !== 2
+                ? `0${values.toTime.$m}`
+                : values.toTime.$m) +
+              ":00",
             day: values.day - 1,
             doctor: values.doctorId,
             id: values.id,
@@ -541,8 +586,8 @@ export default function AppointmentReports() {
   };
 
   return (
-    <Grid container spacing={3} sx={{marginBottom: "4%"}}>
-      <Grid item md={6} xs={12} className={classes.table}>
+    <Grid container spacing={3} sx={{ marginBottom: "4%" }}>
+      {/* <Grid item md={6} xs={12} className={classes.table}>
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "100%", mb: 2 }} className={classes.table}>
             <EnhancedTableToolbar numSelected={selected.length} />
@@ -613,7 +658,7 @@ export default function AppointmentReports() {
                   )}
                 </TableBody>
               </Table>
-            </TableContainer>
+            </TableContainer> */}
             {/* <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
@@ -623,16 +668,16 @@ export default function AppointmentReports() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             /> */}
-          </Paper>
+          {/* </Paper> */}
           {/* <FormControlLabel
             control={<Switch checked={dense} onChange={handleChangeDense} />}
             label="Dense padding"
           /> */}
-        </Box>
-      </Grid>
+        {/* </Box>
+      </Grid> */}
 
       {/** Time Selection */}
-      <Grid item xs={12}>
+      <Grid item xs={12} sx={{marginTop: "5%"}}>
         <form
           onSubmit={handleSubmit}
           className={classes.box}

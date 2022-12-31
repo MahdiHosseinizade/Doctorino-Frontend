@@ -122,13 +122,13 @@ const formValues = {
   office_number: "",
   specialties: "",
   education: "",
-  description: null,
+  description: "",
   image: null,
   province: "",
   city: "",
   clinic_address: "",
 
-  work_periods: [],
+  // work_periods: [],
   // license_proof: null,
   // location: {
   //   type: "",
@@ -210,11 +210,12 @@ export default function DoctorProfileLayout() {
                 medical_system_number: response.data.medical_system_number,
                 phone_number: response.data.phone_number,
                 office_number: response.data.office_number,
-                education: educations.filter((education) => {
-                  if (education.name === response.data.education) {
-                    return education.name;
-                  }
-                })[0]["name"],
+                education: response.data.education !== "تعیین نشده" || response.data.education ? response.data.education : "تعیین نشده",
+                // educations.filter((education) => {
+                //   if (education.name === response.data.education) {
+                //     return education.name;
+                //   }
+                // })[0]["name"],
                 specialties: availableSpecilaities.filter((specialty) => {
                   if (specialty.name === response.data.specialties[0].name) {
                     return specialty.name;

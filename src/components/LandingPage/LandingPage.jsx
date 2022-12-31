@@ -93,7 +93,7 @@ export default function LandingPage() {
         toast.error(err.response.data.message);
       });
   };
-  console.log(resDoctor);
+  // console.log(resDoctor);
 
   const filteredScaleHandler = (search) => {
     if (!search || search === "") {

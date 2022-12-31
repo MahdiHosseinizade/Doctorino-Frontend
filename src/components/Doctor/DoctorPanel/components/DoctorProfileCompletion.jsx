@@ -2,8 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 // import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import provinces from "./LocationInfo/Provinces";
-import cities from "./LocationInfo/Cities";
+// import provinces from "./LocationInfo/Provinces";
+// import cities from "./LocationInfo/Cities";
+import provinces from "../../../../db/Provinces";
+import cities from "../../../../db/cities";
 import educations from "./EducationInfo/Education";
 import AuthContext from "../../../../context/AuthContext";
 import useAxios from "../../../../utils/useAxios";
@@ -76,13 +78,13 @@ const formValues = {
   office_number: "",
   specialties: "",
   education: "",
-  description: null,
-  image: null,
+  description: "",
+  // image: null,
   province: "",
   city: "",
   clinic_address: "",
 
-  work_periods: [],
+  // work_periods: [],
 };
 
 const provinceValues = {
@@ -110,6 +112,10 @@ export default function DoctorProfileCompletion() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "first_name") {
+      console.log("first_name", value);
+      console.log("name", name);
+    }
     setValues({
       ...values,
       [name]: value,
@@ -213,13 +219,17 @@ export default function DoctorProfileCompletion() {
             .then((response) => {
               console.log("the response of doctor", response.data);
               console.log("availableSpecilaities", availableSpecilaities);
+              console.log("response.data.province", response.data.province);
+              // const temp = provinces.filter((province) => {
+              //   return province.value === response.data.province
+              // })[0]["id"]
+              // console.log("temp is: ", temp)
+
               if (response.data.province !== "تعیین نشده") {
                 setProvinceInfo({
                   ...provinceInfo,
                   id: provinces.filter((province) => {
-                    if (province.name === response.data.province) {
-                      return province.id;
-                    }
+                    return province.value === response.data.province;
                   })[0]["id"],
                 });
               } else {
@@ -228,6 +238,8 @@ export default function DoctorProfileCompletion() {
                   id: 0,
                 });
               }
+              // console.log("firstName: ", response.data.user.first_name);
+              console.log("education before setting: ", response.data.education);
               // const temp = provinces.filter((province) => {
               //   if (province.name === response.data.province) {
               //     return province.id;
@@ -246,20 +258,20 @@ export default function DoctorProfileCompletion() {
                 medical_system_number: response.data.medical_system_number,
                 phone_number: response.data.phone_number,
                 office_number: response.data.office_number,
-                education: educations.filter((education) => {
-                  if (education.name === response.data.education) {
-                    return education.id;
-                  }
-                })[0]["id"],
+                education:
+                  response.data.education !== "تعیین نشده" &&
+                  response.data.education !== "undefined" && response.data.education !== null
+                    ? educations.filter((education) => {
+                        return education.name === response.data.education;
+                      })[0]["id"]
+                    : "تعیین نشده",
                 specialties: availableSpecilaities.filter((specialty) => {
-                  if (specialty.name === response.data.specialties[0].name) {
-                    return specialty.id;
-                  }
+                  return specialty.name === response.data.specialties[0].name;
                 })[0]["id"],
                 province:
                   response.data.province !== "تعیین نشده"
                     ? provinces.filter((province) => {
-                        if (province.name === response.data.province) {
+                        if (province.value === response.data.province) {
                           return province.id;
                         }
                       })[0]["id"]
@@ -311,12 +323,12 @@ export default function DoctorProfileCompletion() {
     provinceInfo,
     citiesList,
     availableSpecilaities,
-    
   ]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
+      console.log("this is the doctor when submitting:", values);
       const formData = new FormData();
       formData.append("id", values.id);
       formData.append("user", {
@@ -338,29 +350,39 @@ export default function DoctorProfileCompletion() {
       }
       formData.append("is_active", true);
       formData.append("gender", values.gender);
-      formData.append(
-        "province",
-        provinces.map((province) => {
-          if (province.id === values.province) {
-            return province.id;
-          }
-        })[values.province - 1]
-      );
-      formData.append(
-        "city",
-        cities.map((city) => {
-          if (city.id === values.city) {
-            return city.id;
-          }
-        })[values.city - 1]
-      );
-      formData.append(
-        "education",
-        educations.map((education) => {
+      console.log(
+        "educations: ",
+        educations.filter((education) => {
           if (education.id === values.education) {
             return education.name;
           }
-        })[values.education - 1]
+        })
+      );
+      // formData.append(
+      //   "province",
+      //   provinces.filter((province) => {
+      //     if (province.id === values.province) {
+      //       return province.id;
+      //     }
+      //   })[values.province - 1]
+      // );
+      formData.append("province", values.province);
+      // formData.append(
+      //   "city",
+      //   cities.filter((city) => {
+      //     if (city.id === values.city) {
+      //       return city.id;
+      //     }
+      //   })[values.city - 1]
+      // );
+      formData.append("city", values.city);
+      formData.append(
+        "education",
+        educations.filter((education) => {
+          if (education.id === values.education) {
+            return education.name;
+          }
+        })[0]["name"]
       );
       if (values.national_code.length === 10)
         formData.append("national_code", values.national_code);
@@ -373,6 +395,16 @@ export default function DoctorProfileCompletion() {
       formData.append("work_periods", values.work_periods);
       formData.append("description", values.description);
 
+      console.log(
+        "cities: ",
+        cities.filter((city) => {
+          if (city.id === values.city) {
+            return city.id;
+          }
+        })
+      );
+      console.log("the sending data: ", formData);
+      console.log("the values setting: ", values);
       axios
         .put(`http://188.121.113.74/api/doctor/${values.id}/`, formData, {
           headers: {
@@ -582,7 +614,7 @@ export default function DoctorProfileCompletion() {
                 helperText={errors.province ? errors.province : null}
               >
                 {provinces.map((province) => (
-                  <MenuItem value={province.id}>{province.name}</MenuItem>
+                  <MenuItem value={province.id}>{province.value}</MenuItem>
                 ))}
               </Select>
             </FormControl>

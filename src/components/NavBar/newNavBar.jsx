@@ -227,7 +227,7 @@ const NavBar = ({ buttons }) => {
                 onClick={() => {
                   history.push("/signup");
                 }}
-                sx={{ width: 'auto', }}
+                sx={{ width: 'auto',color:'black' }}
               >
                 &nbsp;ثبت نام
               </Button>
@@ -236,7 +236,7 @@ const NavBar = ({ buttons }) => {
                 onClick={() => {
                   history.push("/login");
                 }}
-                sx={{ width: 'auto', }}
+                sx={{ width: 'auto',color:"Black" }}
               >
                 &nbsp;ورود
               </Button>
@@ -263,7 +263,7 @@ const NavBar = ({ buttons }) => {
                     history.push("/patient-panel/profile");
                   }
                 }}
-                sx={{ width: 'auto', }}
+                sx={{ width: 'auto',color:"Black"  }}
               >
                 پنل کاربری
               </Button>
@@ -271,7 +271,7 @@ const NavBar = ({ buttons }) => {
                 onClick={() => {
                   logOut();
                 }}
-                sx={{ width: 'auto', }}
+                sx={{ width: 'auto', color:"Black" }}
               >
                 خروج
               </Button>
