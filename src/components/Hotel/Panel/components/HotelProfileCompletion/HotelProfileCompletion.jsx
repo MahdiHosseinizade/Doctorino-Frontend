@@ -19,6 +19,9 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Dialog,
+  DialogActions,
+  DialogTitle,
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useFormik } from "formik";
@@ -196,6 +199,7 @@ export default function HotelProfileCompletion() {
   const [availableHotels, setAvailableHotels] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [coverImage, setCoverImage] = useState(null);
+  const [hotelDeleteDialog, setHotelDeleteDialog] = useState(false);
   const [showForm, setRoomForm] = useState('');
   const history = useHistory();
   const api = useAxios();
@@ -277,8 +281,12 @@ export default function HotelProfileCompletion() {
 
   const handleHotels = (event) => {
 
-    let hotel_id = event.target.value;
-
+    let hotel_id;
+    if (typeof event === "number") {
+      hotel_id = event;
+    } else {
+      hotel_id = event.target.value;
+    }
 
     api.get(`/api/hotel/${hotel_id}/`)
       .then(res => {
@@ -365,6 +373,9 @@ export default function HotelProfileCompletion() {
       .catch(err => console.error(err))
   };
 
+
+
+
   const deleteHotel = () => {
     let hotel_id = formik.getFieldProps("hotel_id").value;
 
@@ -379,6 +390,7 @@ export default function HotelProfileCompletion() {
           autoClose: 2000,
         })
         formik.resetForm();
+        setHotel('');
         setLoading(true);
       })
       .catch(err => {
@@ -392,7 +404,7 @@ export default function HotelProfileCompletion() {
   const formik = useFormik({
     initialValues: formValue,
 
-    onReset: () => {
+    onReset: (e) => {
       setFeatures([]);
       setCoverImage(null);
       setProvinceList([]);
@@ -441,6 +453,7 @@ export default function HotelProfileCompletion() {
             autoClose: 2000,
           })
           setLoading(true);
+          handleHotels(values.hotel_id);
         }).catch(err => {
           toast.error("خطایی رخ داده است", {
             position: "top-right",
@@ -448,8 +461,6 @@ export default function HotelProfileCompletion() {
           })
         })
 
-        formik.resetForm();
-        setLoading(true);
       }
     },
     validationSchema: validationSchema,
@@ -633,6 +644,19 @@ export default function HotelProfileCompletion() {
                     onSubmit={formik.handleSubmit}
                     component="form"
                   >
+                    <Dialog 
+                      open={hotelDeleteDialog}
+                      onClose={() => setHotelDeleteDialog(false)}
+                    >
+                      <DialogTitle>آیا مطمئن هستید که هتل را حذف کنید؟</DialogTitle>
+                      <DialogActions>
+                        <Button onClick={() => setHotelDeleteDialog(false)}>خیر</Button>
+                        <Button onClick={() => {
+                          deleteHotel();
+                          setHotelDeleteDialog(false);
+                        }}>بله</Button>
+                      </DialogActions>
+                    </Dialog>
                     <Typography
                       sx={{
                         textAlign: "center",
@@ -815,7 +839,7 @@ export default function HotelProfileCompletion() {
                         </SFormControl>
                       </Grid>
                       <Grid item md={6} xs={6}>
-                        <Button type="button" variant='outlined' color="hotel" onClick={deleteHotel}>حذف هتل</Button>
+                        <Button type="button" variant='outlined' color="hotel" onClick={() => setHotelDeleteDialog(true)}>حذف هتل</Button>
                       </Grid>
                       <Grid item md={6} xs={6}>
                         <Button color="hotel" type="submit" variant="contained">
