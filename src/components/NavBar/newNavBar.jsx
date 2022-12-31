@@ -256,7 +256,7 @@ const NavBar = ({ buttons }) => {
               <Button
                 onClick={() => {
                   if (user.role === "doctor") {
-                    history.push("/doctor-panel/dashboard");
+                    history.push("/doctor-panel/doctor-profile-completion");
                   } else if (user.role === "hotel_owner") {
                     history.push("/hotel-panel/profile-completion");
                   } else {

@@ -1,4 +1,4 @@
-export const provinces = [
+const provinces = [
   {
     id: 1,
     value: "آذربایجان شرقی",
@@ -155,3 +155,5 @@ export const provinces = [
     label: "یزد",
   },
 ];
+
+export default provinces;

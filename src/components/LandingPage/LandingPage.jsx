@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import DoctorSwiper from "./DoctorSwiper";
 import { FormControl, Grid, InputLabel, MenuItem, TextField } from "@mui/material";
 import { useFormik } from "formik";
-import { cities } from "../../db/cities";
+import cities from "../../db/Cities";
 import Select from "react-select";
 import { Link,useHistory } from "react-router-dom";
 

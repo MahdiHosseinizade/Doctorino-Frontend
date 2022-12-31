@@ -5,7 +5,7 @@ import NavBar from "../../NavBar/newNavBar";
 import { FormControl } from "@mui/material";
 import { MdPlace } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
-import { cities } from "../../../db/cities";
+import cities from "../../../db/Cities";
 // import { provinces } from "../../../db/Provinces.js";
 // import {provinces} from "../../../db/Provinces"
 import axios from "axios";
