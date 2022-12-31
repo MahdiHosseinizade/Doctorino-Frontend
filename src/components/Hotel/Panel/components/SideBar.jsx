@@ -81,17 +81,12 @@ export default function SideBar() {
 
     const menuItems = [
         {
-            text: "داشبورد",
-            path: "/hotel-panel/dashboard",
-            icon: <DashboardIcon color="hotel" />
-        },
-        {
             text: "اضافه کردن هتل",
             path: "/hotel-panel/add-hotel",
             icon: <AddHomeIcon color="hotel" />
         },
         {
-            text: "پروفایل",
+            text: "پروفایل مدیر",
             path: "/hotel-panel/profile-completion",
             icon: <AccountCircleIcon color="hotel" />
         },
@@ -100,26 +95,16 @@ export default function SideBar() {
             path: "/hotel-panel/hotel-info",
             icon: <MenuIcon color="hotel" />
         },
-        {
-            text: "گزارش رزرو ها",
-            path: "/hotel-panel/booking-reports",
-            icon: <SummarizeIcon color="hotel" />
-        },
-        {
-            text: "امور مالی",
-            path: "/hotel-panel/finances",
-            icon: <AccountBalanceIcon color="hotel" />
-        },
-        {
-            text: "تغییر رمزعبور",
-            path: "/hotel-panel/change-password",
-            icon: <PasswordIcon color="hotel" />
-        }
     ]
 
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
+        // find out the size of the screen, if the size is less than xs, the drawer will be closed
+        if (window.innerWidth < 600) {
+            setOpen(false);
+            return;
+        }
         setOpen(true);
     };
 

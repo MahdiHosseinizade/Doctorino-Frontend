@@ -596,6 +596,7 @@ export default function HotelProfileCompletion() {
 
                   <Box component="img" src={coverImage ? coverImage : "https://media.radissonhotels.net/image/metropolitan-hotel-sofia-a-member-of-radisson-individuals/exteriorview/16256-145921-f72742573_3xl.jpg?impolicy=Card&gravity=North"}
                     sx={{
+                      display: {xs: "none", md: "block"},
                       width: "100%",
                       marginTop: 2,
                       height: "100%",
