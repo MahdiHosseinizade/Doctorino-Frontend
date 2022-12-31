@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Card,
   CardContent,
@@ -7,9 +7,15 @@ import {
   Container,
   Grid,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useHistory } from "react-router-dom";
+import AuthContext from "../../../context/AuthContext";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +80,19 @@ export default function AvailableRooms({ availableRooms, fromTime, toTime }) {
   const classes = useStyles();
   const history = useHistory();
 
+  const [open, setOpen] = React.useState(false);
+
+  const { user } = useContext(AuthContext);
+
+  const checkForAuth = () => {
+    if (!user) {
+      setOpen(true);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   const calculateNumberOfNightstoStay = (fromTime, toTime) => {
     const fromTimeDate = new Date(fromTime);
     const toTimeDate = new Date(toTime);
@@ -84,12 +103,14 @@ export default function AvailableRooms({ availableRooms, fromTime, toTime }) {
 
   const handleSubmit = (e, room) => {
     e.preventDefault();
-    history.push("/hotel-reservation", {
-      room: room,
-      fromTime: fromTime,
-      toTime: toTime,
-      finalPrice: calculateNumberOfNightstoStay(fromTime, toTime) * room.price_per_night,
-    });
+    if (checkForAuth()) {
+      history.push("/hotel-reservation", {
+        room: room,
+        fromTime: fromTime,
+        toTime: toTime,
+        finalPrice: calculateNumberOfNightstoStay(fromTime, toTime) * room.price_per_night,
+      });
+    }
   };
 
   return (
@@ -158,6 +179,18 @@ export default function AvailableRooms({ availableRooms, fromTime, toTime }) {
           </Grid>
         ))}
       </Grid>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        <DialogTitle>
+          برای رزرو اتاق ابتدا باید وارد سایت شوید.
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={() => history.push("/signup")} variant="text">عضویت</Button>
+          <Button onClick={() => history.push("/login")} variant="text" autoFocus>ورود</Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
