@@ -137,7 +137,10 @@ const NavBar = ({ buttons }) => {
               }}
             >
               {pages.map(({ text, path }, index) => (
-                <MenuItem key={index} value={path} onClick={() => history.push(path)}>
+                <MenuItem key={index} value={path} onClick={() => {
+                  history.push(path)
+                  setAnchorElNav(null)
+                }}>
                   <Typography textAlign="center">{text}</Typography>
                 </MenuItem>
               ))}
@@ -181,7 +184,10 @@ const NavBar = ({ buttons }) => {
               {pages.map(({ text, path }, index) => (
                 <Button
                   key={index}
-                  onClick={() => history.push(path)}
+                  onClick={() => {
+                    history.push(path)
+                    setAnchorElNav(null)
+                  }}
                   sx={{
                     width: "140px",
                     color: "black",
@@ -252,7 +258,7 @@ const NavBar = ({ buttons }) => {
                   if (user.role === "doctor") {
                     history.push("/doctor-panel/dashboard");
                   } else if (user.role === "hotel_owner") {
-                    history.push("/hotel-panel/dashboard");
+                    history.push("/hotel-panel/profile-completion");
                   } else {
                     history.push("/patient-panel/dashboard");
                   }
