@@ -3,6 +3,7 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 // import theme from '../../../../assets/theme/defaultTheme';
 import theme from '../../../assets/theme/defaultTheme';
+import { baseURL } from '../../../utils/useAxios';
 
 
 const marginBottom = "10px";
@@ -21,7 +22,7 @@ function HotelCard ({ hotel }) {
                             // Link react router dom to hotel page
                             component="img"
                             sx={{ width: "100%", height: "100%", padding: "10px", borderRadius: "20px" }}
-                            image={hotel.id % 2 ? "https://cdn.britannica.com/96/115096-050-5AFDAF5D/Bellagio-Hotel-Casino-Las-Vegas.jpg": "https://media-cdn.tripadvisor.com/media/photo-s/16/1a/ea/54/hotel-presidente-4s.jpg"}
+                            image={hotel?.cover_image ? hotel.cover_image.includes(baseURL) ? hotel.cover_image : baseURL + hotel.cover_image : null}
                             // image={hotel.cover_image}
                             alt="hotel image"
                         />
