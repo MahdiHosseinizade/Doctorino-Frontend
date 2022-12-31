@@ -132,7 +132,14 @@ const Profile = (props) => {
                         fontSize: 20,
                       }}
                     >
-                      {/* متخصص {props.doctor?.specialties.name} */}
+                      متخصص {props.doctor?.specialties.map(({ name }, index) => {
+                        if (index === props.doctor?.specialties.length - 1) {
+                          return name;
+                        } else {
+                          return name + "، ";
+                        }
+                      })}
+                      
                       <br /><br />
 
                     </Typography>
