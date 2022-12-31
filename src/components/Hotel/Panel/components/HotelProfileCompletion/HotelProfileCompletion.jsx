@@ -157,8 +157,8 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box 
-        sx={{ p: 3 }}
+        <Box
+          sx={{ p: 3 }}
         >
           <Typography>{children}</Typography>
         </Box>
@@ -249,7 +249,7 @@ export default function HotelProfileCompletion() {
     const citiesLST = cities.filter((city) => city.province_id === province);
     setCityList(citiesLST);
   }
-  
+
   const handleProvince = (event) => {
     const value = event.target.value;
     setProvince(value);
@@ -298,7 +298,7 @@ export default function HotelProfileCompletion() {
 
         setHotel(hotel_id);
         formRoomValue.hotel = hotel;
-        
+
 
         formik.setFieldValue("hotel_id", hotel_id);
 
@@ -332,17 +332,19 @@ export default function HotelProfileCompletion() {
 
         setProvinceList(provinces);
 
+        let citiesLST = [];
         if (province) {
           const provinceObj = provinces.find(prov => prov.name === province);
           if (provinceObj) {
-            setCitiesByProvince(provinceObj.id);
+            citiesLST = cities.filter((city) => city.province_id === provinceObj.id);
+            setCityList(citiesLST);
             setProvince(provinceObj.id);
             formik.setFieldValue("province", provinceObj.id);
           }
         }
 
-        if (city && cityList.length > 0) {
-          const cityObj = cityList.find(cty => cty.name === city);
+        if (city && citiesLST.length > 0) {
+          const cityObj = citiesLST.find(cty => cty.name === city);
           if (cityObj) {
             setCity(cityObj.id);
             formik.setFieldValue("city", cityObj.id);
@@ -596,7 +598,7 @@ export default function HotelProfileCompletion() {
 
                   <Box component="img" src={coverImage ? coverImage : "./src/assets/img/default_hotel_image.jpg"}
                     sx={{
-                      display: {xs: "none", md: "block"},
+                      display: { xs: "none", md: "block" },
                       width: "100%",
                       marginTop: 2,
                       height: "100%",
