@@ -273,8 +273,8 @@ const weekdays = [
 const formValues = {
   id: 0,
   day: "",
-  fromTime: "",
-  toTime: "",
+  fromTime: new Date(0, 0, 0),
+  toTime: new Date(0, 0, 0),
   doctorId: 0,
 };
 
@@ -309,7 +309,6 @@ export default function AppointmentReports() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { authTokens } = useContext(AuthContext);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -407,7 +406,7 @@ export default function AppointmentReports() {
   useEffect(() => {
     const fetchData = async () => {
       // Fetching the doctor id from the user id
-      await API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
+      await API.get(`/api/doctor/user_id_to_doctor_id/${user.id}/`, {
         headers: {
           Authorization: `Bearer ${authData.access}`,
         },
@@ -421,7 +420,7 @@ export default function AppointmentReports() {
           // console.log("this is the values: ", values);
           API.get("http://188.121.113.74/api/doctor/workday/", {
             headers: {
-              Authorization: `Bearer ${authTokens.access}`,
+              Authorization: `Bearer ${authData.access}`,
             },
           })
             .then(async (response) => {
@@ -496,33 +495,35 @@ export default function AppointmentReports() {
     }, 200000);
 
     return () => clearInterval(id);
-  }, [loading, API, authData.access, user.user_id, values, availableTimes]);
+  }, [loading, API, authData.access, user.id, values, availableTimes]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
       console.log("in submit func: ", values);
-      axios.post(
-        // `http://188.121.113.74/api/doctor/workday/${values.id}/`,
-        `http://188.121.113.74/api/doctor/workday/`,
-        {
-          // ...values,
-          // from_time: startTime,
-          // to_time: endTime,
-          // from_time: `{values.fromTime.$H}:${values.fromTime.$m}:00`,
-          from_time: values.fromTime.$H + ":" + values.fromTime.$m + ":00",
-          // to_time: `{values.toTime.$H}:${values.toTime.$m}:00`,
-          to_time: values.toTime.$H + ":" + values.toTime.$m + ":00",
-          day: values.day,
-          doctor: values.doctorId,
-          id: values.id,
-        },
-        // {
-        //   headers: {
-        //     Authorization: `Bearer ${authData.access}`,
-        //   },
-        // }
-      )
+      axios
+        .post(
+          // `http://188.121.113.74/api/doctor/workday/${values.id}/`,
+          `http://188.121.113.74/api/doctor/workday/`,
+          {
+            // ...values,
+            // from_time: startTime,
+            // to_time: endTime,
+            // from_time: `{values.fromTime.$H}:${values.fromTime.$m}:00`,
+            from_time: values.fromTime.$H + ":" + values.fromTime.$m + ":00",
+            // to_time: `{values.toTime.$H}:${values.toTime.$m}:00`,
+            to_time: values.toTime.$H + ":" + values.toTime.$m + ":00",
+            day: values.day - 1,
+            doctor: values.doctorId,
+            id: values.id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authData.access}`,
+            },
+          }
+        )
         .then((response) => {
           toast.success(`زمان موردنظر با موفقیت ثبت شد.`, {
             position: "top-right",
@@ -540,7 +541,7 @@ export default function AppointmentReports() {
   };
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3} sx={{marginBottom: "4%"}}>
       <Grid item md={6} xs={12} className={classes.table}>
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "100%", mb: 2 }} className={classes.table}>
