@@ -61,7 +61,7 @@ export default function HotelSearch() {
           <div className="chooseLocation">
             <div className="LocationIcon">
               <h2>مقصد</h2>
-              <MdPlace className="MdPlace" />
+              <MdPlace className="MdPlace2" />
             </div>
             <div className="EnterCity">
               <FormControl className="FormControlCity" fullWidth>
