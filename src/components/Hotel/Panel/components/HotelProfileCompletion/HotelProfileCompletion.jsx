@@ -16,8 +16,6 @@ import {
   Typography,
   Tab,
   Tabs,
-  Fab,
-  Zoom,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -136,13 +134,15 @@ const formRoomValue = {
   price_per_night: '',
   number_of_room: '',
   room_title: '',
+  hotel: '',
 };
 
 const validationSchemaRoom = Yup.object({
   bed_count: Yup.string().required("تعداد تخت باید انتخاب شود"),
   price_per_night: Yup.string().required("قیمت باید انتخاب شود"),
   number_of_room: Yup.string().required("تعداداتاق ها باید انتخاب شود"),
-  room_title: Yup.string()
+  room_title: Yup.string(),
+  hotel: Yup.string(),
 });
 
 function TabPanel(props) {
@@ -157,7 +157,9 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box 
+        sx={{ p: 3 }}
+        >
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -295,6 +297,8 @@ export default function HotelProfileCompletion() {
         formik.resetForm();
 
         setHotel(hotel_id);
+        formRoomValue.hotel = hotel;
+        
 
         formik.setFieldValue("hotel_id", hotel_id);
 
@@ -394,6 +398,7 @@ export default function HotelProfileCompletion() {
       setProvince('');
       setCity('');
       setHotel('');
+      formRoomValue.hotel = hotel;
       setStars('');
     },
 
@@ -488,8 +493,11 @@ export default function HotelProfileCompletion() {
         roomFormData.append("price_per_night", values.price_per_night);
         roomFormData.append("number_of_room", values.number_of_room);
         roomFormData.append("room_title", values.room_title);
+        roomFormData.append("hotel", hotel);
 
-        api.post(`/api/hotel/room/`, roomData, {
+        console.log(roomFormData);
+
+        api.post(`/api/hotel/room/`, roomFormData, {
           headers: {
             "Authorization": "Bearer " + authData?.access,
           }
