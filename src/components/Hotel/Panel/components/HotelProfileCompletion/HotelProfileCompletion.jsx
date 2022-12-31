@@ -547,10 +547,10 @@ export default function HotelProfileCompletion() {
                 backgroundColor: theme.palette.hotel.dark,
               },
             }} value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab sx={{ width: 'auto' }} label="اطلاعات جامع هتل" {...a11yProps(0)} />
-              <Tab sx={{ width: 'auto' }} label="اتاق ها" {...a11yProps(1)} />
-              <Tab sx={{ width: 'auto' }} label="اتاق جدید" {...a11yProps(2)} />
-              <Tab sx={{ width: 'auto' }} label="گالری تصاویر" {...a11yProps(3)} />
+              <Tab sx={{ width: '25%' }} label="اطلاعات جامع هتل" {...a11yProps(0)} />
+              <Tab sx={{ width: '25%' }} label="اتاق ها" {...a11yProps(1)} />
+              <Tab sx={{ width: '25%' }} label="اتاق جدید" {...a11yProps(2)} />
+              <Tab sx={{ width: '25%' }} label="گالری تصاویر" {...a11yProps(3)} />
             </Tabs>
           </Box>
 
@@ -594,8 +594,9 @@ export default function HotelProfileCompletion() {
                     </SSelect>
                   </SFormControl>
 
-                  <Box component="img" src={coverImage ? coverImage : "https://media.radissonhotels.net/image/metropolitan-hotel-sofia-a-member-of-radisson-individuals/exteriorview/16256-145921-f72742573_3xl.jpg?impolicy=Card&gravity=North"}
+                  <Box component="img" src={coverImage ? coverImage : "./src/assets/img/default_hotel_image.jpg"}
                     sx={{
+                      display: {xs: "none", md: "block"},
                       width: "100%",
                       marginTop: 2,
                       height: "100%",

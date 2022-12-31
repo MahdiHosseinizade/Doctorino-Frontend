@@ -15,16 +15,33 @@ import { Link, useHistory } from "react-router-dom";
 import AuthContext from '../../context/AuthContext';
 
 
-const NavBar = () => {
+const NavBar = ({ buttons }) => {
   let { user, authTokens, logOut } = useContext(AuthContext);
-  // console.log(user);
+
+  const defultButtons = [
+    {
+      text: "لیست پزشکان",
+      path: "/list-of-doctors/",
+    },
+    {
+      text: "جستجوی هتل",
+      path: "/hotel-search/",
+    }
+  ];
 
   const history = useHistory();
-  const pages = ["لیست پزشکان", "جستجوی هتل",];
+  const [pages, setPages] = useState(defultButtons);
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  useEffect(() => {
+    if (buttons.length > 0 && buttons !== pages) {
+      setPages(buttons);
+    } else {
+      setPages(defultButtons);
+    }
+  }, [buttons])
 
   const handleOpenNavMenu = (event) => {
 
@@ -38,15 +55,6 @@ const NavBar = () => {
 
   const handleCloseNavMenu = (e) => {
     setAnchorElNav(null);
-    if (e.target.innerHTML === "لیست پزشکان")
-      history.push("/list-of-doctors/")
-    else if (e.target.innerHTML === "جستجوی هتل")
-      history.push("/hotel-search/")
-    if (e.target.innerText === "لیست پزشکان")
-      history.push("/list-of-doctors/")
-    else if (e.target.innerText === "جستجوی هتل")
-      history.push("/hotel-search/")
-    console.log(e)
   };
 
   const handleCloseUserMenu = () => {
@@ -128,9 +136,9 @@ const NavBar = () => {
                 mr: 10,
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {pages.map(({ text, path }, index) => (
+                <MenuItem key={index} value={path} onClick={() => history.push(path)}>
+                  <Typography textAlign="center">{text}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -170,10 +178,10 @@ const NavBar = () => {
               variant="inline"
             >
               <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              {pages.map((page) => (
+              {pages.map(({ text, path }, index) => (
                 <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
+                  key={index}
+                  onClick={() => history.push(path)}
                   sx={{
                     width: "140px",
                     color: "black",
@@ -181,7 +189,7 @@ const NavBar = () => {
                     display: "block",
                   }}
                 >
-                  {page}
+                  {text}
                 </Button>
               ))}
             </ButtonGroup>
