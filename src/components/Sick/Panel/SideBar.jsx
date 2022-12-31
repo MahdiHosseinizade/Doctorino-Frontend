@@ -2,6 +2,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HotelIcon from '@mui/icons-material/Hotel';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import React, {useContext} from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
@@ -75,9 +76,14 @@ export default function SideBar() {
 
     const menuItems = [
         {
-            text: "داشبورد",
-            path: `${path}/dashboard`,
+            text: "نوبت های من",
+            path: `${path}/doctor-reservations`,
             icon: <DashboardIcon color="f4f4f4" />
+        },
+        {
+            text: "مدیریت رزرو هتل",
+            path: `${path}/hotel-reservations`,
+            icon: <HotelIcon color="f4f4f4" />
         },
         {
             text: "پروفایل",
