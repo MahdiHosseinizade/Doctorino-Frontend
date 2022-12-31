@@ -168,6 +168,9 @@ export default function HotelProfileCompletion() {
 
     const formik = useFormik({
         initialValues: formValue,
+        onReset: () => {
+            setFeatures([]);
+        },
         onSubmit: (values) => postHotel(values),
         validationSchema: validationSchema,
     })
@@ -221,6 +224,8 @@ export default function HotelProfileCompletion() {
                     position: "top-right",
                     autoClose: 2000,
                 })
+
+                formik.resetForm();
             })
             .catch(err => toast.error('مشکلی پیش آمده', {
                 position: "top-right",
