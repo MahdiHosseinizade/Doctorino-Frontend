@@ -15,8 +15,13 @@ import Hotel from "./components/Hotel/Hotel/Hotel";
 import DoctorSpecialitie from "./components/Doctor/SpecialitiePage/DoctorSpecialities";
 import HotelReservation from "./components/Hotel/HotelReservation/HotelReservation";
 import SearchDoctorResponse from "./components/LandingPage/SearchDocResponse";
+import SickPanel from './components/Sick/Panel/SickPanel';
+
 
 const routes = [
+
+  { path: "/patient-panel", component: SickPanel, private: true, role:"patient" },
+
   { path: "/schedule-table", component: scheduleTable },
   { path: "/doctor/:id", component: DoctorProfileLayout },
   { path: "/specialist/:id", component: DoctorSpecialitie },

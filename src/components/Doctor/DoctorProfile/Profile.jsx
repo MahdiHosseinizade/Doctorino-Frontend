@@ -53,6 +53,7 @@ const useStyles = makeStyles({
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
+
   return (
     <Box
       role="tabpanel"
@@ -89,7 +90,7 @@ function a11yProps(index) {
 const Profile = (props) => {
 
   const [value, setValue] = React.useState(0);
-  
+
   const secondaryHandleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -124,7 +125,7 @@ const Profile = (props) => {
                       دکتر {props.doctor?.user.first_name} {props.doctor?.user.last_name}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={12} sx={{marginTop: "-20px", marginBottom: "20px"}}>
+                  <Grid item xs={12} md={12} sx={{ marginTop: "-20px", marginBottom: "20px" }}>
                     <Typography
                       variant="subtitle1"
                       color={'text.secondary'}
@@ -132,14 +133,15 @@ const Profile = (props) => {
                         fontSize: 20,
                       }}
                     >
-                      متخصص {props.doctor?.specialties.map(({ name }, index) => {
+
+                      {props.doctor?.education} {props.doctor?.specialties.map(({ name }, index) => {
                         if (index === props.doctor?.specialties.length - 1) {
                           return name;
                         } else {
                           return name + "، ";
                         }
                       })}
-                      
+
                       <br /><br />
 
                     </Typography>
@@ -149,7 +151,7 @@ const Profile = (props) => {
               <Box>
                 <Grid container spacing={3.5} >
                   <Grid item xs={12} md={12} >
-                    <Typography variant="body2" sx={{ fontSize: "20px",}}>
+                    <Typography variant="body2" sx={{ fontSize: "20px", }}>
                       <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{props.doctor?.city}
                     </Typography>
                   </Grid>
@@ -196,9 +198,9 @@ const Profile = (props) => {
                   }
                 }}
               >
-                  <Collapse in={checked} collapsedSize={40}>
-                    <Typography>{props.doctor?.description}</Typography>
-                  </Collapse>
+                <Collapse in={checked} collapsedSize={40}>
+                  <Typography>{props.doctor?.description}</Typography>
+                </Collapse>
 
               </Box>
 

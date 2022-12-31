@@ -18,7 +18,7 @@ export default function DoctorProfileLayout() {
     const [loading, setLoading] = useState(true);
 
     function fetchData1() {
-        axios.get(`http://188.121.113.74/api/doctor/${id}/`)
+        axios.get(`http://188.121.113.74/api/doctor/${id}/?`)
             .then(res => {
                 setDoctor(res.data);
             })

@@ -496,37 +496,33 @@ export default function AppointmentReports() {
     }, 200000);
 
     return () => clearInterval(id);
-  }, [loading, API, authTokens.access, user.user_id, values, availableTimes]);
-
-  console.log("availableTimes outside of useeffect: ", availableTimes);
-  console.log("rows outside of useeffect: ", rows);
+  }, [loading, API, authData.access, user.user_id, values, availableTimes]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
       console.log("in submit func: ", values);
-      axios
-        .post(
-          // `http://188.121.113.74/api/doctor/workday/${values.id}/`,
-          `http://188.121.113.74/api/doctor/workday/`,
-          {
-            // ...values,
-            // from_time: startTime,
-            // to_time: endTime,
-            // from_time: `{values.fromTime.$H}:${values.fromTime.$m}:00`,
-            from_time: values.fromTime.$H + ":" + values.fromTime.$m + ":00",
-            // to_time: `{values.toTime.$H}:${values.toTime.$m}:00`,
-            to_time: values.toTime.$H + ":" + values.toTime.$m + ":00",
-            day: values.day - 1,
-            doctor: values.doctorId,
-            id: values.id,
-          }
-          // {
-          //   headers: {
-          //     Authorization: `Bearer ${authTokens.access}`,
-          //   },
-          // }
-        )
+      axios.post(
+        // `http://188.121.113.74/api/doctor/workday/${values.id}/`,
+        `http://188.121.113.74/api/doctor/workday/`,
+        {
+          // ...values,
+          // from_time: startTime,
+          // to_time: endTime,
+          // from_time: `{values.fromTime.$H}:${values.fromTime.$m}:00`,
+          from_time: values.fromTime.$H + ":" + values.fromTime.$m + ":00",
+          // to_time: `{values.toTime.$H}:${values.toTime.$m}:00`,
+          to_time: values.toTime.$H + ":" + values.toTime.$m + ":00",
+          day: values.day,
+          doctor: values.doctorId,
+          id: values.id,
+        },
+        // {
+        //   headers: {
+        //     Authorization: `Bearer ${authData.access}`,
+        //   },
+        // }
+      )
         .then((response) => {
           toast.success(`زمان موردنظر با موفقیت ثبت شد.`, {
             position: "top-right",
