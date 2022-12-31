@@ -219,11 +219,14 @@ export default function HotelProfileCompletion() {
       .catch((err) => console.error(err));
 
     api
-      .get("/api/hotel/room/")
-      .then((res) => setRoomForm(res.data))
+      // .get("/api/hotel/room/")
+      .get(`/api/hotel/${hotel === '' ?  '' : String(hotel)+'/'}room/`)
+      .then((res) => rooms(res.data))
       .catch((err) => console.error(err));
 
     setLoading(false);
+
+
   }
 
   useEffect(() => {
@@ -237,7 +240,7 @@ export default function HotelProfileCompletion() {
 
     return () => clearInterval(id);
 
-  }, [availableHotels, setRoomForm, availableFeatures, loading, fetchData]);
+  }, [availableHotels, rooms, availableFeatures, loading, fetchData]);
 
   const handleFeatures = (event) => {
     const value = event.target.value;
@@ -496,7 +499,7 @@ export default function HotelProfileCompletion() {
         roomFormData.append("room_title", values.room_title);
         roomFormData.append("hotel", hotel);
 
-        console.log(roomFormData);
+        console.log('formData',roomFormData);
 
         api.post(`/api/hotel/room/`, roomFormData, {
           headers: {
@@ -521,7 +524,7 @@ export default function HotelProfileCompletion() {
         })
         formikRoom.resetForm();
         setLoading(true);
-        // window.location.reload();
+        window.location.reload();
       }
     },
     validationSchema: validationSchemaRoom,
@@ -856,8 +859,8 @@ export default function HotelProfileCompletion() {
                     />
 
                     <Grid container spacing={2}>
-                      {/* {console.log(rooms)} */}
                       <Grid container spacing={1} sx={{ marginTop: '10px' }}>
+                      {console.log(rooms)}
                         {rooms.map((room, index) => {
                           return (
                             <Grid key={room.id} item xs={12} md={12}>
@@ -867,8 +870,8 @@ export default function HotelProfileCompletion() {
                                   aria-controls={`aria${room.id}`}
                                   id={`id${room.id}`}
                                 >
-
-                                  <Typography>اتاق نوع {rooms.indexOf(room) + 1}</Typography>
+                                  <Typography>{room.room_title}</Typography>
+                                  {/* <Typography>اتاق نوع {rooms.indexOf(room) + 1}</Typography> */}
                                 </AccordionSummary>
                                 <AccordionDetails>
                                   <Typography sx={{ marginBottom: '7px' }}>اتاق {room.bed_count} خوابه</Typography>
