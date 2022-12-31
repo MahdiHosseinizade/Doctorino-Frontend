@@ -22,7 +22,9 @@ function HotelCard({ hotel }) {
     const history = useHistory();
 
     return (
-        <Card sx={{ m: 2, backgroundColor: "#efefef", display: "flex", borderRadius: "10px", maxWidth: "75%" }}>
+        <Card sx={{ m: 2, backgroundColor: "#efefef", display: "flex", 
+        borderRadius: "10px",
+         maxWidth: "75%" }}>
             <Grid container>
                 {/* <Link to={`/hotel/${hotel.id}`}/> */}
                 <Grid item md={3} sm={5} xs={12}>
@@ -91,14 +93,16 @@ function HotelCard({ hotel }) {
                     flexDirection: "column",
                     justifyContent: "center",
                 }}>
-                    <Box sx={{ display: { xs: "none", md: "flex" }, borderLeft: 1, marginTop: "10px", paddingLeft: '8px', height: "100%", flexDirection: "column", justifyContent: "end", }}>
-                        <Box>
+                    <Box sx={{ display: { xs: "none", md: "flex" }, 
+                    // borderLeft: 1, 
+                    marginTop: "10px", paddingLeft: '8px', height: "100%", flexDirection: "column", justifyContent: "end", }}>
+                        {/* <Box>
                             <Typography variant='p' ml={0.7}>قیمت برای هر شب</Typography>
                         </Box>
 
                         <Box sx={{ height: '80%', marginTop: "30px", }}>
                             <Typography variant='h6' ml={0.7}>  { } ریال </Typography>
-                        </Box>
+                        </Box> */}
 
                         <Button
                             variant="contained"
@@ -110,7 +114,7 @@ function HotelCard({ hotel }) {
                                 // paddingBottom:'5px',
                                 justifySelf: "end",
                             }}
-                            onClick={() => history.push("/hotels")}
+                            onClick={() => history.push(`/hotel/${hotel.id}`)}
                         >
                             مشاهده و رزرو
                         </Button>
@@ -125,9 +129,9 @@ function HotelCard({ hotel }) {
                     justifyContent: "end",
                 }}>
                     <Box sx={{ display: { md: "none", xs: "flex" }, padding: "5px", marginBlockEnd: '10px', marginLeft: '5px', marginRight: '5px', height: "100%", flexDirection: "column", justifyContent: "end", }}>
-                        <Box>
+                        {/* <Box>
                             <Typography variant='p' ml={0.5}>قیمت برای هر شب</Typography>
-                        </Box>
+                        </Box> */}
 
                         <Button
                             variant="contained"

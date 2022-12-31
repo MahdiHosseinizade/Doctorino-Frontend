@@ -24,18 +24,69 @@ import AuthContext from '../../../../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { baseURL } from '../../../../utils/useAxios';
+import theme from "../../../../assets/theme/defaultTheme";
 
 
+
+const SMenuItem = styled(MenuItem)({
+    "&:hover": {
+        backgroundColor: theme.palette.hotel.light,
+    },
+    // style when selected
+    "&.Mui-selected": {
+        backgroundColor: theme.palette.hotel.light,
+    },
+    "&.Mui-selected:hover": {
+        backgroundColor: "transparent",
+    }
+})
+
+const SFormControl = styled(FormControl)({
+    "& .MuiOutlinedInput-root": {
+        // set the color of the input when focused
+        "&:hover fieldset": {
+            borderColor: theme.palette.hotel.main,
+        }
+    },
+
+    // focused style
+    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: theme.palette.hotel.main,
+        borderWidth: "1px",
+    },
+    // set the label color when focused
+    "& .MuiInputLabel-root": {
+        color: theme.palette.grey[500],
+    },
+    // style the dropdown icon
+    "& .MuiSelect-icon": {
+        color: theme.palette.hotel.contrastText,
+        backgroundColor: theme.palette.hotel.main,
+        borderRadius: "50%",
+    },
+});
 
 const STextField = styled(TextField)({
+
+    "& .MuiInputLabel-root": {
+        color: theme.palette.grey[500],
+    },
     "& .MuiFilledInput-root": {
-        background: "#fefefe"
+        background: theme.palette.background.paper,
     },
     "& .MuiOutlinedInput-root": {
-        background: "#fefefe"
+        background: "#fefefe",
+        "&:hover fieldset": {
+            borderColor: theme.palette.hotel.main,
+        }
     },
+    // style when focused
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: theme.palette.hotel.main,
+    },
+
     spellCheck: false,
-})
+});
 
 const SSelect = styled(Select)({
     background: "#fefefe"
@@ -152,15 +203,60 @@ export default function ManagerProfile(props) {
     const years = ["1300", "1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309", "1310", "1311", "1312", "1313", "1314", "1315", "1316", "1317", "1318", "1319", "1320", "1321", "1322", "1323", "1324", "1325", "1326", "1327", "1328", "1329", "1330", "1331", "1332", "1333", "1334", "1335", "1336", "1337", "1338", "1339", "1340", "1341", "1342", "1343", "1344", "1345", "1346", "1347", "1348", "1349", "1350", "1351", "1352", "1353", "1354", "1355", "1356", "1357", "1358", "1359", "1360", "1361", "1362", "1363", "1364", "1365", "1366", "1367", "1368", "1369", "1370", "1371", "1372", "1373", "1374", "1375", "1376", "1377", "1378", "1379", "1380", "1381"]
 
     const formik = useFormik({
+
         initialValues: formValue,
-        onSubmit: (values) => postHotel([...hotel, values]),
+
+        onSubmit: (values) => {
+            console.log('on formik')
+            let formData = new FormData();
+            formData.append('firstName', hotel.firstName);
+            formData.append('lastName', hotel.lastName);
+            formData.append('fatherName', hotel.fatherName);
+            formData.append('identityNumber', hotel.identityNumber);
+            formData.append('socialNumber', hotel.socialNumber);
+            formData.append('sex', hotel.sex);
+            formData.append('firstPhoneNumber', hotel.firstPhoneNumber);
+            formData.append('secondPhoneNumber', hotel.secondPhoneNumber);
+            formData.append('firstName', hotel.firstName);
+            formData.append('areaCode', hotel.areaCode);
+            formData.append('telephoneNumber', hotel.telephoneNumber);
+            formData.append('address', hotel.address);
+            formData.append('birthYear', hotel.birthYear);
+            formData.append('birthMonth', hotel.birthMonth);
+            formData.append('birthDay', hotel.birthDay);
+            formData.append('shaba', hotel.shaba);
+
+            console.log('formdata', formData)
+            api.put(`/api/hotel/owner/${authData['child-id']}/`,
+                formData,
+                {
+                    headers: {
+                        "Authorization": "Bearer " + authData?.access,
+                    }
+                    // headers:
+                    // {
+                    //     'Content-Type': 'multipart/form-data',
+                    //     Authorization: `Bearer ${authData.access}`
+                    // }
+                }
+            )
+                .then(res => toast.success('اطلاعات با موفقیت ثبت شد', {
+                    position: "top-right",
+                    autoClose: 2000,
+                }))
+                .catch(err => toast.error('مشکلی پیش آمده', {
+                    position: "top-right",
+                    autoClose: 2000,
+                }))
+        },
+
+
         validationSchema: validationSchema,
     })
 
 
     function postHotel(hotel) {
         let formData = new FormData();
-
         formData.append('firstName', hotel.firstName);
         formData.append('lastName', hotel.lastName);
         formData.append('fatherName', hotel.fatherName);
@@ -178,28 +274,20 @@ export default function ManagerProfile(props) {
         formData.append('shaba', hotel.shaba);
 
 
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1])
-        }
-
-        api.post('/api/hotel/new/',
+        api.put(`/api/hotel/owner/${authData['child-id']}/`,
             formData,
             {
-                // set the type of the request to multipart/form-data
-                // so that the server can handle the request properly
-                // features: array of integers
-                // cover_image: image file
-                // stars: integer
-                // other fields: string
-
-                headers:
-                {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${authData.access}`
+                headers: {
+                    "Authorization": "Bearer " + authData?.access,
                 }
+                // headers:
+                // {
+                //     'Content-Type': 'multipart/form-data',
+                //     Authorization: `Bearer ${authData.access}`
+                // }
             }
         )
-            .then(res => toast.success('هتل با موفقیت ایجاد شد', {
+            .then(res => toast.success('اطلاعات با موفقیت ثبت شد', {
                 position: "top-right",
                 autoClose: 2000,
             }))
@@ -228,7 +316,7 @@ export default function ManagerProfile(props) {
                     '& .MuiTextField-root': { m: 0.5 },
                     boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
                 }}
-                
+
             >
                 <Typography
                     sx={{
@@ -260,7 +348,7 @@ export default function ManagerProfile(props) {
                             label="نام"
                             name='firstName'
                             type="text"
-                            helperText={formik.errors["firstName"]}
+                            helperText={formik.touched["firstName"] && formik.errors["firstName"]}
                             {...formik.getFieldProps('firstName')}
                         />
                     </Grid>
@@ -273,7 +361,7 @@ export default function ManagerProfile(props) {
                             label="نام خانوادگی"
                             name='lastName'
                             type="text"
-                            helperText={formik.errors["lastName"]}
+                            helperText={formik.touched["lastName"] && formik.errors["lastName"]}
                             {...formik.getFieldProps('lastName')}
                         />
                     </Grid>
@@ -286,21 +374,21 @@ export default function ManagerProfile(props) {
                             label="نام پدر"
                             name='fatherName'
                             type="text"
-                            helperText={formik.errors["fatherName"]}
+                            helperText={formik.touched["fatherName"] && formik.errors["fatherName"]}
                             {...formik.getFieldProps('fatherName')}
                         />
                     </Grid>
 
 
                     <Grid item xs={12} md={6} lg={4} >
-                        <FormControl fullWidth>
+                        <SFormControl fullWidth>
                             <InputLabel>جنسیت</InputLabel>
                             <SSelect
                                 required
-                                defaultValue={0}
+                                // defaultValue={0}
                                 value={gender}
                                 label='جنسیت'
-                                onChange={reHandleDay}
+                                onChange={reHandleGender}
                                 error={formik.errors["sex"] && formik.touched["sex"]}
                                 {...formik.getFieldProps('gender')}
                             >
@@ -311,7 +399,7 @@ export default function ManagerProfile(props) {
                                     </MenuItem>
                                 ))}
                             </SSelect>
-                        </FormControl>
+                        </SFormControl>
                     </Grid>
 
 
@@ -323,7 +411,7 @@ export default function ManagerProfile(props) {
                             label="شماره شناسنامه"
                             name='identityNumber'
                             type="text"
-                            helperText={formik.errors["identityNumber"]}
+                            helperText={formik.touched["identityNumber"]  && formik.errors["identityNumber"]}
                             {...formik.getFieldProps('identityNumber')}
                         />
                     </Grid>
@@ -337,7 +425,7 @@ export default function ManagerProfile(props) {
                             label="کد ملی"
                             name='socialNumber'
                             type="text"
-                            helperText={formik.errors["socialNumber"]}
+                            helperText={formik.touched["socialNumber"] && formik.errors["socialNumber"]}
                             {...formik.getFieldProps('socialNumber')}
                         />
                     </Grid>
@@ -350,7 +438,7 @@ export default function ManagerProfile(props) {
                             label="تلفن همراه اول"
                             name='firstPhoneNumber'
                             type="text"
-                            helperText={formik.errors["firstPhoneNumber"]}
+                            helperText={formik.touched["firstPhoneNumber"] && formik.errors["firstPhoneNumber"]}
                             {...formik.getFieldProps('firstPhoneNumber')}
                         />
                     </Grid>
@@ -363,7 +451,7 @@ export default function ManagerProfile(props) {
                             label="تلفن همراه دوم"
                             name='secondPhoneNumber'
                             type="text"
-                            helperText={formik.errors["secondPhoneNumber"]}
+                            helperText={formik.touched["secondPhoneNumber"] && formik.errors["secondPhoneNumber"]}
                             {...formik.getFieldProps('secondPhoneNumber')}
                         />
                     </Grid>
@@ -437,7 +525,7 @@ export default function ManagerProfile(props) {
 
 
                     <Grid item xs={12}>
-                        <Box ml={1} sx={{ borderBottom: 1, boredrColor: "error.main", width: '20%', display: 'flex' }}>
+                        <Box ml={1} sx={{ borderBottom: 1, boredrColor: `${theme.palette.hotel.main}` , width: '20%', display: 'flex' }}>
                             <p>
                                 اطلاعات محل اسکان &nbsp;&nbsp;&nbsp;
                             </p>
@@ -452,7 +540,7 @@ export default function ManagerProfile(props) {
                             label="کد شهرستان"
                             name='areaCode'
                             type="text"
-                            helperText={formik.errors["areaCode"]}
+                            helperText={formik.errors["areaCode"] && formik.touched["areaCode"]}
                             {...formik.getFieldProps('areaCode')}
                         />
                     </Grid>
@@ -465,7 +553,7 @@ export default function ManagerProfile(props) {
                             label="تلفن ثابت"
                             name='telephoneNumber'
                             type="text"
-                            helperText={formik.errors["telephoneNumber"]}
+                            helperText={formik.errors["telephoneNumber"] && formik.touched["telephoneNumber"]}
                             {...formik.getFieldProps('telephoneNumber')}
                         />
                     </Grid>
@@ -478,7 +566,7 @@ export default function ManagerProfile(props) {
                             label="آدرس"
                             name='adress'
                             type="text"
-                            helperText={formik.errors["adress"]}
+                            helperText={formik.errors["adress"] && formik.touched["adress"]}
                             {...formik.getFieldProps('adress')}
                         />
                     </Grid>
@@ -499,14 +587,13 @@ export default function ManagerProfile(props) {
                             label="شماره شبا"
                             name='shaba'
                             type="text"
-                            helperText={formik.errors["shaba"]}
+                            helperText={formik.errors["shaba"] && formik.touched["shaba"]}
                             {...formik.getFieldProps('shaba')}
                         />
                     </Grid>
-
                     <Grid item xs={12} sx={{ marginTop: '20px' }}>
                         <Button type="submit"
-                            disabled={(formik.isValid)}
+                            // disabled={(formik.isValid)}
                             variant="contained"
                             color='hotel'
                             style={{ fontSize: '15px' }}
@@ -532,5 +619,3 @@ export default function ManagerProfile(props) {
 
 // failiures:
 // 1. sselect ha ke chackbox nadarand entekhab nemishavand
-// 2. sjamare shaba ham ezafe shavad
-// 3. bakhsh haye mokhtalef style bandi shavand!!
