@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./HotelSearch.css";
 import NavBar from "../../NavBar/newNavBar";
 // import { makeStyles } from "@mui/styles";
-import { FormControl } from "@mui/material";
+import { FormControl, Grid } from "@mui/material";
 import { MdPlace } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 import { cities } from "../../../db/cities";

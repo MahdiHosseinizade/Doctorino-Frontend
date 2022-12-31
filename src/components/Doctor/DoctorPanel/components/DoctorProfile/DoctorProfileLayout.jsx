@@ -178,12 +178,13 @@ export default function DoctorProfileLayout() {
         });
 
       // Fetching doctor's information from the database
-      API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
+      API.get(`/api/doctor/user_id_to_doctor_id/${user.id}/`, {
         headers: {
           Authorization: `Bearer ${authData?.access}`,
         },
       })
         .then((response) => {
+          console.log("the response of doctorID", response.data);
           API.get(`/api/doctor/${response.data.id}/`, {
             headers: {
               Authorization: `Bearer ${authData?.access}`,
@@ -283,7 +284,7 @@ export default function DoctorProfileLayout() {
     loading,
     doctor,
     id,
-    user.user_id,
+    user.id,
     authData?.access,
     API,
     availableSpecilaities,

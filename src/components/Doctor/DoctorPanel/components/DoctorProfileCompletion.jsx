@@ -199,7 +199,7 @@ export default function DoctorProfileCompletion() {
         });
 
       // Fetching user's information from the database
-      API.get(`/api/doctor/user_id_to_doctor_id/${user.user_id}/`, {
+      API.get(`/api/doctor/user_id_to_doctor_id/${user.id}/`, {
         headers: {
           Authorization: `Bearer ${authData?.access}`,
         },
@@ -306,7 +306,7 @@ export default function DoctorProfileCompletion() {
     loading,
     API,
     authData?.access,
-    user.user_id,
+    user.id,
     values,
     provinceInfo,
     citiesList,
