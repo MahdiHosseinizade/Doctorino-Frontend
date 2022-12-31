@@ -4,6 +4,36 @@ import SideBar from "./components/SideBar";
 import NavBar from "../../NavBar/newNavBar";
 
 export default function PanelLayout({ children }) {
+
+  const [buttonsInNavBar, setButtonsInNavBar] = React.useState([]);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (window.innerWidth < 600) {
+        setButtonsInNavBar(
+          [
+            {
+              text: "اضافه کردن هتل",
+              path: "/hotel-panel/add-hotel",
+            },
+            {
+              text: "پروفایل مدیر",
+              path: "/hotel-panel/profile-completion",
+            },
+            {
+              text: "اطلاعات تکمیلی هتل",
+              path: "/hotel-panel/hotel-info",
+            },
+          ]
+        );
+      } else {
+        setButtonsInNavBar([]);
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  });
+
   return (
     <div>
       <CssBaseline />
@@ -13,15 +43,15 @@ export default function PanelLayout({ children }) {
           position: "static",
           top: "0",
           right: "0",
-          // display: "flex",
-          // flexDirection: "row",
-          // width: "100%",
-          // height: "auto",
-          // alignItems: "center",
-          // boxSizing: "border-box",
+          display: "flex",
+          flexDirection: "row",
+          width: "100%",
+          height: "auto",
+          alignItems: "center",
+          boxSizing: "border-box",
         }}
       >
-        <NavBar />
+        <NavBar buttons={buttonsInNavBar} />
       </Box>
 
       <Box sx={{
@@ -31,7 +61,11 @@ export default function PanelLayout({ children }) {
         justifyContent: "center"
       }}
       >
-        <SideBar />
+        <Box sx={{
+          display: { xs: "none", sm: "block" }
+        }}>
+          <SideBar />
+        </Box>
         <Box
           sx={{
             alignItems: "center",

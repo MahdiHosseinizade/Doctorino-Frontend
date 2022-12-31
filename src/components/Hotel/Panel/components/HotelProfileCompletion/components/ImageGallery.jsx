@@ -41,6 +41,10 @@ const ImageGallery = ({ hotel_id, loading, setLoading }) => {
 
         setLoading(false);
 
+        if (!hotel_id) {
+            return;
+        }
+
         api.get(`/api/hotel/${hotel_id}/`,
             {
                 headers: {
@@ -77,6 +81,12 @@ const ImageGallery = ({ hotel_id, loading, setLoading }) => {
     }
 
     function sendImage(file) {
+
+        if (!hotel_id) {
+            toast.error("لطفا هتل مورد نظر را انتخاب کنید.", { position: 'top-right', autoClose: 2000 });
+            return;
+        }
+
         const formData = new FormData();
         formData.append('image', file);
         formData.append('hotel', hotel_id);
