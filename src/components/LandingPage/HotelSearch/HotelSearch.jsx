@@ -5,9 +5,9 @@ import NavBar from "../../NavBar/newNavBar";
 import { FormControl, Grid } from "@mui/material";
 import { MdPlace } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
-import cities from "../../../db/Cities";
+// import cities from "../../../db/Cities";
 // import { provinces } from "../../../db/Provinces.js";
-// import {provinces} from "../../../db/Provinces"
+import provinces from "../../../db/Provinces"
 import axios from "axios";
 import { toast } from "react-toastify";
 import Select from "react-select";
@@ -68,7 +68,7 @@ export default function HotelSearch() {
                 <Select
                   value={city.name}
                   onChange={(e) => handleCity(e)}
-                  options={cities}
+                  options={provinces}
                   menuPortalTarget={document.body}
                   // menuPortalTarget={document.querySelector("#root > div.ContainerLandingPage > form > div.SearchBar_Container > div.chooseLocation")}
                   styles={{

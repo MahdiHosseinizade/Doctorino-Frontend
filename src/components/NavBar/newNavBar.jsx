@@ -260,7 +260,7 @@ const NavBar = ({ buttons }) => {
                   } else if (user.role === "hotel_owner") {
                     history.push("/hotel-panel/profile-completion");
                   } else {
-                    history.push("/patient-panel/dashboard");
+                    history.push("/patient-panel/profile");
                   }
                 }}
                 sx={{ width: 'auto', }}

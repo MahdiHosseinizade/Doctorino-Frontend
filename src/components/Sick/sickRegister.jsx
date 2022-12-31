@@ -113,7 +113,7 @@ const SickRegister = () => {
             autoClose: 3000,
         }
       )
-      loginUser(user.email, user.password);
+      history.push("/login");
     })
     .catch((err) =>{
       console.log(err);

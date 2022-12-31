@@ -619,7 +619,7 @@ export default function HotelProfileCompletion() {
                     </SSelect>
                   </SFormControl>
 
-                  <Box component="img" src={coverImage ? coverImage : "./src/assets/img/default_hotel_image.jpg"}
+                  <Box component="img" src={coverImage ? coverImage : "http://188.121.113.74/media/hotel-images/default_hotel_image.jpg"}
                     sx={{
                       display: { xs: "none", md: "block" },
                       width: "100%",
