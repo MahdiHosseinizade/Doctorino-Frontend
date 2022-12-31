@@ -154,7 +154,7 @@ const NavBar = ({ buttons }) => {
             }}
           >
             <Link to="/">
-              <AdbIcon color="primary" sx={{ fontSize: 45, mr: 1 }} />
+              {/* <AdbIcon color="primary" sx={{ fontSize: 45, mr: 1 }} /> */}
               <Typography
                 variant="h4"
                 sx={{
