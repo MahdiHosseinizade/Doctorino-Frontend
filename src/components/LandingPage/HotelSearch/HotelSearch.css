@@ -1,4 +1,4 @@
-.searchBar{
+.searchBar2{
     margin-bottom: 60px;
     /* background-image: url('https://www.finds.ir/img/2020081384124649.jpg'); */
     /* background-color: #096085; */
@@ -62,7 +62,7 @@
     /* overflow: hidden; */
 }
 
-.ContainerLandingPage{
+.ContainerLandingPage2{
     position: relative;
     display: flex;
     flex-direction: column;
@@ -106,9 +106,9 @@
     border-left: 1px solid #03056f;
     height: 100px;
 }
-.ZareBin{
+.ZareBin2{
     cursor: pointer;
-    background-color: #096085;
+    background-color: #fdb713;
     width: 90px;
     height:90px;
     border-radius:35px ;
@@ -125,7 +125,7 @@
     color: #ffffff;
 }
 
-.Title{
+.Title2{
     position: absolute;
     top: 20%;
     right: 25%;
@@ -139,7 +139,7 @@
     margin: 10px 10px;
 }
 .MdPlace{
-    color:#096085;
+    color:#fdb713;
     font-size: 25px;
     margin-right: 20px;
 }

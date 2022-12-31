@@ -49,10 +49,10 @@ export default function HotelSearch() {
   };
 
   return (
-    <div className="ContainerLandingPage">
+    <div className="ContainerLandingPage2">
       <NavBar />
       <form>
-        <div className="Title">
+        <div className="Title2">
           <h2 className="searchBarText">راه حلی مناسب برای رزرو دکتر و هتل</h2>
           <h1 className="searchBarTitle">دکترینو</h1>
         </div>
@@ -82,14 +82,14 @@ export default function HotelSearch() {
           </div>
           {/* <div className="vl"></div> */}
           <div className="searchScale">
-            <button onClick={handleSubmit} className="ZareBin">
+            <button onClick={handleSubmit} className="ZareBin2">
               {<BiSearch className="ZarebinIcon" />}
             </button>
           </div>
         </div>
 
         <div className="landingPage">
-          <div className="searchBar"></div>
+          <div className="searchBar2"></div>
         </div>
       </form>
     </div>
