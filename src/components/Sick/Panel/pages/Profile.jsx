@@ -13,7 +13,7 @@ import moment from "jalali-moment";
 import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
 import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
 import "./Profile.css";
-import cities from "../../../../db/Cities.js";
+import cities from "../../../../db/cities";
 import provinces from "../../../../db/Provinces";
 
 
@@ -114,7 +114,7 @@ const Profile = () => {
 
           let citiesLST = [];
           if (province) {
-            const provinceObj = provinces.find(prov => prov.name === province);
+            const provinceObj = provinces.find(prov => prov.value === province);
             if (provinceObj) {
               citiesLST = cities.filter((city) => city.province_id === provinceObj.id);
               setCitiesToShow(citiesLST);
@@ -259,9 +259,9 @@ const Profile = () => {
                 label="استان"
                 error={formik.errors["province"] && formik.touched["province"]}
               >
-                {provincesToShow.map(({ id, name }) => (
+                {provincesToShow.map(({ id, value }) => (
                   <MenuItem key={id} value={id}>
-                    <ListItemText primary={name} />
+                    <ListItemText primary={value} />
                   </MenuItem>
                 ))}
               </SSelect>
