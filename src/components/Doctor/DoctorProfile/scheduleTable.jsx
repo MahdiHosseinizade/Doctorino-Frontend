@@ -72,7 +72,6 @@ export default function ScheduleTime({ doctor, ...props }) {
         0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [],
     }
 
-    const [flag, setFlag] = React.useState(true);
     let show_time = [];
     const [open, setOpen] = React.useState(false);
     const history = useHistory();
@@ -81,6 +80,8 @@ export default function ScheduleTime({ doctor, ...props }) {
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
     const maxSteps = day.length;
+    const [flag, setFlag] = useState(true);
+    const [deleteValue, setDalateValue] = useState('');
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -96,7 +97,6 @@ export default function ScheduleTime({ doctor, ...props }) {
 
     const handleClose = () => {
         setOpen(false);
-
     };
 
     const [reservation, setReservation] = useState([]);
@@ -322,7 +322,7 @@ export default function ScheduleTime({ doctor, ...props }) {
     }
 
     let today = new Date().toLocaleDateString('fa-IR-u-nu-latn');
-    formValue.date_reserved = `${today.substring(0, 4)}-${today.substring(5, 7)}-${Number(today.substring(8, 9))+activeStep}`;
+    formValue.date_reserved = `${today.substring(0, 4)}-${today.substring(5, 7)}-${Number(today.substring(8, 9)) + activeStep}`;
     console.log()
 
     const [form, setForm] = useState('');
@@ -344,10 +344,10 @@ export default function ScheduleTime({ doctor, ...props }) {
 
             console.log(
                 {
-                    "date_reserved":  values.date_reserved,
+                    "date_reserved": values.date_reserved,
                     "from_time": _from_time,
                     "to_time": _to_time,
-                    "patient_name": `${authData['first-name'] + authData['last-name']}`, //
+                    "patient_name": `${authData['first-name'] + " " + authData['last-name']}`, //
                     "national_code": '0987654321', //
                     "doctor": doctor?.id,
                     "patient": authData['child-id'], //
@@ -359,7 +359,7 @@ export default function ScheduleTime({ doctor, ...props }) {
                     "date_reserved": values.date_reserved,
                     "from_time": _from_time,
                     "to_time": _to_time,
-                    "patient_name": authData['first-name'] + authData['last-name'], //
+                    "patient_name": authData['first-name'] + ' ' + authData['last-name'], //
                     "national_code": '0987654321', //
                     "doctor": doctor?.id,
                     "patient": authData['child-id'], //
@@ -368,10 +368,13 @@ export default function ScheduleTime({ doctor, ...props }) {
                     "Authorization": "Bearer " + authData?.access,
                 }
             }).then(res => {
-                toast.success("اتاق با موفقیت اضافه شد", {
+                delete show_time[activeStep][show_time[activeStep].indexOf(_from_time)]
+                window.location.reload();
+                toast.success("نوبت شما با موفقیت رزرو شد", {
                     position: "top-right",
                     autoClose: 2000,
                 })
+
             }).catch(err => {
                 toast.error("خطایی رخ داده است", {
                     position: "top-right",
@@ -514,36 +517,86 @@ export default function ScheduleTime({ doctor, ...props }) {
                     <Stack>
                         <Box
                             sx={{}}>
-                            <Grid container spacing={1}>
+                            <Grid container spacing={1} >
                                 {show_time.filter((item) => (item[0] == day[activeStep]))[0][1].map((time, index) => {
                                     return (
                                         <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
-                                            <Button type="submit" id={`${time}`} variant={!flag ? "contained" : 'outlined'}
+                                            <Button type="submit" variant='outlined'
+                                                id={`${time}`}
+                                                className={`${time}`}
+                                                // disabled='true'
+                                                // color={(flag && Button.id == `${time}`) ? "primary" : 'error'}
                                                 sx={{
-                                                    // "& :hover": {
-                                                    //     backgroundColor: 'white'
-                                                    // },
-                                                    // backgroundColor: 'darkblue',
+                                                    borderRadius: '15px',
+
                                                 }}
                                                 onClick={() => {
                                                     set_from_time(time + ':00')
                                                     if (time.substring(3, 5) == '45') { set_to_time(`${Number(time.substring(0, 2)) + 1}:00:00`) }
                                                     else { set_to_time(`${Number(time.substring(0, 2))}:${Number(time.substring(3, 5)) + 15}:00`) }
-                                                    setFlag(!flag)
-                                                    
+                                                    // setFlag(!flag)
+                                                    // console.log(_from_time, _to_time)
                                                 }}
                                             >
                                                 <Typography textAlign="center">{time}</Typography></Button>
                                         </Grid>
                                     );
                                 })}
+                                {show_time.filter((item) => (item[0] == day[activeStep]))[0][1].length === 0 &&
+                                    <Grid item xs={12} md={12} sx={{ justifyContent: 'center', display: 'flex' }}>
+                                        <Box fullWidth
+                                            sx={{
+                                                diasplay: 'flex',
+                                                width: '100%'
+                                            }}>
+                                            <Typography sx={{
+                                                fontWeight: '550',
+                                                fontSize: '14px',
+                                                justifyContent: 'flex-end',
+                                                center: '10%',
+                                                marginTop: '50px',
+                                                marginBottom: '40px',
+                                            }}>
+                                                متاسفانه زمانی برای نمایش وجود ندارد
+                                            </Typography>
+                                        </Box>
+                                    </Grid>}
 
                             </Grid>
                         </Box>
                     </Stack>
                 </Grid>
                 <Grid item xs={12}>
-                    <Box>
+                    <Box sx={{ diasplay: 'flex' }}>
+                        <Box sx={{
+                            fontWeight: '500',
+                            justifyContent: 'center',
+                            display: _from_time ? 'flex' : 'none',
+                            marginTop: '15px',
+                            marginBottom: '10px',
+                        }}><hr style={{ width: '100%' }} /></Box>
+                        <Typography sx={{
+                            fontWeight: '500',
+                            justifyContent: 'center',
+                            display: _from_time ? 'flex' : 'none',
+                        }}>
+                            زمان رزرو پزشک
+                        </Typography>
+                        <Typography sx={{
+                            fontWeight: '700',
+                            justifyContent: 'center',
+                            display: _from_time ? 'flex' : 'none',
+                            marginTop: '15px',
+                        }}>
+                            {day[activeStep]}
+                        </Typography>
+                        <Typography sx={{
+                            fontWeight: '700',
+                            justifyContent: 'center',
+                            display: _from_time ? 'flex' : 'none',
+                        }}>
+                            {_from_time} تا {_to_time}
+                        </Typography>
                         <br />
                         <Button sx={{
                             width: "100%",
@@ -574,14 +627,3 @@ export default function ScheduleTime({ doctor, ...props }) {
         </Card>
     );
 }
-
-// {
-//     "id": 1,
-//     "date_reserved": "2022-12-19",
-//     "from_time": "15:39:09",
-//     "to_time": "19:00:00",
-//     "patient_name": "mmd",
-//     "national_code": "2520183063",
-//     "patient": 7,
-//     "doctor": 1
-// },
