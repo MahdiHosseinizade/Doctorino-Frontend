@@ -17,7 +17,7 @@ import AuthContext from '../../context/AuthContext';
 
 const NavBar = ({ buttons }) => {
   let { user, authTokens, logOut } = useContext(AuthContext);
-  
+
   const defultButtons = [
     {
       text: "لیست پزشکان",
@@ -36,15 +36,11 @@ const NavBar = ({ buttons }) => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log(buttons)
-      if (buttons.length > 0 && buttons !== pages) {
-        setPages(buttons);
-      } else {
-        setPages(defultButtons);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
+    if (buttons.length > 0 && buttons !== pages) {
+      setPages(buttons);
+    } else {
+      setPages(defultButtons);
+    }
   }, [buttons])
 
   const handleOpenNavMenu = (event) => {
