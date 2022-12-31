@@ -36,7 +36,7 @@ const NavBar = ({ buttons }) => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   useEffect(() => {
-    if (buttons.length > 0 && buttons !== pages) {
+    if (buttons?.length > 0 && buttons !== pages) {
       setPages(buttons);
     } else {
       setPages(defultButtons);
