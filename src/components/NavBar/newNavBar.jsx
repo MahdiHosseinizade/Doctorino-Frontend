@@ -21,11 +21,11 @@ const NavBar = ({ buttons }) => {
   const defultButtons = [
     {
       text: "لیست پزشکان",
-      path: "/list-of-doctors/",
+      path: "/list-of-doctors",
     },
     {
       text: "جستجوی هتل",
-      path: "/hotel-search/",
+      path: "/hotel-search",
     }
   ];
 
