@@ -34,7 +34,7 @@ const HotelReservations = () => {
 
   function deleteReservation(id) {
     api
-      .delete(`/api/doctor/appointment/${id}/`, {
+      .delete(`api/hotel/hotel_reserve/${id}/`, {
         headers: {
           Authorization: `Bearer ${authData?.access}`,
         },
@@ -62,11 +62,12 @@ const HotelReservations = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} md={12}>
           <Grid container spacing={2}>
+            {console.log("reservations: ", reservations)}
             {reservations &&
                 reservations.map((r, index) => (
                 <Grid item key={index} xs={12} sm={12} md={12} lg={12}>
                   <ReservationCard
-                    appointment={r}
+                    reservation={r}
                     deleteReservation={deleteReservation}
                   />
                 </Grid>

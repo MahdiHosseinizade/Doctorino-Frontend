@@ -15,7 +15,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import { makeStyles } from "@mui/styles";
 import moment from "jalali-moment";
-import { response } from "express";
+import theme from "../../../../assets/theme/defaultTheme";
 
 const useStyles = makeStyles({
   card: {
@@ -38,7 +38,9 @@ const useStyles = makeStyles({
 });
 
 const AppointmentCard = ({ reservation, deleteReservation }) => {
+  console.log("in reservation card", reservation)
   const [loading, setLoading] = useState(true);
+  const [hotel, setHotel] = useState(null);
   const [room, setRoom] = useState(null);
   const { user, authData } = useContext(AuthContext);
   const api = useAxios();
@@ -48,12 +50,18 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
       api
         .get(`/api/hotel/room/`)
         .then((res) => {
-          console.log("this is the res data from hotel/room: ", res.data);
-          const temp = res.filter((hotelRoom) => {
+          const hotelRoom = res.data.find((hotelRoom) => {
             return hotelRoom.id === reservation.hotel_room;
-          })
-          console.log("this is the hotel room:", temp);
-          setRoom(res.data);
+          });
+          setRoom(hotelRoom);
+          api
+            .get(`api/hotel/${hotelRoom.hotel}/`)
+            .then((response) => {
+              setHotel(response.data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         })
         .catch((err) => {
           console.log(err);
@@ -61,14 +69,17 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
 
       setLoading(false);
     }
-  }, [loading]);
+  }, [loading, 
+    reservation.hotel_room,
+    api,
+  ]);
 
-  function getTime(time) {
-    const hour = parseInt(time.split(":")[0]);
-    const minute = time.split(":")[1];
+  // function getTime(time) {
+  //   const hour = parseInt(time.split(":")[0]);
+  //   const minute = time.split(":")[1];
 
-    return `${hour}:${minute}`;
-  }
+  //   return `${hour}:${minute}`;
+  // }
 
   function getDate(date) {
     const month_map = {
@@ -86,35 +97,32 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
       12: "اسفند",
     };
 
-    // const date = moment(reservation?.date_reserved);
     const newDate = moment(date);
-
     const month = month_map[newDate.month() + 1];
-
     return `${newDate.format("DD")} ${month} ${newDate.year()}`;
   }
 
-  function validateDate(date) {
-    // const date = moment(reservation?.date_reserved);
-    const newDate = moment(date);
-    const time = reservation?.from_time;
+  // function validateDate(date) {
+  //   // const date = moment(reservation?.date_reserved);
+  //   const newDate = moment(date);
+  //   const time = reservation?.from_time;
 
-    const now = moment();
+  //   const now = moment();
 
-    now.locale("fa");
+  //   now.locale("fa");
 
-    if (newDate.format("YYYY/MM/DD") < now.format("YYYY/MM/DD")) {
-      return false;
-    } else if (newDate.format("YYYY/MM/DD") === now.format("YYYY/MM/DD")) {
-      if (getTime(time) < now.format("HH:mm:ss")) {
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
-  }
+  //   if (newDate.format("YYYY/MM/DD") < now.format("YYYY/MM/DD")) {
+  //     return false;
+  //   } else if (newDate.format("YYYY/MM/DD") === now.format("YYYY/MM/DD")) {
+  //     if (getTime(time) < now.format("HH:mm:ss")) {
+  //       return false;
+  //     } else {
+  //       return true;
+  //     }
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   const classes = useStyles();
 
@@ -142,7 +150,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
             alt="doctor image"
           />
         </Grid> */}
-        <Grid item xs={6} md={6}>
+        <Grid item xs={6} md={9}>
           <CardContent>
             <Box>
               <Grid container spacing={3.5}>
@@ -151,7 +159,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
                     variant="subtitle2"
                     sx={{ fontSize: "30px", display: "flex" }}
                   >
-                    {room?.room_title}
+                    هتل {hotel?.hotel_name}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={12}>
@@ -162,14 +170,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
                       fontSize: 20,
                     }}
                   >
-                    {room?.education}{" "}
-                    {room?.specialties.map(({ id, name }, index) => {
-                      if (index !== room?.specialties.length - 1) {
-                        return name + "، ";
-                      } else {
-                        return name;
-                      }
-                    })}
+                    {room?.room_title}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={12}>
@@ -178,24 +179,43 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
                       sx={{ marginBottom: "-7px", color: "darkblue" }}
                     />
                     <span> </span>
-                    {room?.city}
-                    <span> </span>
-                    {room?.clinic_address}
+                    {hotel?.address}
+                    {/* <span> </span>
+                    {room?.clinic_address} */}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} md={12}>
-                  <Typography variant="body2" sx={{ fontSize: "20px" }}>
-                    <CalendarMonthIcon
-                      sx={{
-                        marginBottom: "-7px",
-                        color: validateDate() ? "darkblue" : "darkred",
-                      }}
-                    />
-                    <span> </span>
-                    {getDate()}
-                  </Typography>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  sx={{ display: "flex", flexDirection: "row" }}  
+                >
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="body2" sx={{ fontSize: "20px" }}>
+                      <CalendarMonthIcon
+                        sx={{
+                          marginBottom: "-7px",
+                          // color: validateDate() ? "darkblue" : "darkred",
+                        }}
+                      />
+                      <span> </span>
+                      از تاریخ {getDate(reservation?.from_date)}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="body2" sx={{ fontSize: "20px" }}>
+                      <CalendarMonthIcon
+                        sx={{
+                          marginBottom: "-7px",
+                          // color: validateDate() ? "darkblue" : "darkred",
+                        }}
+                      />
+                      <span> </span>
+                      تا تاریخ {getDate(reservation?.to_date)}
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} md={12}>
+                {/* <Grid item xs={12} md={12}>
                   <Typography variant="body2" sx={{ fontSize: "20px" }}>
                     <AccessTimeIcon
                       sx={{
@@ -210,7 +230,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
                     </b> تا{" "}
                     <b>{reservation && getTime(reservation?.to_time)}</b>
                   </Typography>
-                </Grid>
+                </Grid> */}
               </Grid>
             </Box>
           </CardContent>
@@ -218,7 +238,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
         <Grid
           item
           xs={12}
-          md={2}
+          md={3}
           sx={{
             display: "flex",
             justifyContent: "flex-end",
@@ -237,7 +257,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
               fontSize: "20px",
             }}
           >
-            لغو نوبت
+            لغو رزرو
           </Button>
         </Grid>
       </Grid>
