@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 import { Container, Grid } from "@mui/material";
 import NavBar from "../../NavBar/newNavBar";
-import HotelCard from "./HotelCard";
+import HotelCard from "../../Hotel/HotelList/components/HotelCard";
 
 const useStyles = makeStyles({
   container: {
