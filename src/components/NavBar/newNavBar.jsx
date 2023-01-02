@@ -62,13 +62,16 @@ const NavBar = ({ buttons }) => {
     setAnchorElUser(null);
   };
 
+  let bgColor = '#65B9D3';
+
   return (
     <AppBar
       position="fixed"
       sx={{
         zIndex: 100,
         direction: "rtl",
-        background: "#65B9D3",
+        background : bgColor,
+        //background: user?.role === 'doctor' ? 'fff' : user?.role === 'hotel_owner' ? 'aaa' : '#65B9D3' ,
         enableColorOnDark: true,
       }}
     >
