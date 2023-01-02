@@ -26,6 +26,9 @@ import { toast } from "react-toastify";
 import { baseURL } from "../../../../utils/useAxios";
 import theme from "../../../../assets/theme/defaultTheme";
 import { set } from "date-fns-jalali";
+import years from "./years";
+import months from "./months";
+import days from "./days";
 
 const SMenuItem = styled(MenuItem)({
   "&:hover": {
@@ -91,26 +94,45 @@ const SSelect = styled(Select)({
 });
 
 const formValue = {
-  firstName: "",
-  lastName: "",
-  fatherName: "",
+  first_name: "",
+  last_name: "",
+  father_name: "",
   national_code: "",
-  sex: 0,
-  firstPhoneNumber: "",
-  secondPhoneNumber: "",
-  areaCode: "", // code telephone shahrestan
-  telephoneNumber: "", // telephone sabet
+  gender: "",
+  first_phone_number: "",
+  second_phone_number: "",
+  area_code: "",
+  telephone_number: "", 
   address: "",
-  //   birthYear: [],
-  //   birthMonth: [],
-  birthDay: [],
-  shaba: "",
+  birthDay: "",
+  birthMonth: "",
+  birthYear: "",
+  shaba_code: "",
 };
 
+const validationSchema = Yup.object({
+  first_name: Yup.string().required("نام ضروری است"),
+  last_name: Yup.string().required("نام خانوادگی ضروری است"),
+  father_name: Yup.string().required("نام پدر ضروری است"),
+  national_code: Yup.string().required("کد ملی ضروری است"),
+  gender: Yup.string().required('جنسیت ضروری است'),
+  first_phone_number: Yup.number().required("تلفن همراه ضروری است"),
+  second_phone_number: Yup.number(),
+  area_code: Yup.string(),
+  telephone_number: Yup.string(),
+  address: Yup.string(),
+  birthDay: Yup.string().required("روز تولد ضروری است"),
+  birthMonth: Yup.string().required("ماه تولد ضروری است"),
+  birthYear: Yup.string().required("سال تولد ضروری است"),
+  shaba_code: Yup.number().required("شماره شبا ضروری است"),
+});
+
+
+
 export default function ManagerProfile(props) {
-  const [ownerInfos, setOwnerInfos] = useState({ ...formValue });
+  const [ownerInfos, setOwnerInfos] = useState({ ...formValue});
   const [hotel, setHotel] = useState([]);
-  const [genders, setGenders] = useState([]);
+  const [gender, setGender] = useState([]);
   const [day, setDay] = useState([]);
   const [month, setMonth] = useState([]);
   const [year, setYear] = useState([]);
@@ -129,29 +151,24 @@ export default function ManagerProfile(props) {
         })
 
         .then((response) => {
-          console.log("hotel owner response", response.data);
-          //   setHotel(response.data);
+          console.log("fetching data: ", response.data);
           setOwnerInfos({
             ...ownerInfos,
-            firstName: response.data.user.first_name,
-            lastName: response.data.user.last_name,
-            fatherName: response.data.father_name,
-            // identityNumber: response.data.user.identity_number,
-            // socialNumber: response.data.social_number,
-            // sex: response
-            sex: response.data.gender,
-            firstPhoneNumber: response.data.first_phone_number,
-            secondPhoneNumber: response.data.second_phone_number,
-            areaCode: response.data.area_code,
-            telephoneNumber: response.data.telephone_number,
+            first_name: response.data.user.first_name,
+            last_name: response.data.user.last_name,
+            email: response.data.user.email,
+            username:  response.data.user.username,
+            father_name: response.data.father_name,
+            gender: response.data.gender,
+            first_phone_number: response.data.first_phone_number,
+            second_phone_number: response.data.second_phone_number,
+            area_code: response.data.area_code,
+            telephone_number: response.data.telephone_number,
             address: response.data.address,
-            // birthYear: response.data.birth_year,
-            // birthMonth: response.data.birth_month,
-            birthDay: response.data.birth_day,
-            shaba: response.data.shaba_code,
+            birth_day: response.data.birth_day,
+            shaba_code: response.data.shaba_code,
             national_code: response.data.national_code,
           });
-          console.log("this is the hotel owner: ", ownerInfos);
           setLoading(false);
         })
         .catch((error) => {
@@ -169,318 +186,94 @@ export default function ManagerProfile(props) {
     return () => clearInterval(id);
   }, [api, authData, loading, ownerInfos]);
 
-  const handleGender = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setGenders(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
 
   const reHandleGender = (e) => {
-    setGenders(e.target.value);
-  };
-
-  const handleDay = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setDay(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    setGender(e.target.value);
   };
 
   const reHandleDay = (e) => {
     setDay(e.target.value);
   };
 
-  const handleMonth = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setMonth(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
 
   const reHandleMonth = (e) => {
     setMonth(e.target.value);
   };
 
-  const handleYear = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setYear(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
 
   const reHandleYear = (e) => {
     setYear(e.target.value);
   };
 
-  const validationSchema = Yup.object({
-    firstName: Yup.string().required("نام ضروری است"),
-    lastName: Yup.string().required("نام خانوادگی ضروری است"),
-    fatherName: Yup.string().required("نام پدر ضروری است"),
-    identityNumber: Yup.string().required("شماره شناسنامه ضروری است"),
-    socialNumber: Yup.string().required("کد ملی ضروری است"),
-    // sex: Yup.string().required("جنسیت ضروری است"),
-    firstPhoneNumber: Yup.string().required("تلفن همراه ضروری است"),
-    secondPhoneNumber: Yup.string(),
-    areaCode: Yup.string(),
-    telephoneNumber: Yup.string(),
-    address: Yup.string(),
-    birthYear: Yup.string().required("سال تولد ضروری است"),
-    // birthMonth: Yup.string().required("ماه تولد ضروری است"),
-    // birthDay: Yup.string().required("روز تولد ضروری است"),
-    shaba: Yup.string().required("شماره شبا ضروری است"),
-  });
 
-  const gender = ["مونث", "مذکر"];
-  const days = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-    "25",
-    "26",
-    "27",
-    "28",
-    "29",
-    "30",
-    "31",
-  ];
-  const months = [
-    "فروردین",
-    "اردیبهشت",
-    "خرداد",
-    "تیر",
-    "مرداد",
-    "شهریور",
-    "مهر",
-    "آبان",
-    "آذر",
-    "دی",
-    "بهمن",
-    "اسفند",
-  ];
-  const years = [
-    "1300",
-    "1301",
-    "1302",
-    "1303",
-    "1304",
-    "1305",
-    "1306",
-    "1307",
-    "1308",
-    "1309",
-    "1310",
-    "1311",
-    "1312",
-    "1313",
-    "1314",
-    "1315",
-    "1316",
-    "1317",
-    "1318",
-    "1319",
-    "1320",
-    "1321",
-    "1322",
-    "1323",
-    "1324",
-    "1325",
-    "1326",
-    "1327",
-    "1328",
-    "1329",
-    "1330",
-    "1331",
-    "1332",
-    "1333",
-    "1334",
-    "1335",
-    "1336",
-    "1337",
-    "1338",
-    "1339",
-    "1340",
-    "1341",
-    "1342",
-    "1343",
-    "1344",
-    "1345",
-    "1346",
-    "1347",
-    "1348",
-    "1349",
-    "1350",
-    "1351",
-    "1352",
-    "1353",
-    "1354",
-    "1355",
-    "1356",
-    "1357",
-    "1358",
-    "1359",
-    "1360",
-    "1361",
-    "1362",
-    "1363",
-    "1364",
-    "1365",
-    "1366",
-    "1367",
-    "1368",
-    "1369",
-    "1370",
-    "1371",
-    "1372",
-    "1373",
-    "1374",
-    "1375",
-    "1376",
-    "1377",
-    "1378",
-    "1379",
-    "1380",
-    "1381",
-  ];
+  const genders = ["مذکر", "مونث", ];
 
   const formik = useFormik({
     initialValues: formValue,
 
     onSubmit: (values) => {
-      console.log("on formik");
       let formData = new FormData();
-      formData.append("first_name", formValue.firstName);
-      formData.append("last_name", formValue.lastName);
-      // formData.append('fatherName', formValue.fatherName);
-      // formData.append('identityNumber', formValue.identityNumber);
-      // formData.append('socialNumber', formValue.socialNumber);
-      // formData.append('sex', formValue.sex);
-      formData.append("firstPhoneNumber", formValue.firstPhoneNumber);
-      formData.append("secondPhoneNumber", formValue.secondPhoneNumber);
-      formData.append("firstName", formValue.firstName);
-      formData.append("areaCode", formValue.areaCode);
-      formData.append("telephoneNumber", formValue.telephoneNumber);
+      let user = {
+        first_name: formValue.first_name,
+        last_name: formValue.last_name,
+        email: ownerInfos.email,
+        usrname: ownerInfos.username,
+      };
+      formData.append("user", user);
+      formData.append("first_phone_number", formValue.first_phone_number);
+      formData.append("gender", formValue.gender);
+      formData.append("national_code", formValue.national_code);
+      formData.append("father_name", formValue.father_name);
+      formData.append("second_phone_number", formValue.second_phone_number);
+      formData.append("area_code", formValue.area_code);
+      formData.append("telephone_number", formValue.telephone_number);
       formData.append("address", formValue.address);
       formData.append(
         "birth_day",
         `${formValue.birthYear}-${formValue.birthMonth}-${formValue.birthDay}`
       );
-      // formData.append('birthMonth', formValue.birthMonth);
-      // formData.append('birthDay', formValue.birthDay);
-      formData.append("shaba", formValue.shaba);
+      console.log(`${formValue.birthYear}-${formValue.birthMonth}-${formValue.birthDay}`)
+      formData.append("shaba_code", formValue.shaba_code);
 
-      console.log("formdata", formData);
-      api
-        .put(`/api/hotel/owner/${authData["child-id"]}/`, formData, {
-          headers: {
-            Authorization: "Bearer " + authData?.access,
-          },
-          // headers:
-          // {
-          //     'Content-Type': 'multipart/form-data',
-          //     Authorization: `Bearer ${authData.access}`
-          // }
-        })
-        .then((res) => {
-          toast.success("اطلاعات با موفقیت ثبت شد", {
-            position: "top-right",
-            autoClose: 2000,
-          });
-        })
-        .catch((err) =>
-          toast.error("مشکلی پیش آمده", {
-            position: "top-right",
-            autoClose: 2000,
-          })
-        );
+
+      console.log("formdata: ", formData);
+
+    //   api
+    //     .put(`/api/hotel/owner/${authData["child-id"]}/`, formData, {
+    //       headers: {
+    //         Authorization: "Bearer " + authData?.access,
+    //       },
+    //       // headers:
+    //       // {
+    //       //     'Content-Type': 'multipart/form-data',
+    //       //     Authorization: `Bearer ${authData.access}`
+    //       // }
+    //     })
+    //     .then((res) => {
+    //       toast.success("اطلاعات با موفقیت ثبت شد", {
+    //         position: "top-right",
+    //         autoClose: 2000,
+    //       });
+    //     })
+    //     .catch((err) =>
+    //       toast.error("مشکلی پیش آمده", {
+    //         position: "top-right",
+    //         autoClose: 2000,
+    //       })
+    //     );
     },
 
     validationSchema: validationSchema,
   });
 
-  function postHotel(hotel) {
-    let formData = new FormData();
-    formData.append("firstName", hotel.firstName);
-    formData.append("lastName", hotel.lastName);
-    formData.append("fatherName", hotel.fatherName);
-    formData.append("identityNumber", hotel.identityNumber);
-    formData.append("socialNumber", hotel.socialNumber);
-    // formData.append('sex', hotel.sex);
-    formData.append("firstPhoneNumber", hotel.firstPhoneNumber);
-    formData.append("secondPhoneNumber", hotel.secondPhoneNumber);
-    formData.append("firstName", hotel.firstName);
-    formData.append("areaCode", hotel.areaCode);
-    formData.append("telephoneNumber", hotel.telephoneNumber);
-    formData.append("address", hotel.address);
-    formData.append("birth_day", hotel.birthYear);
-    // formData.append('birthMonth', hotel.birthMonth);
-    // formData.append('birthDay', hotel.birthDay);
-    formData.append("shaba", hotel.shaba);
 
-    api
-      .put(`/api/hotel/owner/${authData["child-id"]}/`, formData, {
-        headers: {
-          Authorization: "Bearer " + authData?.access,
-        },
-        // headers:
-        // {
-        //     'Content-Type': 'multipart/form-data',
-        //     Authorization: `Bearer ${authData.access}`
-        // }
-      })
-      .then((res) =>
-        toast.success("اطلاعات با موفقیت ثبت شد", {
-          position: "top-right",
-          autoClose: 2000,
-        })
-      )
-      .catch((err) =>
-        toast.error("مشکلی پیش آمده", {
-          position: "top-right",
-          autoClose: 2000,
-        })
-      );
-  }
 
   return (
     <Container>
       <Box
         onSubmit={formik.handleSubmit}
         component="form"
-        autoComplete="off"
+        // autoComplete="off"
         mt={5}
         sx={{
           bgcolor: "rgb(245, 246, 248)",
@@ -522,31 +315,32 @@ export default function ManagerProfile(props) {
           <Grid item xs={12} md={6} lg={4}>
             <STextField
               fullWidth
-              error={formik.errors["firstName"] && formik.touched["firstName"]}
+              error={formik.errors["first_name"] && formik.touched["first_name"]}
               variant="filled"
+              value = {ownerInfos.first_name}
               label="نام"
-              name="firstName"
+              name="first_name"
               type="text"
               helperText={
-                formik.touched["firstName"] && formik.errors["firstName"]
+                formik.touched["first_name"] && formik.errors["first_name"]
               }
-              {...formik.getFieldProps("firstName")}
+              {...formik.getFieldProps("first_name")}
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
             <STextField
               fullWidth
-            //   value={ownerInfos.lastName}
-              error={formik.errors["lastName"] && formik.touched["lastName"]}
+              value={ownerInfos.last_name}
+              error={formik.errors["last_name"] && formik.touched["last_name"]}
               variant="filled"
               label="نام خانوادگی"
-              name="lastName"
+              name="last_name"
               type="text"
               helperText={
-                formik.touched["lastName"] && formik.errors["lastName"]
+                formik.touched["last_name"] && formik.errors["last_name"]
               }
-              {...formik.getFieldProps("lastName")}
+              {...formik.getFieldProps("last_name")}
             />
           </Grid>
 
@@ -554,16 +348,16 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={
-                formik.errors["fatherName"] && formik.touched["fatherName"]
+                formik.errors["father_name"] && formik.touched["father_name"]
               }
               variant="filled"
               label="نام پدر"
-              name="fatherName"
+              name="father_name"
               type="text"
               helperText={
-                formik.touched["fatherName"] && formik.errors["fatherName"]
+                formik.touched["father_name"] && formik.errors["father_name"]
               }
-              {...formik.getFieldProps("fatherName")}
+              {...formik.getFieldProps("father_name")}
             />
           </Grid>
 
@@ -576,10 +370,10 @@ export default function ManagerProfile(props) {
                 value={gender}
                 label="جنسیت"
                 onChange={reHandleGender}
-                error={formik.errors["sex"] && formik.touched["sex"]}
+                error={formik.errors["gender"] && formik.touched["gender"]}
                 {...formik.getFieldProps("gender")}
               >
-                {gender.map((feat, ind) => (
+                {genders.map((feat, ind) => (
                   <MenuItem key={ind} value={feat}>
                     {/* <Checkbox checked={genders.indexOf(feat) > -1} /> */}
                     <ListItemText primary={feat} />
@@ -612,16 +406,16 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={
-                formik.errors["socialNumber"] && formik.touched["socialNumber"]
+                formik.errors["national_code"] && formik.touched["national_code"]
               }
               variant="filled"
               label="کد ملی"
-              name="socialNumber"
+              name="national_code"
               type="text"
               helperText={
-                formik.touched["socialNumber"] && formik.errors["socialNumber"]
+                formik.touched["national_code"] && formik.errors["national_code"]
               }
-              {...formik.getFieldProps("socialNumber")}
+              {...formik.getFieldProps("national_code")}
             />
           </Grid>
 
@@ -629,18 +423,18 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={
-                formik.errors["firstPhoneNumber"] &&
-                formik.touched["firstPhoneNumber"]
+                formik.errors["first_phone_number"] &&
+                formik.touched["first_phone_number"]
               }
               variant="filled"
               label="تلفن همراه اول"
-              name="firstPhoneNumber"
+              name="first_phone_number"
               type="text"
               helperText={
-                formik.touched["firstPhoneNumber"] &&
-                formik.errors["firstPhoneNumber"]
+                formik.touched["first_phone_number"] &&
+                formik.errors["first_phone_number"]
               }
-              {...formik.getFieldProps("firstPhoneNumber")}
+              {...formik.getFieldProps("first_phone_number")}
             />
           </Grid>
 
@@ -648,18 +442,18 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={
-                formik.errors["secondPhoneNumber"] &&
-                formik.touched["secondPhoneNumber"]
+                formik.errors["second_phone_number"] &&
+                formik.touched["second_phone_number"]
               }
               variant="filled"
               label="تلفن همراه دوم"
-              name="secondPhoneNumber"
+              name="second_phone_number"
               type="text"
               helperText={
-                formik.touched["secondPhoneNumber"] &&
-                formik.errors["secondPhoneNumber"]
+                formik.touched["second_phone_number"] &&
+                formik.errors["second_phone_number"]
               }
-              {...formik.getFieldProps("secondPhoneNumber")}
+              {...formik.getFieldProps("second_phone_number")}
             />
           </Grid>
 
@@ -673,7 +467,7 @@ export default function ManagerProfile(props) {
                 label="روز تولد"
                 onChange={reHandleDay}
                 error={formik.errors["birthDay"] && formik.touched["birthDay"]}
-                {...formik.getFieldProps("day")}
+                {...formik.getFieldProps("birthDay")}
               >
                 {days.map((feat, ind) => (
                   <MenuItem key={ind} value={feat}>
@@ -697,7 +491,7 @@ export default function ManagerProfile(props) {
                 error={
                   formik.errors["birthMonth"] && formik.touched["birthMonth"]
                 }
-                {...formik.getFieldProps("month")}
+                {...formik.getFieldProps("birthMonth")}
               >
                 {months.map((feat, ind) => (
                   <MenuItem key={ind} value={feat}>
@@ -750,15 +544,15 @@ export default function ManagerProfile(props) {
           <Grid item xs={12} md={6}>
             <STextField
               fullWidth
-              error={formik.errors["areaCode"] && formik.touched["areaCode"]}
+              error={formik.errors["area_code"] && formik.touched["area_code"]}
               variant="filled"
               label="کد شهرستان"
-              name="areaCode"
+              name="area_code"
               type="text"
               helperText={
-                formik.errors["areaCode"] && formik.touched["areaCode"]
+                formik.errors["area_code"] && formik.touched["area_code"]
               }
-              {...formik.getFieldProps("areaCode")}
+              {...formik.getFieldProps("area_code")}
             />
           </Grid>
 
@@ -766,18 +560,18 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={
-                formik.errors["telephoneNumber"] &&
-                formik.touched["telephoneNumber"]
+                formik.errors["telephone_number"] &&
+                formik.touched["telephone_number"]
               }
               variant="filled"
               label="تلفن ثابت"
-              name="telephoneNumber"
+              name="telephone_number"
               type="text"
               helperText={
-                formik.errors["telephoneNumber"] &&
-                formik.touched["telephoneNumber"]
+                formik.errors["telephone_number"] &&
+                formik.touched["telephone_number"]
               }
-              {...formik.getFieldProps("telephoneNumber")}
+              {...formik.getFieldProps("telephone_number")}
             />
           </Grid>
 
@@ -811,19 +605,19 @@ export default function ManagerProfile(props) {
           <Grid item xs={12} md={6}>
             <STextField
               fullWidth
-              error={formik.errors["shaba"] && formik.touched["shaba"]}
+              error={formik.errors["shaba_code"] && formik.touched["shaba_code"]}
               variant="filled"
               label="شماره شبا"
-              name="shaba"
+              name="shaba_code"
               type="text"
-              helperText={formik.errors["shaba"] && formik.touched["shaba"]}
-              {...formik.getFieldProps("shaba")}
+              helperText={formik.errors["shaba_code"] && formik.touched["shaba_code"]}
+              {...formik.getFieldProps("shaba_code")}
             />
           </Grid>
           <Grid item xs={12} sx={{ marginTop: "20px" }}>
             <Button
               type="submit"
-              // disabled={(formik.isValid)}
+              disabled={!(formik.isValid)}
               variant="contained"
               color="hotel"
               style={{ fontSize: "15px" }}
