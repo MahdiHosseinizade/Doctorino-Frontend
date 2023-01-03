@@ -433,7 +433,7 @@ export default function HotelProfileCompletion() {
         formData.append("hotel_description", values.hotel_description);
         formData.append("address", values.address);
         formData.append("rules", values.rules);
-        formData.append("stars", values.stars);
+        formData.append("hotel_stars", values.stars);
         formData.append("province", values.province);
         formData.append("city", values.city);
 
