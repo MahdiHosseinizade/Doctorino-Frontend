@@ -14,6 +14,7 @@ import theme from "../../assets/theme/defaultTheme";
 import { makeStyles } from "@mui/styles";
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import { baseURL } from '../../utils/useAxios';
 
 
 
@@ -50,7 +51,7 @@ export default function DoctorCard({ doctor }) {
             <CardMedia
               component="img"
               className={classes.doctorImage}
-              image={doctor?.image}
+              image={doctor && doctor.image ? doctor.image.includes(baseURL) ? doctor.image : baseURL + doctor.image : null}
               alt="profile-picture"
             />
           </a>
@@ -103,7 +104,8 @@ export default function DoctorCard({ doctor }) {
                 <hr width="100%" /> */}
 
               <Typography variant="body2" sx={{ fontSize: "15px", marginBottom: "10px" }}>
-                <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{doctor?.city}
+                <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} />
+                <span>     </span>{doctor?.province} - {doctor?.city}
               </Typography>
 
               <Typography
