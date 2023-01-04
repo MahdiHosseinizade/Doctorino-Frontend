@@ -5,9 +5,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import AuthContext from '../../../context/AuthContext';
-import { Grid, TextField } from "@mui/material";
+import { Grid, IconButton, InputAdornment, TextField } from "@mui/material";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useHistory } from "react-router-dom";
 import { baseURL } from "../../../utils/useAxios";
 
@@ -41,8 +42,13 @@ const validationSchema = Yup.object({
 
 
 const Hotelregister = () => {
-  const history = useHistory();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfrim, setShowPasswordConfrim] = useState(false);
   const [user, setUser] = useState([]);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const handleClickShowPasswordConfrim = () => setShowPasswordConfrim(!showPasswordConfrim);
+  const handleMouseDownPasswordConfrim = () => setShowPasswordConfrim(!showPasswordConfrim);
 
   const { loginUser } = useContext(AuthContext);
 
@@ -158,7 +164,20 @@ const Hotelregister = () => {
               variant="outlined"
               label="کلمه عبور"
               name="pass"
-              type="password"
+              type={showPassword ? "text" : "password"}
+              InputProps={{ // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
               helperText={
                 formik.errors["pass"] &&
                 formik.touched["pass"] &&
@@ -174,7 +193,20 @@ const Hotelregister = () => {
               variant="outlined"
               label="تکرار کلمه عبور"
               name="tPass"
-              type="password"
+              type = {showPasswordConfrim ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPasswordConfrim}
+                          onMouseDown={handleMouseDownPasswordConfrim}
+                        >
+                          {showPasswordConfrim ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
               helperText={
                 formik.errors["rPass"] &&
                 formik.touched["rPass"] &&
