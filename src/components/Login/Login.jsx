@@ -75,12 +75,7 @@ const Login = ({ history }) => {
     validateOnMount: true,
   });
 
-  // useEffect(() => {
-  //   if (document.cookie.token ) {
-  //     history.push("/hotel-panel");
 
-  //   }
-  //   },[])
 
   const postuserHandler = (user) => {
     axios
