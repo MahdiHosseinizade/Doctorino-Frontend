@@ -114,17 +114,17 @@ const validationSchema = Yup.object({
   first_name: Yup.string().required("نام ضروری است"),
   last_name: Yup.string().required("نام خانوادگی ضروری است"),
   father_name: Yup.string().required("نام پدر ضروری است"),
-  national_code: Yup.string().required("کد ملی ضروری است"),
+  national_code: Yup.string().required("کد ملی ضروری است").min(10, 'کد ملی باید 10 رقم باشد').max(10, 'کد ملی باید 10 رقم باشد'),
   gender: Yup.string().required('جنسیت ضروری است'),
-  first_phone_number: Yup.number().required("تلفن همراه ضروری است"),
-  second_phone_number: Yup.number(),
+  first_phone_number: Yup.string().required("تلفن همراه ضروری است").min(11, 'تلفن همراه باید 11 رقم باشد').max(11, 'تلفن همراه باید 1 رقم باشد'),
+  second_phone_number: Yup.string().min(11, 'تلفن همراه باید 11 رقم باشد').max(11, 'تلفن همراه باید 11 رقم باشد'),
   area_code: Yup.string(),
   telephone_number: Yup.string(),
   address: Yup.string(),
   birthDay: Yup.string().required("روز تولد ضروری است"),
   birthMonth: Yup.string().required("ماه تولد ضروری است"),
   birthYear: Yup.string().required("سال تولد ضروری است"),
-  shaba_code: Yup.number().required("شماره شبا ضروری است"),
+  shaba_code: Yup.string().required("شماره شبا ضروری است").min(12, "شماره شبا  باید حداقل 12 رقم باشد"),
 });
 
 
@@ -212,55 +212,55 @@ export default function ManagerProfile(props) {
     initialValues: formValue,
 
     onSubmit: (values) => {
+      
       let formData = new FormData();
       let user = {
-        first_name: formValue.first_name,
-        last_name: formValue.last_name,
+        first_name: values.first_name,
+        last_name: values.last_name,
         email: ownerInfos.email,
         usrname: ownerInfos.username,
       };
       formData.append("user", user);
-      formData.append("first_phone_number", formValue.first_phone_number);
-      formData.append("gender", formValue.gender);
-      formData.append("national_code", formValue.national_code);
-      formData.append("father_name", formValue.father_name);
-      formData.append("second_phone_number", formValue.second_phone_number);
-      formData.append("area_code", formValue.area_code);
-      formData.append("telephone_number", formValue.telephone_number);
-      formData.append("address", formValue.address);
+      formData.append("first_phone_number", values.first_phone_number);
+      formData.append("gender", genders.indexOf(values.gender));
+      formData.append("national_code", values.national_code);
+      formData.append("father_name", values.father_name);
+      formData.append("second_phone_number", values.second_phone_number);
+      formData.append("area_code", values.area_code);
+      formData.append("telephone_number", values.telephone_number);
+      formData.append("address", values.address);
       formData.append(
         "birth_day",
-        `${formValue.birthYear}-${formValue.birthMonth}-${formValue.birthDay}`
+        `${values.birthYear}-${months.indexOf(values.birthMonth)+1}-${values.birthDay}`
       );
-      console.log(`${formValue.birthYear}-${formValue.birthMonth}-${formValue.birthDay}`)
-      formData.append("shaba_code", formValue.shaba_code);
+      formData.append("shaba_code", values.shaba_code);
 
+      // for (let key of formData.entries())
+      // console.log(key[0], key[1])
 
-      console.log("formdata: ", formData);
-
-    //   api
-    //     .put(`/api/hotel/owner/${authData["child-id"]}/`, formData, {
-    //       headers: {
-    //         Authorization: "Bearer " + authData?.access,
-    //       },
-    //       // headers:
-    //       // {
-    //       //     'Content-Type': 'multipart/form-data',
-    //       //     Authorization: `Bearer ${authData.access}`
-    //       // }
-    //     })
-    //     .then((res) => {
-    //       toast.success("اطلاعات با موفقیت ثبت شد", {
-    //         position: "top-right",
-    //         autoClose: 2000,
-    //       });
-    //     })
-    //     .catch((err) =>
-    //       toast.error("مشکلی پیش آمده", {
-    //         position: "top-right",
-    //         autoClose: 2000,
-    //       })
-    //     );
+      api
+        .put(`/api/hotel/owner/${authData["child-id"]}/`, formData, {
+          headers: {
+            Authorization: "Bearer " + authData?.access,
+          },
+          // headers:
+          // {
+          //     'Content-Type': 'multipart/form-data',
+          //     Authorization: `Bearer ${authData.access}`
+          // }
+        })
+        .then((res) => {
+          toast.success("اطلاعات با موفقیت ثبت شد", {
+            position: "top-right",
+            autoClose: 2000,
+          });
+        })
+        .catch((err) =>
+          toast.error("مشکلی پیش آمده", {
+            position: "top-right",
+            autoClose: 2000,
+          })
+        );
     },
 
     validationSchema: validationSchema,
