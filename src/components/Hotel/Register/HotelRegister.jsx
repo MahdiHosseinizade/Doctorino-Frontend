@@ -5,9 +5,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import AuthContext from '../../../context/AuthContext';
-import { Grid, TextField } from "@mui/material";
+import { Grid, IconButton, InputAdornment, TextField } from "@mui/material";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 // import useHistory from "react-router-dom";
 
 const baseURL = "http://188.121.113.74"
@@ -41,8 +42,13 @@ const validationSchema = Yup.object({
 
 
 const Hotelregister = () => {
-  // const history = useHistory();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfrim, setShowPasswordConfrim] = useState(false);
   const [user, setUser] = useState([]);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const handleClickShowPasswordConfrim = () => setShowPasswordConfrim(!showPasswordConfrim);
+  const handleMouseDownPasswordConfrim = () => setShowPasswordConfrim(!showPasswordConfrim);
 
     const { loginUser } = useContext(AuthContext);
 
@@ -71,16 +77,14 @@ const Hotelregister = () => {
                 loginUser(hotel.email, hotel.pass);
             })
             .catch(
-                (err) => {
-                    console.log(err);
-                    toast.error(
-                        'مشکلی پیش آمده است',
-                        {
-                            position: "top-right",
-                            autoClose: 2000,
-                        }
-                    )
-                }
+                (err) => {         
+                  if (err.response.data.email){
+                    toast.error('ایمیل وارد شده تکراری است', {
+                      position: "top-right",
+                      autoClose: 3000,
+                    })
+                  }
+              }
             );
     }
 
@@ -102,7 +106,6 @@ const Hotelregister = () => {
         <Grid container spacing={1}>
           <Grid item md={6} xs={6}>
             <STextField
-              // id="first_name"
               fullWidth
               error={
                 formik.errors["name"] && formik.touched["name"]
@@ -118,15 +121,8 @@ const Hotelregister = () => {
               }
               {...formik.getFieldProps("name")}
             />
-            {/* <Input label="نام" name="name" formik={formik} type="text" /> */}
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              label="نام خانوادگی"
-              name="family"
-              formik={formik}
-              type="text"
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["family"] && formik.touched["family"]}
@@ -144,7 +140,6 @@ const Hotelregister = () => {
           </Grid>
           <Grid item md={12} xs={12}>
             <STextField
-              // id="first_name"
               fullWidth
               error={formik.errors["email"] && formik.touched["email"]}
               variant="outlined"
@@ -158,23 +153,28 @@ const Hotelregister = () => {
               }
               {...formik.getFieldProps("email")}
             />
-            {/* <Input label="ایمیل" name="email" formik={formik} type="email" /> */}
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              label="رمز عبور"
-              name="pass"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
-              // id="first_name"
               fullWidth
               error={formik.errors["pass"] && formik.touched["pass"]}
               variant="outlined"
               label="کلمه عبور"
               name="pass"
-              type="password"
+              type={showPassword ? "text" : "password"}
+              InputProps={{ // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
               helperText={
                 formik.errors["pass"] &&
                 formik.touched["pass"] &&
@@ -184,19 +184,26 @@ const Hotelregister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              label="تکرار رمز عبور"
-              name="rPass"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["rPass"] && formik.touched["rPass"]}
               variant="outlined"
               label="تکرار کلمه عبور"
               name="tPass"
-              type="password"
+              type = {showPasswordConfrim ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPasswordConfrim}
+                          onMouseDown={handleMouseDownPasswordConfrim}
+                        >
+                          {showPasswordConfrim ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
               helperText={
                 formik.errors["rPass"] &&
                 formik.touched["rPass"] &&
