@@ -55,9 +55,7 @@ const Login = ({ history }) => {
   const formik = useFormik({
     initialValues: value,
     onSubmit: (values, e) => {
-      // postuserHandler(values);
       loginUser(values.email, values.password);
-      // if login successfull redirect to landing page
       if (document.cookie.token) {
         history.push("/");
       }
@@ -67,12 +65,7 @@ const Login = ({ history }) => {
     validateOnMount: true,
   });
 
-  // useEffect(() => {
-  //   if (document.cookie.token ) {
-  //     history.push("/hotel-panel");
 
-  //   }
-  //   },[])
 
   const postuserHandler = (user) => {
     axios

@@ -51,7 +51,6 @@ const SickRegister = () => {
     onSubmit: (values, e) => {
       // console.log(values);
       postsickHandler(values);
-      history.push("/login");
       e.preventDefault();
     },
     validationSchema: validationSchema,
@@ -93,7 +92,7 @@ const SickRegister = () => {
 //             )
 //         }
 //     );
-  const postsickHandler = (user) => {
+  const postsickHandler = async (user) => {
     // post Header in Body Request
     // console.log(user);
     const userData = {
@@ -104,7 +103,7 @@ const SickRegister = () => {
         password: user.password,
       }
     }
-    axios.post("http://188.121.113.74/api/auth/patient/new/",userData)
+    await axios.post("http://188.121.113.74/api/auth/patient/new/",userData)
     .then((res) =>{
       toast.success(
         `ثبت نام ${res.data.user.first_name} ${res.data.user.last_name} با موفقیت انجام شد`,
@@ -115,16 +114,14 @@ const SickRegister = () => {
       )
       history.push("/login");
     })
-    .catch((err) =>{
-      console.log(err);
-      toast.error(
-        'مشکلی پیش آمده است',
-        {
-            position: "top-right",
-            autoClose: 3000,
-        }
-      )
-    })
+    .catch((err) =>{         
+      if (err.response.data.email){
+        toast.error('ایمیل وارد شده تکراری است', {
+          position: "top-right",
+          autoClose: 3000,
+        })
+      }
+  })
     // axios
     //   .post("http://188.121.113.74/api/auth/patient/new/", user)
     //   .then((res) => {
