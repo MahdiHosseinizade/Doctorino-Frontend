@@ -9,6 +9,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import NavBar from "../../NavBar/newNavBar";
 import { Schedule } from "@mui/icons-material";
+import NotFound from "../../../pages/NotFoundPage";
 
 export default function DoctorProfileLayout() {
 
@@ -16,13 +17,18 @@ export default function DoctorProfileLayout() {
     const [doctor, setDoctor] = useState();
     // const [scheduleTime, setScheduleTime] = useState();
     const [loading, setLoading] = useState(true);
+    const [loaded, setLoaded] = useState(true);
 
     function fetchData1() {
         axios.get(`http://188.121.113.74/api/doctor/${id}/?`)
             .then(res => {
                 setDoctor(res.data);
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                if (err.response.status === 404) {
+                    setLoaded(false);
+                }
+            })
 
         setLoading(false);
     }
@@ -44,49 +50,55 @@ export default function DoctorProfileLayout() {
             // fetchData2();
         }
 
-    }, [loading, doctor, setLoading, setDoctor,])
+    }, [loading, doctor, setLoading, setDoctor, loaded])
 
     return (
-        <Container>
-            <NavBar />
-            <CssBaseline />
-            <Grid container spacing={4}>
-                <Grid
-                    xs={7}
-                    md={7}
-                    lg={7}
-                    item
-                    sx={{
-                        Width: "100%",
-                        display: "static",
-                        height: "auto",
-                        alignItems: "center",
-                        boxSizing: " border-box"
-                    }}
-                >
-                    <DoctorProfile doctor={doctor} />
-                </Grid>
+        <>
+            {loaded ?
+                <Container>
+                    <NavBar />
+                    <CssBaseline />
+                    <Grid container spacing={4}>
+                        <Grid
+                            xs={7}
+                            md={7}
+                            lg={7}
+                            item
+                            sx={{
+                                Width: "100%",
+                                display: "static",
+                                height: "auto",
+                                alignItems: "center",
+                                boxSizing: " border-box"
+                            }}
+                        >
+                            <DoctorProfile doctor={doctor} />
+                        </Grid>
 
-                <Grid
-                    item
+                        <Grid
+                            item
 
-                    xs={4.5}
-                    md={4.5}
-                    lg={4.5}
-                    sx={{
-                        mr: "10px",
-                        Width: "100%",
-                        display: "static",
-                        position: "static",
-                        flexDirection: "row",
-                        height: "auto",
-                        alignItems: "center",
-                        boxSizing: " border-box"
-                    }}
-                >
-                    <ScheduleTime  doctor={doctor}/>
-                </Grid>
-            </Grid>
-        </Container >
+                            xs={4.5}
+                            md={4.5}
+                            lg={4.5}
+                            sx={{
+                                mr: "10px",
+                                Width: "100%",
+                                display: "static",
+                                position: "static",
+                                flexDirection: "row",
+                                height: "auto",
+                                alignItems: "center",
+                                boxSizing: " border-box"
+                            }}
+                        >
+                            <ScheduleTime doctor={doctor} />
+                        </Grid>
+                    </Grid>
+                </Container >
+                :
+                <NotFound /> 
+            }
+        </>
     );
 }

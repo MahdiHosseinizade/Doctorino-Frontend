@@ -32,6 +32,7 @@ import { FaChild } from "react-icons/fa";
 import { RiBilliardsFill } from "react-icons/ri";
 import { AiFillSafetyCertificate } from "react-icons/ai";
 import NavBar from "../../NavBar/newNavBar";
+import NotFound from "../../../pages/NotFoundPage";
 // import moment from "jalali-moment";
 // import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
 // import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
@@ -114,6 +115,7 @@ const Hotel = () => {
   const [fromTime, setFromTime] = useState(new Date());
   const [toTime, setToTime] = useState(new Date());
   const [availableRooms, setAvailableRooms] = useState([]);
+  const [loaded, setLoaded] = useState(true);
   const { id } = useParams();
   const [hotel, setHotel] = useState();
   console.log(hotel);
@@ -129,7 +131,12 @@ const Hotel = () => {
         setHotel({ ...res.data });
         setHotel({ ...res.data });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if (err.response.status === 404) {
+          setLoaded(false);
+        }
+        console.log(err)
+      });
   };
   // I want to implement features of hotel with icons
 
@@ -151,8 +158,7 @@ const Hotel = () => {
     // console.log("toTime: ", toTime.toISOString().split("T")[0]);
     await axios
       .get(
-        `http://188.121.113.74/api/hotel/${id}/${
-          fromTime.toISOString().split("T")[0]
+        `http://188.121.113.74/api/hotel/${id}/${fromTime.toISOString().split("T")[0]
         }/${toTime.toISOString().split("T")[0]}/available_rooms/`
       )
       .then((response) => {
@@ -166,167 +172,169 @@ const Hotel = () => {
   };
 
   return (
-    <Container className={classes.container}>
-      <NavBar />
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={12}>
-          <Card className={classes.card}>
-            <Grid container sx={{ marginTop: "10px" }}>
-              <Grid
-                item
-                xs={12}
-                lg={6}
-                sx={{
-                  display: "flex",
-                  // position: "sticky",
-                  top: "0",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: "20px",
-                }}
-              >
-                <CardMedia
-                  // sx={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px",marginRight: "20px"}}
-                  component="img"
-                  className={classes.hotel_image}
-                  image={hotel?.cover_image}
-                  alt="hotel image"
-                />
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <CardContent sx={{ marginTop: "20px" }}>
-                  <Box>
-                    <Grid container spacing={3.5}>
-                      <Grid item xs={12} md={12}>
-                        {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
-                        <Typography
-                          variant="subtitle2"
-                          sx={{ fontSize: "20px", display: "flex" }}
-                        >
-                          <PlaceOutlinedIcon
-                            color="warning"
-                            sx={{ marginBottom: "-2px" }}
-                          />
-                          <span> آدرس : </span>
-                          {hotel?.address}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                      <Typography
-                        noWrap
-                        variant="subtitle2"
-                        sx={{ fontSize: "18px", display: "inline" }}
-                      >
-                        <VerifiedIcon
-                          color="warning"
-                          sx={{ marginBottom: "-7px" }}
-                        />
-                        <span> </span> هتل
-                      </Typography>
+    <>
+      {loaded ?
+        <Container className={classes.container}>
+          <NavBar />
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={12}>
+              <Card className={classes.card}>
+                <Grid container sx={{ marginTop: "10px" }}>
+                  <Grid
+                    item
+                    xs={12}
+                    lg={6}
+                    sx={{
+                      display: "flex",
+                      // position: "sticky",
+                      top: "0",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <CardMedia
+                      // sx={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px",marginRight: "20px"}}
+                      component="img"
+                      className={classes.hotel_image}
+                      image={hotel?.cover_image}
+                      alt="hotel image"
+                    />
+                  </Grid>
+                  <Grid item xs={12} lg={6}>
+                    <CardContent sx={{ marginTop: "20px" }}>
+                      <Box>
+                        <Grid container spacing={3.5}>
+                          <Grid item xs={12} md={12}>
+                            {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
+                            <Typography
+                              variant="subtitle2"
+                              sx={{ fontSize: "20px", display: "flex" }}
+                            >
+                              <PlaceOutlinedIcon
+                                color="warning"
+                                sx={{ marginBottom: "-2px" }}
+                              />
+                              <span> آدرس : </span>
+                              {hotel?.address}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={12}>
+                          <Typography
+                            noWrap
+                            variant="subtitle2"
+                            sx={{ fontSize: "18px", display: "inline" }}
+                          >
+                            <VerifiedIcon
+                              color="warning"
+                              sx={{ marginBottom: "-7px" }}
+                            />
+                            <span> </span> هتل
+                          </Typography>
 
-                      <Typography
-                        noWrap
-                        variant="subtitle1"
-                        sx={{
-                          fontSize: "17px",
-                          display: "inline",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        {hotel?.hotel_name}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                      <Typography
-                        noWrap
-                        variant="subtitle2"
-                        sx={{ fontSize: "18px", display: "inline" }}
-                      >
-                        <Star color="warning" sx={{ marginBottom: "-7px" }} />
-                      </Typography>
+                          <Typography
+                            noWrap
+                            variant="subtitle1"
+                            sx={{
+                              fontSize: "17px",
+                              display: "inline",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            {hotel?.hotel_name}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={12}>
+                          <Typography
+                            noWrap
+                            variant="subtitle2"
+                            sx={{ fontSize: "18px", display: "inline" }}
+                          >
+                            <Star color="warning" sx={{ marginBottom: "-7px" }} />
+                          </Typography>
 
-                      <Typography
-                        noWrap
-                        variant="subtitle1"
-                        sx={{
-                          fontSize: "17px",
-                          display: "inline",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        {hotel?.hotel_stars}
-                        <span> </span> ستاره
-                      </Typography>
-                    </Grid>
-                  </Box>
-                </CardContent>
-              </Grid>
+                          <Typography
+                            noWrap
+                            variant="subtitle1"
+                            sx={{
+                              fontSize: "17px",
+                              display: "inline",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            {hotel?.hotel_stars}
+                            <span> </span> ستاره
+                          </Typography>
+                        </Grid>
+                      </Box>
+                    </CardContent>
+                  </Grid>
+                </Grid>
+              </Card>
             </Grid>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card className={classes.featureCard}>
-            <div>
-              <CardHeader
-                title="امکانات و ویژگی ها"
-                className="h2_emkanat"
-                sx={{ fontSize: "20px" }}
-              />
-              <CardContent>
-                <Typography
-                  noWrap
-                  variant="subtitle2"
-                  sx={{
-                    fontSize: "18px",
-                  }}
-                >
-                  {hotel?.features &&
-                    hotel?.features.map((item, index) => {
-                      return iconsFeatures.map((icon, index) => {
-                        if (item.title === icon.title) {
-                          return (
-                            <p className="features_hotel" key={index}>
-                              <div className="features_icon">{icon.icon}</div>{" "}
-                              {item.title}
-                            </p>
-                          );
-                        }
-                      });
-                    })}
-                </Typography>
-              </CardContent>
-            </div>
-          </Card>
-        </Grid>
+            <Grid item xs={12} md={6}>
+              <Card className={classes.featureCard}>
+                <div>
+                  <CardHeader
+                    title="امکانات و ویژگی ها"
+                    className="h2_emkanat"
+                    sx={{ fontSize: "20px" }}
+                  />
+                  <CardContent>
+                    <Typography
+                      noWrap
+                      variant="subtitle2"
+                      sx={{
+                        fontSize: "18px",
+                      }}
+                    >
+                      {hotel?.features &&
+                        hotel?.features.map((item, index) => {
+                          return iconsFeatures.map((icon, index) => {
+                            if (item.title === icon.title) {
+                              return (
+                                <p className="features_hotel" key={index}>
+                                  <div className="features_icon">{icon.icon}</div>{" "}
+                                  {item.title}
+                                </p>
+                              );
+                            }
+                          });
+                        })}
+                    </Typography>
+                  </CardContent>
+                </div>
+              </Card>
+            </Grid>
 
-        <Grid item xs={12} md={6}>
-          <Card className={classes.availableRoomsCard}>
-            <form onSubmit={handleSubmit}>
-              <CardContent>
-                <LocalizationProvider dateAdapter={AdapterJalali}>
-                  <DatePicker
-                    label="تاریخ ورود"
-                    mask="____/__/__"
-                    value={fromTime}
-                    onChange={(newValue) => setFromTime(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-                <LocalizationProvider
-                  dateAdapter={AdapterJalali}
-                  sx={{ marginTop: "20px" }}
-                >
-                  <DatePicker
-                    label="تاریخ خروج"
-                    mask="____/__/__"
-                    value={toTime}
-                    onChange={(newValue) => setToTime(newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-                {/* <Grid item xs={6} md={6}> */}
-                {/* <DatePicker
+            <Grid item xs={12} md={6}>
+              <Card className={classes.availableRoomsCard}>
+                <form onSubmit={handleSubmit}>
+                  <CardContent>
+                    <LocalizationProvider dateAdapter={AdapterJalali}>
+                      <DatePicker
+                        label="تاریخ ورود"
+                        mask="____/__/__"
+                        value={fromTime}
+                        onChange={(newValue) => setFromTime(newValue)}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                    <LocalizationProvider
+                      dateAdapter={AdapterJalali}
+                      sx={{ marginTop: "20px" }}
+                    >
+                      <DatePicker
+                        label="تاریخ خروج"
+                        mask="____/__/__"
+                        value={toTime}
+                        onChange={(newValue) => setToTime(newValue)}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                    {/* <Grid item xs={6} md={6}> */}
+                    {/* <DatePicker
                   inputPlaceholder="تاریخ ورود"
                   value={fromTime}
                   colorPrimary="#3f51b5"
@@ -352,54 +360,58 @@ const Hotel = () => {
                   calendarSelectedDayClassName="selected-day"
                   calendarClassName="custom-calendar"
                 /> */}
-                {/* </Grid> */}
-              </CardContent>
-              <CardActions>
-                <Grid item md={12} xs={12}>
-                  <button className={classes.button} type="submit">
-                    مشاهده اتاق های موجود
-                  </button>
-                </Grid>
-              </CardActions>
-            </form>
-          </Card>
-        </Grid>
+                    {/* </Grid> */}
+                  </CardContent>
+                  <CardActions>
+                    <Grid item md={12} xs={12}>
+                      <button className={classes.button} type="submit">
+                        مشاهده اتاق های موجود
+                      </button>
+                    </Grid>
+                  </CardActions>
+                </form>
+              </Card>
+            </Grid>
 
-        <Grid item xs={12} md={12}>
-          {availableRooms && (
-            <AvailableRooms
-              availableRooms={availableRooms}
-              fromTime={fromTime}
-              toTime={toTime}
-            />
-          )}
-        </Grid>
-        <Grid item xs={12} md={12}>
-          <Card className={classes.rulesCard}>
-            <div>
-              <CardHeader
-                title="قوانین هتل"
-                className="h2_emkanat"
-                sx={{ fontSize: "20px" }}
-              />
-              <CardContent>
-                <Grid container spacing={3.5}>
-                  <Grid item xs={12} md={6}>
-                    <Typography
-                      noWrap
-                      variant="subtitle2"
-                      sx={{ fontSize: "18px", display: "inline" }}
-                    >
-                      <p className="hotel_rules">{hotel?.rules}</p>
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </div>
-          </Card>
-        </Grid>
-      </Grid>
-    </Container>
+            <Grid item xs={12} md={12}>
+              {availableRooms && (
+                <AvailableRooms
+                  availableRooms={availableRooms}
+                  fromTime={fromTime}
+                  toTime={toTime}
+                />
+              )}
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <Card className={classes.rulesCard}>
+                <div>
+                  <CardHeader
+                    title="قوانین هتل"
+                    className="h2_emkanat"
+                    sx={{ fontSize: "20px" }}
+                  />
+                  <CardContent>
+                    <Grid container spacing={3.5}>
+                      <Grid item xs={12} md={6}>
+                        <Typography
+                          noWrap
+                          variant="subtitle2"
+                          sx={{ fontSize: "18px", display: "inline" }}
+                        >
+                          <p className="hotel_rules">{hotel?.rules}</p>
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </div>
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
+        :
+        <NotFound />
+      }
+    </>
   );
 };
 
