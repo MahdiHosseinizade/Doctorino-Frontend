@@ -22,7 +22,23 @@ const theme = createTheme({
             light: "#FFF6E7",
             dark: "#c7ba28",
             contrastText: "#fff",
+            icon: '#FFF6E7',
+        },
+        doctor: {
+            main: '#00cccc',
+            light: "#",
+            dark: "#",
+            contrastText: "#",
+        },
+        navbar: {
+            main: '#33ccff',
+            light: "#fff",
+            dark: "#000",
+            contrastText: "#fff",
+            icon: 'primary',
         }
+
+
     },
     typography: {
         fontFamily: IranYekan,

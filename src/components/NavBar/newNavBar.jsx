@@ -13,9 +13,13 @@ import AdbIcon from "@mui/icons-material/LocalHospitalTwoTone";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Link, useHistory } from "react-router-dom";
 import AuthContext from '../../context/AuthContext';
+import theme from "../../assets/theme/defaultTheme";
 
 
-const NavBar = ({ buttons }) => {
+const NavBar = ({ buttons, bgColor, ...props }) => {
+  if (!bgColor){
+    bgColor = theme.palette.navbar
+  }
   let { user, authTokens, logOut } = useContext(AuthContext);
 
   const defultButtons = [
@@ -62,17 +66,15 @@ const NavBar = ({ buttons }) => {
     setAnchorElUser(null);
   };
 
-  let bgColor = '#65B9D3';
 
   return (
     <AppBar
       position="fixed"
       sx={{
-        zIndex: 100,
         direction: "rtl",
-        background : bgColor,
-        //background: user?.role === 'doctor' ? 'fff' : user?.role === 'hotel_owner' ? 'aaa' : '#65B9D3' ,
-        enableColorOnDark: true,
+        background: bgColor.main,
+        // background: user?.role === 'doctor' ? '#fff' : user?.role === 'hotel_owner' ? theme.palette.hotel.main : '#65B9D3' ,
+        // enableColorOnDark: true,
       }}
     >
       <Container
@@ -97,10 +99,12 @@ const NavBar = ({ buttons }) => {
             }}
           >
             <AdbIcon
-              color="primary"
+              // color="primary"
+              color = {bgColor.icon}
               onClick={() => history.push("/")}
               sx={{ display: { xs: "none", md: "flex" }, fontSize: 45, mr: 1 }}
             />
+            {console.log(bgColor)}
             دکترینو
           </Typography>
 

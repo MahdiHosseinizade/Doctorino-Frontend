@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import DoctorCard from "./components/DoctorCard";
 import NavBar from "../../NavBar/newNavBar";
 import { makeStyles } from "@mui/styles";
+import theme from "../../../assets/theme/defaultTheme";
 
 const useStyles = makeStyles({
   container: {
@@ -31,7 +32,7 @@ export default function Doctors() {
     <Container>
       <Grid className={classes.navBar}>
         {/* <Box> */}
-          <NavBar />
+          <NavBar bgColor={theme.palette.doctor}/>
         {/* </Box> */}
       </Grid>
       <Grid container className={classes.container} sx={{ m: 3 }}>

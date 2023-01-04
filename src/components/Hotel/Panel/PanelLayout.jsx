@@ -2,6 +2,7 @@ import { Box, Container, CssBaseline } from "@mui/material";
 import React from "react";
 import SideBar from "./components/SideBar";
 import NavBar from "../../NavBar/newNavBar";
+import theme from "../../../assets/theme/defaultTheme"
 
 export default function PanelLayout({ children }) {
 
@@ -51,7 +52,7 @@ export default function PanelLayout({ children }) {
           boxSizing: "border-box",
         }}
       >
-        <NavBar buttons={buttonsInNavBar} />
+        <NavBar buttons={buttonsInNavBar} bgColor={theme.palette.hotel} />
       </Box>
 
       <Box sx={{

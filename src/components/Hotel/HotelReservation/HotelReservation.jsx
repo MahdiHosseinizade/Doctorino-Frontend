@@ -18,6 +18,7 @@ import AuthContext from "../../../context/AuthContext";
 import useAxios from "../../../utils/useAxios";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router";
+import theme from '../../../assets/theme/defaultTheme'
 
 
 const useStyles = makeStyles({

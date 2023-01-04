@@ -32,6 +32,7 @@ import { FaChild } from "react-icons/fa";
 import { RiBilliardsFill } from "react-icons/ri";
 import { AiFillSafetyCertificate } from "react-icons/ai";
 import NavBar from "../../NavBar/newNavBar";
+import theme from "../../../assets/theme/defaultTheme"
 // import moment from "jalali-moment";
 // import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
 // import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
@@ -167,7 +168,7 @@ const Hotel = () => {
 
   return (
     <Container className={classes.container}>
-      <NavBar />
+      <NavBar bgColor={theme.palette.hotel}/>
       <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           <Card className={classes.card}>

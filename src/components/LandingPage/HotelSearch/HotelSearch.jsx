@@ -12,6 +12,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { useHistory } from "react-router-dom";
+import theme from "../../../assets/theme/defaultTheme"
 // import { alignProperty } from "@mui/material/styles/cssUtils";
 
 // const useStyles = makeStyles({});
@@ -50,7 +51,7 @@ export default function HotelSearch() {
 
   return (
     <div className="ContainerLandingPage2">
-      <NavBar />
+      <NavBar bgColor={theme.palette.hotel}/>
       <form>
         <div className="Title2">
           <h2 className="searchBarText">راه حلی مناسب برای رزرو دکتر و هتل</h2>

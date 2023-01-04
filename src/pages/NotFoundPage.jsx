@@ -3,6 +3,7 @@ import { Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import NavBar from "../components/NavBar/newNavBar";
 import { Container, Grid } from "@mui/material";
+import theme from "../assets/theme/defaultTheme"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,7 +31,7 @@ const NotFound = () => {
   return (
     <Container>
       <Grid container>
-        <NavBar />
+        <NavBar bgColor={theme.palette.hotel}/>
         <Grid item xs={12}>
           <img
             className={classes.pageNotFoundImage}
