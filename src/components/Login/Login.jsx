@@ -8,10 +8,11 @@ import { toast } from "react-toastify";
 import Input from "../common/Input";
 import NavBar from "../NavBar/newNavBar.jsx";
 import styled from "@emotion/styled";
-import { TextField } from "@mui/material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
 import AuthContext from "../../context/AuthContext";
 import { useContext } from "react";
 import { baseURL } from '../../utils/useAxios';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 
 const value = {
@@ -48,6 +49,9 @@ const validationSchema = Yup.object({
 //   });
 //   console.log(formik.values);
 const Login = ({ history }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
   const { loginUser } = useContext(AuthContext);
   const [user, setUser] = useState({ ...value });
   // const history = useHistory();
@@ -136,7 +140,20 @@ const Login = ({ history }) => {
                   variant="outlined"
                   label="کلمه عبور"
                   name="password"
-                  type="password"
+                  type = {showPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                   helperText={
                     formik.errors["password"] &&
                     formik.touched["password"] &&
