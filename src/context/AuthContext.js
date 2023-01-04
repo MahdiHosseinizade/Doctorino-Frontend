@@ -63,8 +63,13 @@ export const AuthProvider = ({ children }) => {
         position: "top-right",
         autoClose: 2000,
       });
+    } else if (response.status === 400) {
+      toast.error("نام کاربری یا رمز عبور اشتباه است", {
+        position: "top-right",
+        autoClose: 2000,
+      });
     } else {
-      toast.error(`نام کاربری یا رمز عبور اشتباه است`, {
+      toast.error("کابری با این اطلاعات پیدا نشد ", {
         position: "top-right",
         autoClose: 2000,
       });
