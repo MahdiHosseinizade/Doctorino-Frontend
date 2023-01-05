@@ -28,7 +28,7 @@ const theme = createTheme({
             main: '#00cccc',
             light: "#",
             dark: "#",
-            contrastText: "#",
+            contrastText: "#FFF6E7",
             icon: '#7fffd4',
         },
         navbar: {

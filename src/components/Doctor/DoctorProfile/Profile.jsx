@@ -1,5 +1,5 @@
 //profile
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   Container,
   Card,
@@ -11,6 +11,8 @@ import {
   FormControlLabel,
   Collapse,
   Button,
+  TextField,
+  Rating,
 } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import PropTypes from 'prop-types';
@@ -20,8 +22,15 @@ import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { flexbox } from '@mui/system';
-
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import theme from '../../../assets/theme/defaultTheme';
+import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
+import ThumbUpAlt from '@mui/icons-material/ThumbUpAlt';
+import useAxios from '../../../utils/useAxios';
+import AuthContext from '../../../context/AuthContext';
+import { toast } from 'react-toastify';
+import ReviewCard from './ReviewCard';
 
 // show the directory to the use with <basic breadcrums (mui)>
 
@@ -45,6 +54,26 @@ const useStyles = makeStyles({
     maxWidth: "250px",
     position: "static",
     display: "inline-table",
+  },
+  textField: {
+    "& .MuiInputLabel-root": {
+      color: theme.palette.grey[500],
+    },
+    "& .MuiFilledInput-root": {
+      background: theme.palette.background.paper,
+    },
+    "& .MuiOutlinedInput-root": {
+      background: "#fefefe",
+      "&:hover fieldset": {
+        borderColor: theme.palette.doctor.main,
+      }
+    },
+    // style when focused
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: theme.palette.doctor.main,
+    },
+
+    spellCheck: false,
   }
 });
 
@@ -84,22 +113,82 @@ function a11yProps(index) {
   };
 }
 
+const formValue = {
+  score: 0,
+  text: "",
+};
+
+const validationSchema = Yup.object({
+  score: Yup.number().required("امتیاز را وارد کنید."),
+  text: Yup.string().required("نظر خود را وارد کنید."),
+});
 
 
 
 const Profile = (props) => {
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [checked, setChecked] = useState(false);
 
   const secondaryHandleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [checked, setChecked] = React.useState(false);
+  const api = useAxios();
+  const { user, authData } = useContext(AuthContext);
 
-  const thiredHandleChange = () => {
-    setChecked((prev) => !prev);
-  };
+
+  useEffect(() => {
+    if (loading && props.doctorId) {
+      api.get(`/api/doctor/${props.doctorId}/reviews/`)
+        .then(res => {
+          setReviews(res.data);
+          console.log(res.data);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+
+  }, [loading, reviews]);
+
+  const formik = useFormik({
+    initialValues: formValue,
+
+    onReset: (e) => {
+    },
+
+    onSubmit: (values) => {
+      api.post("/api/doctor/reviews/", {
+        doctor: props.doctor?.id,
+        voter: user.id,
+        score: values.score,
+        text: values.text,
+      }, {
+        headers: {
+          Authorization: `Bearer ${authData?.access}`
+        }
+      }).then((res) => {
+
+        setReviews([...reviews, res.data]);
+
+        toast.success("نظر شما با موفقیت ثبت شد.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        formik.resetForm();
+      }).catch((err) => {
+        toast.error("مشکلی در ثبت نظر پیش آمد.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      });
+    },
+    validationSchema: validationSchema,
+  });
 
   const classes = useStyles();
 
@@ -227,7 +316,66 @@ const Profile = (props) => {
             </Typography>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            نظرات و امتیاز
+            <Box
+              component="form"
+              onSubmit={formik.handleSubmit}
+            >
+              <Grid container spacing={2} sx={{
+                padding: "10px",
+              }}>
+                <Grid item xs={12} md={12}>
+                  <Grid item xs={12} md={12}>
+                    <Rating
+                      name="score"
+                      label="امتیاز"
+                      defaultValue={0}
+                      value={formik.getFieldProps("score").value}
+                      onChange={(event, newValue) => {
+                        formik.setFieldValue("score", newValue);
+                      }}
+                      sx={{
+                        color: theme.palette.doctor.main,
+                      }}
+                      icon={<ThumbUpAlt fontSize="inherit" />}
+                      emptyIcon={<ThumbDownAltOutlinedIcon fontSize="inherit" />}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      fullWidth
+                      className={classes.textField}
+                      error={
+                        formik.errors["text"] &&
+                        formik.touched["text"]
+                      }
+                      variant="outlined"
+                      label="نظر"
+                      name="text"
+                      type="text"
+                      helperText={formik.touched["text"] && formik.errors["text"]}
+                      multiline
+                      rows={3}
+                      {...formik.getFieldProps("text")}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} md={12} sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                  marginBottom: "20px",
+                }}>
+                  <Button disabled={!(formik.dirty && formik.isValid)} color="doctor" type="submit" variant="contained">
+                    ثبت نظر
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+            {reviews.map(({ id, voter, score, text }) => (
+              <Card className={classes.card} key={id}>
+                <ReviewCard key={id} voter={voter} score={score} text={text} />
+              </Card>
+            ))}
           </TabPanel>
         </Box>
       </Card>
