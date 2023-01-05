@@ -116,7 +116,6 @@ const validationSchema = Yup.object({
   father_name: Yup.string().required("نام پدر ضروری است"),
   national_code: Yup.string().required("کد ملی ضروری است").min(10, 'کد ملی باید 10 رقم باشد').max(10, 'کد ملی باید 10 رقم باشد'),
   gender: Yup.string().required('جنسیت ضروری است'),
-  first_phone_number: Yup.string().required("تلفن همراه ضروری است").min(11, 'تلفن همراه باید 11 رقم باشد').max(11, 'تلفن همراه باید 1 رقم باشد'),
   second_phone_number: Yup.string().min(11, 'تلفن همراه باید 11 رقم باشد').max(11, 'تلفن همراه باید 11 رقم باشد'),
   area_code: Yup.string(),
   telephone_number: Yup.string(),
@@ -137,6 +136,7 @@ export default function ManagerProfile(props) {
   const [month, setMonth] = useState([]);
   const [year, setYear] = useState([]);
   const [loading, setLoading] = useState(true);
+  let recieved_values = {};
 
   let { user, authData, logoutUser } = useContext(AuthContext);
   let api = useAxios();
@@ -149,9 +149,8 @@ export default function ManagerProfile(props) {
             Authorization: "Bearer " + authData?.access,
           },
         })
-
+        
         .then((response) => {
-          console.log("fetching data: ", response.data);
           setOwnerInfos({
             ...ownerInfos,
             first_name: response.data.user.first_name,
@@ -169,6 +168,10 @@ export default function ManagerProfile(props) {
             shaba_code: response.data.shaba_code,
             national_code: response.data.national_code,
           });
+
+          recieved_values = response.data;
+          console.log(recieved_values)
+          setOwnerFileds()
           setLoading(false);
         })
         .catch((error) => {
@@ -225,7 +228,7 @@ export default function ManagerProfile(props) {
       formData.append("gender", genders.indexOf(values.gender));
       formData.append("national_code", values.national_code);
       formData.append("father_name", values.father_name);
-      formData.append("second_phone_number", values.second_phone_number);
+      formData.append("second_phone_number", "");
       formData.append("area_code", values.area_code);
       formData.append("telephone_number", values.telephone_number);
       formData.append("address", values.address);
@@ -235,25 +238,41 @@ export default function ManagerProfile(props) {
       );
       formData.append("shaba_code", values.shaba_code);
 
-      // for (let key of formData.entries())
-      // console.log(key[0], key[1])
+      
 
       api
         .put(`/api/hotel/owner/${authData["child-id"]}/`, formData, {
           headers: {
             Authorization: "Bearer " + authData?.access,
           },
-          // headers:
-          // {
-          //     'Content-Type': 'multipart/form-data',
-          //     Authorization: `Bearer ${authData.access}`
-          // }
+          
         })
         .then((res) => {
           toast.success("اطلاعات با موفقیت ثبت شد", {
             position: "top-right",
             autoClose: 2000,
           });
+
+          setOwnerInfos({
+            ...ownerInfos,
+            first_name: values.first_name,
+            last_name: values.last_name,
+            email: values.email,
+            username:  values.username,
+            father_name: values.father_name,
+            gender: values.gender,
+            first_phone_number: values.first_phone_number,
+            second_phone_number: values.second_phone_number,
+            area_code: values.area_code,
+            telephone_number: values.telephone_number,
+            address: values.address,
+            birth_day: values.birth_day,
+            shaba_code: values.shaba_code,
+            national_code: values.national_code,
+          });
+
+          setOwnerFileds()
+          setLoading(false);
         })
         .catch((err) =>
           toast.error("مشکلی پیش آمده", {
@@ -266,7 +285,53 @@ export default function ManagerProfile(props) {
     validationSchema: validationSchema,
   });
 
-
+  const setOwnerFileds = () => 
+  {
+    if(recieved_values.user.first_name){
+      formik.setFieldValue("first_name", recieved_values.user.first_name);
+    }
+    if(recieved_values.user.last_name){
+      formik.setFieldValue("last_name", recieved_values.user.last_name);
+    }
+    if(recieved_values.father_name){
+      formik.setFieldValue("father_name", recieved_values.father_name);
+    }
+    if(recieved_values.national_code){
+      formik.setFieldValue("national_code", recieved_values.national_code);
+    }
+    if(recieved_values.gender){
+      setGender(recieved_values.gender)
+      formik.setFieldValue("gender", gender);
+    }
+    if(recieved_values.first_phone_number){
+      formik.setFieldValue("first_phone_number", recieved_values.first_phone_number);
+    }
+    if(recieved_values.area_code){
+      formik.setFieldValue("area_code", recieved_values.area_code);
+    }
+    if(recieved_values.telephone_number){
+      formik.setFieldValue("telephone_number", recieved_values.telephone_number);
+    }
+    if(recieved_values.address){
+      formik.setFieldValue("address", recieved_values.address);
+    }
+    if(recieved_values.birthDay){
+      setDay(recieved_values.birthDay)
+      formik.setFieldValue("birthDay", day);
+    }
+    if(recieved_values.birthMonth){
+      setMonth(recieved_values.birthMonth)
+      formik.setFieldValue("birthMonth", month);
+    }
+    if(recieved_values.birthYear){
+      setYear(recieved_values.birthYear)
+      formik.setFieldValue("birthYear", year);
+    }
+    if(recieved_values.shaba_code){
+      formik.setFieldValue("shaba_code", recieved_values.shaba_code);
+    }
+    
+  }
 
   return (
     <Container>
@@ -316,8 +381,7 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={formik.errors["first_name"] && formik.touched["first_name"]}
-              variant="filled"
-              value = {ownerInfos.first_name}
+              variant="outlined"
               label="نام"
               name="first_name"
               type="text"
@@ -331,9 +395,8 @@ export default function ManagerProfile(props) {
           <Grid item xs={12} md={6} lg={4}>
             <STextField
               fullWidth
-              value={ownerInfos.last_name}
               error={formik.errors["last_name"] && formik.touched["last_name"]}
-              variant="filled"
+              variant="outlined"
               label="نام خانوادگی"
               name="last_name"
               type="text"
@@ -350,7 +413,7 @@ export default function ManagerProfile(props) {
               error={
                 formik.errors["father_name"] && formik.touched["father_name"]
               }
-              variant="filled"
+              variant="outlined"
               label="نام پدر"
               name="father_name"
               type="text"
@@ -373,9 +436,9 @@ export default function ManagerProfile(props) {
                 error={formik.errors["gender"] && formik.touched["gender"]}
                 {...formik.getFieldProps("gender")}
               >
+              {console.log(gender)}
                 {genders.map((feat, ind) => (
                   <MenuItem key={ind} value={feat}>
-                    {/* <Checkbox checked={genders.indexOf(feat) > -1} /> */}
                     <ListItemText primary={feat} />
                   </MenuItem>
                 ))}
@@ -387,28 +450,9 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={
-                formik.errors["identityNumber"] &&
-                formik.touched["identityNumber"]
-              }
-              variant="filled"
-              label="شماره شناسنامه"
-              name="identityNumber"
-              type="text"
-              helperText={
-                formik.touched["identityNumber"] &&
-                formik.errors["identityNumber"]
-              }
-              {...formik.getFieldProps("identityNumber")}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <STextField
-              fullWidth
-              error={
                 formik.errors["national_code"] && formik.touched["national_code"]
               }
-              variant="filled"
+              variant="outlined"
               label="کد ملی"
               name="national_code"
               type="text"
@@ -419,14 +463,14 @@ export default function ManagerProfile(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} lg={4}>
             <STextField
               fullWidth
               error={
                 formik.errors["first_phone_number"] &&
                 formik.touched["first_phone_number"]
               }
-              variant="filled"
+              variant="outlined"
               label="تلفن همراه اول"
               name="first_phone_number"
               type="text"
@@ -438,27 +482,8 @@ export default function ManagerProfile(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <STextField
-              fullWidth
-              error={
-                formik.errors["second_phone_number"] &&
-                formik.touched["second_phone_number"]
-              }
-              variant="filled"
-              label="تلفن همراه دوم"
-              name="second_phone_number"
-              type="text"
-              helperText={
-                formik.touched["second_phone_number"] &&
-                formik.errors["second_phone_number"]
-              }
-              {...formik.getFieldProps("second_phone_number")}
-            />
-          </Grid>
-
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
+            <SFormControl fullWidth>
               <InputLabel>روز تولد</InputLabel>
               <SSelect
                 required
@@ -476,11 +501,11 @@ export default function ManagerProfile(props) {
                   </MenuItem>
                 ))}
               </SSelect>
-            </FormControl>
+            </SFormControl>
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
+            <SFormControl fullWidth>
               <InputLabel>ماه تولد</InputLabel>
               <SSelect
                 required
@@ -500,11 +525,11 @@ export default function ManagerProfile(props) {
                   </MenuItem>
                 ))}
               </SSelect>
-            </FormControl>
+            </SFormControl>
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
+            <SFormControl fullWidth>
               <InputLabel>سال تولد</InputLabel>
               <SSelect
                 required
@@ -524,7 +549,7 @@ export default function ManagerProfile(props) {
                   </MenuItem>
                 ))}
               </SSelect>
-            </FormControl>
+            </SFormControl>
           </Grid>
 
           <Grid item xs={12}>
@@ -545,7 +570,7 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={formik.errors["area_code"] && formik.touched["area_code"]}
-              variant="filled"
+              variant="outlined"
               label="کد شهرستان"
               name="area_code"
               type="text"
@@ -563,7 +588,7 @@ export default function ManagerProfile(props) {
                 formik.errors["telephone_number"] &&
                 formik.touched["telephone_number"]
               }
-              variant="filled"
+              variant="outlined"
               label="تلفن ثابت"
               name="telephone_number"
               type="text"
@@ -579,7 +604,7 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={formik.errors["adress"] && formik.touched["adress"]}
-              variant="filled"
+              variant="outlined"
               label="آدرس"
               name="adress"
               type="text"
@@ -606,7 +631,7 @@ export default function ManagerProfile(props) {
             <STextField
               fullWidth
               error={formik.errors["shaba_code"] && formik.touched["shaba_code"]}
-              variant="filled"
+              variant="outlined"
               label="شماره شبا"
               name="shaba_code"
               type="text"
