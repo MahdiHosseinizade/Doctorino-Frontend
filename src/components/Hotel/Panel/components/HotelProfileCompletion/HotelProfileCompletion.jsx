@@ -203,6 +203,7 @@ export default function HotelProfileCompletion() {
   const [showForm, setRoomForm] = useState('');
   const history = useHistory();
   const api = useAxios();
+  const winSize = useWindowSize();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function fetchData() {
@@ -225,7 +226,7 @@ export default function HotelProfileCompletion() {
     api
       // .get("/api/hotel/room/")
       .get(`/api/hotel/${hotel === '' ?  '' : String(hotel)+'/'}room/`)
-      .then((res) => rooms(res.data))
+      .then((res) => setRooms(res.data))
       .catch((err) => console.error(err));
 
     setLoading(false);
@@ -293,6 +294,7 @@ export default function HotelProfileCompletion() {
 
     api.get(`/api/hotel/${hotel_id}/`)
       .then(res => {
+        console.log(res.data);
         const {
           hotel_name,
           hotel_description,
@@ -301,9 +303,10 @@ export default function HotelProfileCompletion() {
           features: resievedFeats,
           trade_code,
           cover_image,
-          stars,
+          hotel_stars,
           city,
           province,
+          phone_number,
         } = res.data;
 
         formik.resetForm();
@@ -336,10 +339,13 @@ export default function HotelProfileCompletion() {
         if (cover_image) {
           setCoverImage(cover_image);
         }
-        if (stars) {
-          console.log(stars);
-          setStars(stars);
-          formik.setFieldValue("stars", stars);
+        if (hotel_stars) {
+          setStars(hotel_stars);
+          formik.setFieldValue("stars", hotel_stars);
+        }
+
+        if (phone_number) {
+          formik.setFieldValue("phone_number", phone_number);
         }
 
         setProvinceList(provinces);
@@ -680,7 +686,12 @@ export default function HotelProfileCompletion() {
 
                     <Grid container spacing={2}>
                       <Grid item xs={12} md={12}>
-                        <Dropzone CssBaseLine={true} handleFile={handleCoverImage} iconColor={'hotel'} />
+                        <Dropzone 
+                          imageToShow={winSize.width < 900 && coverImage ? coverImage : null}
+                          CssBaseLine={true} 
+                          handleFile={handleCoverImage} 
+                          iconColor={'hotel'} 
+                        />
                       </Grid>
                       <Grid item xs={12} md={6}>
                         <STextField
@@ -1103,4 +1114,29 @@ export default function HotelProfileCompletion() {
       </Box >
     </Container >
   );
+}
+
+function useWindowSize() {
+
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined,
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    window.addEventListener("resize", handleResize);
+    
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowSize;
 }
