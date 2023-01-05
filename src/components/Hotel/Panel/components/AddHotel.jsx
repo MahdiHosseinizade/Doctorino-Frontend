@@ -26,6 +26,8 @@ import { toast } from 'react-toastify';
 import { baseURL } from '../../../../utils/useAxios';
 import Dropzone from '../../../common/Dropzone';
 import theme from '../../../../assets/theme/defaultTheme';
+import cities from "../../../../db/cities";
+import provinces from "../../../../db/Provinces";
 
 
 const DropzoneStyle = {
@@ -116,17 +118,21 @@ const formValue = {
     rules: "",
     features: [],
     trade_code: "",
+    province: "",
+    city: "",
 }
 
 const validationSchema = Yup.object({
     stars: Yup.number().required("ستاره های هتل باید وارد شود"),
     hotel_name: Yup.string().required("نام هتل ضروری است"),
-    phone_number: Yup.string().required("تلفن هتل ضروری است"),
+    phone_number: Yup.string().required("تلفن هتل ضروری است").min(11, "تلفن هتل باید 11 رقم باشد").max(11, "تلفن هتل باید 11 رقم باشد"),
     hotel_description: Yup.string(),
     rules: Yup.string(),
     address: Yup.string().required("آدرس هتل ضروری است"),
     features: Yup.array(),
     trade_code: Yup.string().required("کد صنفی ضروری است"),
+    province: Yup.number().required("استان هتل ضروری است"),
+    city: Yup.number().required("شهر هتل ضروری است"),
 })
 
 
@@ -142,6 +148,8 @@ export default function HotelProfileCompletion() {
     const [file, setFile] = useState();
     const [loading, setLoading] = useState(true);
     const [imageToShow, setImageToShow] = useState(null);
+    const [cityList, setCityList] = useState([]);
+    const [provinceList, setProvinceList] = useState([]);
 
     function handleImage(e) {
         // save the image to the state
@@ -150,9 +158,13 @@ export default function HotelProfileCompletion() {
 
     useEffect(() => {
         if (loading) {
+            
             axios.get(`${baseURL}/api/hotel/feature/`)
                 .then(res => setAvailableFeatures(res.data))
                 .catch(err => console.log(err));
+            
+            setProvinceList(provinces);
+
             setLoading(false);
         }
     }, [loading, features])
@@ -170,6 +182,8 @@ export default function HotelProfileCompletion() {
         initialValues: formValue,
         onReset: () => {
             setFeatures([]);
+            setImageToShow(null);
+            setCityList([]);
         },
         onSubmit: (values) => postHotel(values),
         validationSchema: validationSchema,
@@ -178,6 +192,28 @@ export default function HotelProfileCompletion() {
 
     function handleStars(e) {
         setStars(e.target.value);
+    }
+
+    function setCitiesByProvince(province) {
+        const citiesLST = cities.filter((city) => city.province_id === province);
+        setCityList(citiesLST);
+        formik.setFieldValue("city", "");
+    }
+
+    const handleProvince = (event) => {
+        const value = event.target.value;
+
+        const province = provinces.find((province) => province.id === value);
+        formik.setFieldValue("province", province.id);
+
+        setCitiesByProvince(value);
+    }
+
+    const handleCity = (event) => {
+        const value = event.target.value;
+
+        const city = cityList.find((city) => city.id === value);
+        formik.setFieldValue("city", city.id);
     }
 
     function postHotel(hotel) {
@@ -200,6 +236,8 @@ export default function HotelProfileCompletion() {
         formData.append('hotel_description', hotel.hotel_description);
         formData.append('rules', hotel.rules);
         formData.append('trade_code', hotel.trade_code);
+        formData.append('city', hotel.city);
+        formData.append('province', hotel.province);
 
 
         // log all the form data
@@ -361,6 +399,40 @@ export default function HotelProfileCompletion() {
                                     rows={3}
                                     {...formik.getFieldProps("rules")}
                                 />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <SFormControl fullWidth>
+                                    <InputLabel>استان</InputLabel>
+                                    <SSelect
+                                        value={formik.getFieldProps("province")["value"]}
+                                        onChange={handleProvince}
+                                        label="استان"
+                                        error={formik.errors["province"] && formik.touched["province"]}
+                                    >
+                                        {provinceList.map(({ id, value }) => (
+                                            <SMenuItem key={id} value={id}>
+                                                <ListItemText primary={value} />
+                                            </SMenuItem>
+                                        ))}
+                                    </SSelect>
+                                </SFormControl>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <SFormControl fullWidth>
+                                    <InputLabel>شهر</InputLabel>
+                                    <SSelect
+                                        value={formik.getFieldProps("city")["value"]}
+                                        onChange={handleCity}
+                                        label="شهر"
+                                        error={formik.errors["city"] && formik.touched["city"]}
+                                    >
+                                        {cityList.map(({ id, name }) => (
+                                            <SMenuItem key={id} value={id}>
+                                                <ListItemText primary={name} />
+                                            </SMenuItem>
+                                        ))}
+                                    </SSelect>
+                                </SFormControl>
                             </Grid>
                             <Grid item xs={12} md={6}>
                                 <SFormControl fullWidth>

@@ -1,7 +1,7 @@
 import "./signUp.css";
 import { useFormik } from "formik";
 import {  useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import DoctorRegister from "../Doctor/Registration/DoctorRegistration";
 import SickRegister from "../Sick/sickRegister";
@@ -21,6 +21,8 @@ const SignUp = () => {
   const [doctor,setDoctor] = useState(false)
   const [hotel,setHotel] = useState(false)
   const [sick,setSick] = useState(false)
+
+  const history = useHistory();
   
   const formik = useFormik({
     initialValues: value,
@@ -62,9 +64,11 @@ const SignUp = () => {
         {doctor  ? <DoctorRegister/> : sick ? <SickRegister/> : hotel ? <Hotelregister/> : <SickRegister/>}
         <h2 className="h2text">
           آیا حساب کاربری دارید ؟
-          <Link className="link" to="/login">
+          <a className="a-link" onClick={
+            () => history.push("/login", { destination : "/"})
+          }>
             ورود
-          </Link>
+          </a>
         </h2>
       </div>
         </div>

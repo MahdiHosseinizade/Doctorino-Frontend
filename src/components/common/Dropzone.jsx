@@ -85,9 +85,10 @@ function Dropzone({ CssBaseLine, handleFile, imageToShow, BaseStyle, ...props })
                     <img src={imageToShow} style={{
                         width: "100%",
                         height: "100%",
+                        maxHeight: "500px",
                         borderRadius: "10px",
                         borderColor: "#2196f3",
-                        objectFit: "cover",
+                        objectFit: "fill",
                     }} /> :
 
                     <CloudUploadIcon color={props.iconColor ? props.iconColor : "primary"} fontSize='large' />

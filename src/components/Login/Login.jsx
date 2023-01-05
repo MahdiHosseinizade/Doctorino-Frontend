@@ -53,7 +53,12 @@ const Login = ({ history }) => {
   const [user, setUser] = useState({ ...value });
   
   const location = useLocation();
-  const { destination } = location.state;
+  
+  let destination = null;
+  
+  if (location.state) {
+    destination = location.state.destination;
+  }
 
   const formik = useFormik({
     initialValues: value,

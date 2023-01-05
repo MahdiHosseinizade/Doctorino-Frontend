@@ -131,6 +131,11 @@ button:disabled{
     margin-right: 1rem;
 }
 
+.h2text .a-link{
+    margin-right: 1rem;
+    cursor: pointer;
+}
+
 .h2text a:hover{
     color: #083b68;
     font-size: 15px;

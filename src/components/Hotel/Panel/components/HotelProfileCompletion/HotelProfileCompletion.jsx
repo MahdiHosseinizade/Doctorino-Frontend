@@ -37,8 +37,8 @@ import RoomCard from "./components/RoomCard";
 import ImageGallery from "./components/ImageGallery"
 import theme from '../../../../../assets/theme/defaultTheme';
 import PropTypes from 'prop-types';
-import cities from "../../../../../assets/map_data/Cities";
-import provinces from "../../../../../assets/map_data/Provinces";
+import cities from "../../../../../db/cities";
+import provinces from "../../../../../db/Provinces";
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -203,6 +203,7 @@ export default function HotelProfileCompletion() {
   const [showForm, setRoomForm] = useState('');
   const history = useHistory();
   const api = useAxios();
+  const winSize = useWindowSize();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function fetchData() {
@@ -225,7 +226,7 @@ export default function HotelProfileCompletion() {
     api
       // .get("/api/hotel/room/")
       .get(`/api/hotel/${hotel === '' ?  '' : String(hotel)+'/'}room/`)
-      .then((res) => rooms(res.data))
+      .then((res) => setRooms(res.data))
       .catch((err) => console.error(err));
 
     setLoading(false);
@@ -301,9 +302,10 @@ export default function HotelProfileCompletion() {
           features: resievedFeats,
           trade_code,
           cover_image,
-          stars,
+          hotel_stars,
           city,
           province,
+          phone_number,
         } = res.data;
 
         formik.resetForm();
@@ -336,17 +338,20 @@ export default function HotelProfileCompletion() {
         if (cover_image) {
           setCoverImage(cover_image);
         }
-        if (stars) {
-          console.log(stars);
-          setStars(stars);
-          formik.setFieldValue("stars", stars);
+        if (hotel_stars) {
+          setStars(hotel_stars);
+          formik.setFieldValue("stars", hotel_stars);
+        }
+
+        if (phone_number) {
+          formik.setFieldValue("phone_number", phone_number);
         }
 
         setProvinceList(provinces);
 
         let citiesLST = [];
         if (province) {
-          const provinceObj = provinces.find(prov => prov.name === province);
+          const provinceObj = provinces.find(prov => prov.value === province);
           if (provinceObj) {
             citiesLST = cities.filter((city) => city.province_id === provinceObj.id);
             setCityList(citiesLST);
@@ -680,7 +685,12 @@ export default function HotelProfileCompletion() {
 
                     <Grid container spacing={2}>
                       <Grid item xs={12} md={12}>
-                        <Dropzone CssBaseLine={true} handleFile={handleCoverImage} iconColor={'hotel'} />
+                        <Dropzone 
+                          imageToShow={winSize.width < 900 && coverImage ? coverImage : null}
+                          CssBaseLine={true} 
+                          handleFile={handleCoverImage} 
+                          iconColor={'hotel'} 
+                        />
                       </Grid>
                       <Grid item xs={12} md={6}>
                         <STextField
@@ -779,9 +789,9 @@ export default function HotelProfileCompletion() {
                             label="استان"
                             error={formik.errors["province"] && formik.touched["province"]}
                           >
-                            {provinceList.map(({ id, name }) => (
+                            {provinceList.map(({ id, value }) => (
                               <SMenuItem key={id} value={id}>
-                                <ListItemText primary={name} />
+                                <ListItemText primary={value} />
                               </SMenuItem>
                             ))}
                           </SSelect>
@@ -1103,4 +1113,29 @@ export default function HotelProfileCompletion() {
       </Box >
     </Container >
   );
+}
+
+function useWindowSize() {
+
+  const [windowSize, setWindowSize] = useState({
+    width: undefined,
+    height: undefined,
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    window.addEventListener("resize", handleResize);
+    
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowSize;
 }
