@@ -73,7 +73,7 @@ export default function DoctorProfileLayout() {
                                 boxSizing: " border-box"
                             }}
                         >
-                            <DoctorProfile doctor={doctor} />
+                            <DoctorProfile doctor={doctor} doctorId={id} />
                         </Grid>
 
                         <Grid
