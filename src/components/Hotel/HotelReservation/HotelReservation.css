@@ -71,3 +71,12 @@
     cursor: pointer;
     margin-top: 20px;
 }
+.BedTitle{
+    font-size: 17px;
+    font-weight: bold;
+}
+.BedCount{
+    margin-top: 10px;
+    font-size: 17px;
+    font-weight: bold;
+}

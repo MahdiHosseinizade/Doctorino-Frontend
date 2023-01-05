@@ -19,7 +19,8 @@ import useAxios from "../../../utils/useAxios";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router";
 import NavBar from "../../NavBar/newNavBar";
-import theme from '../../../assets/theme/defaultTheme'
+import moment from "jalali-moment";
+import { getTime } from "date-fns-jalali";import theme from '../../../assets/theme/defaultTheme'
 
 
 const useStyles = makeStyles({
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
   },
   card: {
     // display: "fix",
-    marginTop:"70px",
+    marginTop: "70px",
     width: "100%",
     height: "150px",
     position: "relative",
@@ -47,7 +48,7 @@ const useStyles = makeStyles({
   },
   card3: {
     width: "100%",
-    height: "100px",
+    height: "300px",
     display: "fix",
     paddingInline: "13px",
     marginBottom: "50px",
@@ -62,6 +63,8 @@ const HotelReservation = () => {
   const [from_time, setFromTime] = useState(
     fromTime.toISOString().split("T")[0]
   );
+  const data = location.state;
+  console.log(data);
   const [to_time, setToTime] = useState(toTime.toISOString().split("T")[0]);
 
   const api = useAxios();
@@ -122,7 +125,7 @@ const HotelReservation = () => {
 
   return (
     <Container className={classes.container}>
-      <NavBar/>
+      <NavBar />
       <Card className={classes.card}>
         <Grid container sx={{ marginTop: "10px" }}>
           <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
@@ -148,6 +151,16 @@ const HotelReservation = () => {
       <Card className={classes.card3}>
         <Grid container sx={{ marginTop: "10px" }}>
           <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
+            <div className="showInformation">
+              <div className="showBed">
+                <div className="BedTitle">
+                  اسم اتاق : {data.room.room_title}
+                </div>
+                <div className="BedCount">
+                  تعداد تخت : {data.room.bed_count}{" "}
+                </div>
+              </div>
+            </div>
             <div className="PricenAndButton">
               <div className="Price">
                 <div className="PriceTitle">
