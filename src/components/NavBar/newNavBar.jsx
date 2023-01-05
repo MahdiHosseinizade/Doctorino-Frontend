@@ -244,7 +244,7 @@ const NavBar = ({ buttons, bgColor, ...props }) => {
 
               <Button
                 onClick={() => {
-                  history.push("/login");
+                  history.push("/login", { destination: window.location.pathname });
                 }}
                 sx={{ width: 'auto', color: "Black" }}
               >

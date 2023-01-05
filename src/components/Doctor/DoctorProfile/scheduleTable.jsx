@@ -449,7 +449,7 @@ export default function ScheduleTime({ doctor, ...props }) {
         <DialogActions>
           <Button
             onClick={() => {
-              history.push("/login");
+              history.push("/login", { destination: window.location.pathname});
             }}
           >
             &nbsp;ورود

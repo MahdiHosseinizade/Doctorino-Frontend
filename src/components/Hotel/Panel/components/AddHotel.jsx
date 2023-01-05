@@ -186,7 +186,7 @@ export default function HotelProfileCompletion() {
 
         formData.append('hotel_name', hotel.hotel_name);
         formData.append('address', hotel.address);
-        formData.append('stars', hotel.stars);
+        formData.append('hotel_stars', hotel.stars);
 
         if (file) {
             formData.append('cover_image', file);

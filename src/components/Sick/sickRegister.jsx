@@ -51,7 +51,6 @@ const SickRegister = () => {
     onSubmit: (values, e) => {
       // console.log(values);
       postsickHandler(values);
-      history.push("/login");
       e.preventDefault();
     },
     validationSchema: validationSchema,
@@ -113,7 +112,7 @@ const SickRegister = () => {
             autoClose: 3000,
         }
       )
-      history.push("/login");
+      history.push("/login", { destination: "/" });
     })
     .catch((err) =>{
       console.log(err);

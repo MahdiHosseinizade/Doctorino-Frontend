@@ -114,7 +114,7 @@ const DoctorRegister = () => {
     
     postDoctorRegister(user)
       .then((res) => {
-        history.push("/login");
+        history.push("/login", { destination: "/"});
         setDoctor(user);
         toast.success("ثبت نام با موفقیت انجام شد", {
           position: "top-right",

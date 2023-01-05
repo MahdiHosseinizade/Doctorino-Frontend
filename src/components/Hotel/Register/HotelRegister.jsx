@@ -8,6 +8,7 @@ import AuthContext from '../../../context/AuthContext';
 import { Grid, TextField } from "@mui/material";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 // import useHistory from "react-router-dom";
 
 const baseURL = "http://188.121.113.74"
@@ -41,7 +42,7 @@ const validationSchema = Yup.object({
 
 
 const Hotelregister = () => {
-  // const history = useHistory();
+  const history = useHistory();
   const [user, setUser] = useState([]);
 
     const { loginUser } = useContext(AuthContext);
@@ -69,6 +70,7 @@ const Hotelregister = () => {
                     }
                 )
                 loginUser(hotel.email, hotel.pass);
+                history.push("/login", { destination: "/" })
             })
             .catch(
                 (err) => {
