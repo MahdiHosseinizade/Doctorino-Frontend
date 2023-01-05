@@ -18,6 +18,7 @@ import AuthContext from "../../../context/AuthContext";
 import useAxios from "../../../utils/useAxios";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router";
+import NavBar from "../../NavBar/newNavBar";
 
 
 const useStyles = makeStyles({
@@ -27,6 +28,7 @@ const useStyles = makeStyles({
   },
   card: {
     // display: "fix",
+    marginTop:"70px",
     width: "100%",
     height: "150px",
     position: "relative",
@@ -119,6 +121,7 @@ const HotelReservation = () => {
 
   return (
     <Container className={classes.container}>
+      <NavBar/>
       <Card className={classes.card}>
         <Grid container sx={{ marginTop: "10px" }}>
           <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
