@@ -37,8 +37,8 @@ import RoomCard from "./components/RoomCard";
 import ImageGallery from "./components/ImageGallery"
 import theme from '../../../../../assets/theme/defaultTheme';
 import PropTypes from 'prop-types';
-import cities from "../../../../../assets/map_data/Cities";
-import provinces from "../../../../../assets/map_data/Provinces";
+import cities from "../../../../../db/cities";
+import provinces from "../../../../../db/Provinces";
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -294,7 +294,6 @@ export default function HotelProfileCompletion() {
 
     api.get(`/api/hotel/${hotel_id}/`)
       .then(res => {
-        console.log(res.data);
         const {
           hotel_name,
           hotel_description,
@@ -352,7 +351,7 @@ export default function HotelProfileCompletion() {
 
         let citiesLST = [];
         if (province) {
-          const provinceObj = provinces.find(prov => prov.name === province);
+          const provinceObj = provinces.find(prov => prov.value === province);
           if (provinceObj) {
             citiesLST = cities.filter((city) => city.province_id === provinceObj.id);
             setCityList(citiesLST);
@@ -790,9 +789,9 @@ export default function HotelProfileCompletion() {
                             label="استان"
                             error={formik.errors["province"] && formik.touched["province"]}
                           >
-                            {provinceList.map(({ id, name }) => (
+                            {provinceList.map(({ id, value }) => (
                               <SMenuItem key={id} value={id}>
-                                <ListItemText primary={name} />
+                                <ListItemText primary={value} />
                               </SMenuItem>
                             ))}
                           </SSelect>

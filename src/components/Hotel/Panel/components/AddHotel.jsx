@@ -26,8 +26,8 @@ import { toast } from 'react-toastify';
 import { baseURL } from '../../../../utils/useAxios';
 import Dropzone from '../../../common/Dropzone';
 import theme from '../../../../assets/theme/defaultTheme';
-import cities from "../../../../assets/map_data/Cities";
-import provinces from "../../../../assets/map_data/Provinces";
+import cities from "../../../../db/cities";
+import provinces from "../../../../db/Provinces";
 
 
 const DropzoneStyle = {
@@ -409,9 +409,9 @@ export default function HotelProfileCompletion() {
                                         label="استان"
                                         error={formik.errors["province"] && formik.touched["province"]}
                                     >
-                                        {provinceList.map(({ id, name }) => (
+                                        {provinceList.map(({ id, value }) => (
                                             <SMenuItem key={id} value={id}>
-                                                <ListItemText primary={name} />
+                                                <ListItemText primary={value} />
                                             </SMenuItem>
                                         ))}
                                     </SSelect>

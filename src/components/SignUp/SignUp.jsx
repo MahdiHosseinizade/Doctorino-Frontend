@@ -64,11 +64,11 @@ const SignUp = () => {
         {doctor  ? <DoctorRegister/> : sick ? <SickRegister/> : hotel ? <Hotelregister/> : <SickRegister/>}
         <h2 className="h2text">
           آیا حساب کاربری دارید ؟
-          <Link className="link" onClick={
+          <a className="a-link" onClick={
             () => history.push("/login", { destination : "/"})
           }>
             ورود
-          </Link>
+          </a>
         </h2>
       </div>
         </div>
