@@ -17,7 +17,7 @@ import theme from "../../assets/theme/defaultTheme";
 
 
 const NavBar = ({ buttons, bgColor, ...props }) => {
-  if (!bgColor){
+  if (!bgColor) {
     bgColor = theme.palette.navbar
   }
   let { user, authTokens, logOut } = useContext(AuthContext);
@@ -100,11 +100,14 @@ const NavBar = ({ buttons, bgColor, ...props }) => {
           >
             <AdbIcon
               // color="primary"
-              color = {bgColor.icon}
+              color={bgColor.icon}
               onClick={() => history.push("/")}
-              sx={{ display: { xs: "none", md: "flex" }, fontSize: 45, mr: 1 }}
+              sx={{
+                color: bgColor.icon,
+                display: { xs: "none", md: "flex" }, fontSize: 45, mr: 1
+              }}
             />
-            {console.log(bgColor)}
+            {/* {console.log(bgColor)} */}
             دکترینو
           </Typography>
 
@@ -234,7 +237,7 @@ const NavBar = ({ buttons, bgColor, ...props }) => {
                 onClick={() => {
                   history.push("/signup");
                 }}
-                sx={{ width: 'auto',color:'black' }}
+                sx={{ width: 'auto', color: 'black' }}
               >
                 &nbsp;ثبت نام
               </Button>
@@ -243,7 +246,7 @@ const NavBar = ({ buttons, bgColor, ...props }) => {
                 onClick={() => {
                   history.push("/login");
                 }}
-                sx={{ width: 'auto',color:"Black" }}
+                sx={{ width: 'auto', color: "Black" }}
               >
                 &nbsp;ورود
               </Button>
@@ -270,7 +273,7 @@ const NavBar = ({ buttons, bgColor, ...props }) => {
                     history.push("/patient-panel/profile");
                   }
                 }}
-                sx={{ width: 'auto',color:"Black"  }}
+                sx={{ width: 'auto', color: "Black" }}
               >
                 پنل کاربری
               </Button>
@@ -278,7 +281,7 @@ const NavBar = ({ buttons, bgColor, ...props }) => {
                 onClick={() => {
                   logOut();
                 }}
-                sx={{ width: 'auto', color:"Black" }}
+                sx={{ width: 'auto', color: "Black" }}
               >
                 خروج
               </Button>

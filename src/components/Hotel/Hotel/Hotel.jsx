@@ -176,7 +176,7 @@ const Hotel = () => {
     <>
       {loaded ?
         <Container className={classes.container}>
-          <NavBar />
+          <NavBar bgColor={theme.palette.hotel}/>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
               <Card className={classes.card}>
