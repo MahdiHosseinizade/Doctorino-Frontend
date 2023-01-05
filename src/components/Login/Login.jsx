@@ -7,6 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Input from "../common/Input";
 import NavBar from "../NavBar/newNavBar.jsx";
+import theme from "../../assets/theme/defaultTheme";
 import styled from "@emotion/styled";
 import { TextField } from "@mui/material";
 import AuthContext from "../../context/AuthContext";
@@ -111,7 +112,7 @@ const Login = ({ history }) => {
     <div className="signUpPage">
       <div>
         <nav>
-          <NavBar />
+          <NavBar bgColor={theme.palette.doctor}/>
         </nav>
         <div className="formControllogin">
           <form onSubmit={formik.handleSubmit}>

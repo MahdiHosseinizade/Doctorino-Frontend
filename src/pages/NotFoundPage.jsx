@@ -31,7 +31,7 @@ const NotFound = () => {
   return (
     <Container>
       <Grid container>
-        <NavBar bgColor={theme.palette.hotel}/>
+        <NavBar bgColor={theme.palette.navbar}/>
         <Grid item xs={12}>
           <img
             className={classes.pageNotFoundImage}

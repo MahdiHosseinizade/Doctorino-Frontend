@@ -9,6 +9,7 @@ import { RadioGroup ,FormControlLabel,Radio, Typography } from '@mui/material';
 // import Hotelregister from "../Hotel/Register/HotelRegister";
 import Hotelregister from "../Hotel/Register/HotelRegister";
 import NavBar from "../NavBar/newNavBar";
+import theme from '../../assets/theme/defaultTheme';
 
 
 const value = {
@@ -52,7 +53,7 @@ const SignUp = () => {
   return (
     <div className="signUp">
       <nav>
-        <NavBar />
+        <NavBar bgColor={theme.palette.navbar}/>
       </nav>
       <div className="signUpPage">
       <div className="signUpBox">

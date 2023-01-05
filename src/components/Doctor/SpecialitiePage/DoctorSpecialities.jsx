@@ -4,6 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import NavBar from "../../NavBar/newNavBar";
+import theme from "../../../assets/theme/defaultTheme"
 import DoctorCard from "../../LandingPage/DoctorCard";
 
 const useStyles = makeStyles({
@@ -82,7 +83,7 @@ const DoctorSpecialitie = () => {
     return (
         <Container>
             <Grid className={classes.navBar}>
-                <NavBar />
+                <NavBar bgColor={theme.palette.doctor}/>
             </Grid>
             <Grid container className={classes.container} sx={{ m: 3 }}>
             {findDoctor.map((doctor, index) => (

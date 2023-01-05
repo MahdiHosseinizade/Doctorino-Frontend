@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import NavBar from "../../NavBar/newNavBar";
+import theme from "../../../assets/theme/defaultTheme"
 import { Schedule } from "@mui/icons-material";
 import NotFound from "../../../pages/NotFoundPage";
 
@@ -56,7 +57,7 @@ export default function DoctorProfileLayout() {
         <>
             {loaded ?
                 <Container>
-                    <NavBar />
+                    <NavBar bgColor={theme.palette.doctor}/>
                     <CssBaseline />
                     <Grid container spacing={4}>
                         <Grid

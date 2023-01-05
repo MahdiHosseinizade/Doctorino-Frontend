@@ -1,6 +1,7 @@
 import "./landingPage.css";
 import React, { useContext, useEffect } from "react";
 import NavBar from "../NavBar/newNavBar";
+import theme from "../../assets/theme/defaultTheme";
 import { makeStyles } from "@mui/styles";
 import AuthContext from "../../context/AuthContext";
 import { useState } from "react";
@@ -133,7 +134,7 @@ export default function LandingPage() {
   return (
     <>
       <div className="ContainerLandingPage">
-        <NavBar />
+        <NavBar bgColor={theme.palette.navbar}/>
         <form  >
         <div className="Title">
           <h2>راه حلی مناسب برای رزرو دکتر</h2>

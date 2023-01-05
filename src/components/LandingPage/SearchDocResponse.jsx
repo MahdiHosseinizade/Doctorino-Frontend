@@ -2,6 +2,7 @@ import { makeStyles } from "@mui/styles";
 import { Container, Grid, Typography } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import NavBar from "../NavBar/newNavBar";
+import theme from "../../assets/theme/defaultTheme"
 import DoctorCard from "./DoctorCard";
 import queryString from "query-string";
 import { Box } from "@mui/system";
@@ -28,7 +29,7 @@ const SearchDoctorResponse = () => {
         <div>
           <Container>
             <Grid className={classes.navBar}>
-              <NavBar />
+              <NavBar bgColor={theme.palette.doctor}/>
             </Grid>
             <Box sx={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-between',marginTop:'100px'}}>
             <Typography sx={{
