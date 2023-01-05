@@ -65,13 +65,13 @@ export default function LandingPage() {
   useEffect(() => {
     getSpecialites();
     filteredScaleHandler(searchScale);
-  }, [specialitie]);
+  }, []);
+
 
   const getSpecialites = async () => {
     try {
       const { data } = await axios.get(
-        "http://188.121.113.74/api/doctor/specialties/"
-      );
+        "http://188.121.113.74/api/doctor/specialties/");
       setSpecialitie(data);
     } catch (error) {
       console.log(error);
@@ -139,8 +139,8 @@ export default function LandingPage() {
           <h2>راه حلی مناسب برای رزرو دکتر</h2>
           <h1>دکترینو</h1>
         </div>
-        <div className="SearchBar_Container">
-          <div className="chooseLocation">
+        <div className="SearchBar_Container2">
+          <div className="chooseLocation2">
             <div  className="LocationIcon">
               <h2>لوکیشن</h2>
               <MdPlace className="MdPlace" />
@@ -176,12 +176,12 @@ export default function LandingPage() {
         </form>
       </div>
       <div className="showSpecialieties">
-        <Grid container spacing={3} style={{justifyContent : 'space-around' }} >
-          {filteredScale && filteredScale.map((item, index) => (
+        <Grid container spacing={3} style={{justifyContent : 'space-around',width:"100%" }} >
+          {specialitie && specialitie.map((item, index) => (
             <Grid item xs={6} md={4}  key={index}>
               <a 
                 href={`/specialist/${+findIndex + 1}`}
-                className="doctorScale"
+                className="doctorScale2"
                 onClick={() => findIndexFunction(index)}
                 key={index}
               >
