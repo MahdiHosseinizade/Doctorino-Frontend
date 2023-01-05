@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { Link, withRouter } from "react-router-dom";
+import { Link, useLocation, withRouter } from "react-router-dom";
 import "./login.css";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -50,13 +50,15 @@ const validationSchema = Yup.object({
 const Login = ({ history }) => {
   const { loginUser } = useContext(AuthContext);
   const [user, setUser] = useState({ ...value });
-  // const history = useHistory();
-  // console.log(user);
+  
+  const location = useLocation();
+  const { destination } = location.state;
+
   const formik = useFormik({
     initialValues: value,
     onSubmit: (values, e) => {
       // postuserHandler(values);
-      loginUser(values.email, values.password);
+      loginUser(values.email, values.password, destination);
       // if login successfull redirect to landing page
       if (document.cookie.token) {
         history.push("/");
