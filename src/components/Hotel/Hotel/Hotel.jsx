@@ -11,6 +11,7 @@ import {
   Typography,
   TextField,
 } from "@mui/material";
+import './Hotel.css';
 import AvailableRooms from "./AvailableRooms";
 import AdapterJalali from "@date-io/date-fns-jalali";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -32,11 +33,6 @@ import { FaChild } from "react-icons/fa";
 import { RiBilliardsFill } from "react-icons/ri";
 import { AiFillSafetyCertificate } from "react-icons/ai";
 import NavBar from "../../NavBar/newNavBar";
-// import moment from "jalali-moment";
-// import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
-// import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
-// import "react-modern-calendar-datepicker/lib/DatePicker.css";
-// import DatePicker from "react-modern-calendar-datepicker";
 
 const useStyles = makeStyles({
   container: {
@@ -71,7 +67,6 @@ const useStyles = makeStyles({
   },
   hotel_image: {
     position: "absolute",
-    right: "5px",
     right: "5px",
     width: "90%",
     height: "90%",
@@ -131,7 +126,7 @@ const Hotel = () => {
       })
       .catch((err) => console.log(err));
   };
-  // I want to implement features of hotel with icons
+  
 
 
   const iconsFeatures = [
@@ -178,7 +173,6 @@ const Hotel = () => {
                 lg={6}
                 sx={{
                   display: "flex",
-                  // position: "sticky",
                   top: "0",
                   alignItems: "center",
                   justifyContent: "center",
@@ -186,7 +180,6 @@ const Hotel = () => {
                 }}
               >
                 <CardMedia
-                  // sx={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px",marginRight: "20px"}}
                   component="img"
                   className={classes.hotel_image}
                   image={hotel?.cover_image}
@@ -222,7 +215,7 @@ const Hotel = () => {
                           color="warning"
                           sx={{ marginBottom: "-7px" }}
                         />
-                        <span> </span> هتل
+                        <span></span> هتل
                       </Typography>
 
                       <Typography
@@ -234,7 +227,7 @@ const Hotel = () => {
                           marginLeft: "10px",
                         }}
                       >
-                        {hotel?.hotel_name}
+                        <span> </span> {hotel?.hotel_name}
                       </Typography>
                     </Grid>
                     <Grid item xs={12} md={12}>
