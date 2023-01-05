@@ -9,9 +9,8 @@ import { Grid, TextField } from "@mui/material";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-// import useHistory from "react-router-dom";
+import { baseURL } from "../../../utils/useAxios";
 
-const baseURL = "http://188.121.113.74"
 
 const STextField = styled(TextField)({
   "& .MuiFilledInput-root": {
@@ -24,20 +23,20 @@ const STextField = styled(TextField)({
 });
 
 const formValue = {
-    name: "",
-    family: "",
-    email: "",
-    pass: "",
-    rPass: "",
+  name: "",
+  family: "",
+  email: "",
+  pass: "",
+  rPass: "",
 }
 
 const validationSchema = Yup.object({
-    name: Yup.string().required("نام ضروری است"),
-    family: Yup.string().required("نام خانوادگی ضروری است"),
-    email: Yup.string().email("ایمیل معتبر نیست").required("ایمیل ضروری است"),
-    pass: Yup.string().required("کلمه عبور ضروری است"),
-    rPass: Yup.string().required("تکرار کلمه عبور ضروری است")
-        .oneOf([Yup.ref("pass"), null], "کلمه عبور همخوانی ندارد"),
+  name: Yup.string().required("نام ضروری است"),
+  family: Yup.string().required("نام خانوادگی ضروری است"),
+  email: Yup.string().email("ایمیل معتبر نیست").required("ایمیل ضروری است"),
+  pass: Yup.string().required("کلمه عبور ضروری است"),
+  rPass: Yup.string().required("تکرار کلمه عبور ضروری است")
+    .oneOf([Yup.ref("pass"), null], "کلمه عبور همخوانی ندارد"),
 })
 
 
@@ -45,66 +44,65 @@ const Hotelregister = () => {
   const history = useHistory();
   const [user, setUser] = useState([]);
 
-    const { loginUser } = useContext(AuthContext);
+  const { loginUser } = useContext(AuthContext);
 
-    function posthotelHandler(hotel) {
+  function posthotelHandler(hotel) {
 
-        axios.post(
-            `${baseURL}/api/hotel/owner/new/`,
-            {
-                "user" : {
-                    "password": hotel.pass,
-                    "email": hotel.email,
-                    "first_name": hotel.name,
-                    "last_name": hotel.family,
-                    "is_hotel_owner": true
-                }
-            }
+    axios.post(
+      `${baseURL}/api/hotel/owner/new/`,
+      {
+        "user": {
+          "password": hotel.pass,
+          "email": hotel.email,
+          "first_name": hotel.name,
+          "last_name": hotel.family,
+          "is_hotel_owner": true
+        }
+      }
+    )
+      .then((res) => {
+        toast.success(
+          `ثبت نام ${res.data.user.first_name} ${res.data.user.last_name} با موفقیت انجام شد`,
+          {
+            position: "top-right",
+            autoClose: 2000,
+          }
         )
-            .then((res) => {
-                toast.success(
-                    `ثبت نام ${res.data.user.first_name} ${res.data.user.last_name} با موفقیت انجام شد`,
-                    {
-                        position: "top-right",
-                        autoClose: 2000,
-                    }
-                )
-                loginUser(hotel.email, hotel.pass);
-                history.push("/login", { destination: "/" })
-            })
-            .catch(
-                (err) => {
-                    console.log(err);
-                    toast.error(
-                        'مشکلی پیش آمده است',
-                        {
-                            position: "top-right",
-                            autoClose: 2000,
-                        }
-                    )
-                }
-            );
-    }
+        loginUser(hotel.email, hotel.pass);
+        history.push("/login", { destination: "/" })
+      })
+      .catch(
+        (err) => {
+          console.log(err);
+          toast.error(
+            'مشکلی پیش آمده است',
+            {
+              position: "top-right",
+              autoClose: 2000,
+            }
+          )
+        }
+      );
+  }
 
 
-    const formik = useFormik({
-        initialValues: formValue,
-        onSubmit: (values) => {
-            posthotelHandler(values);
-        },
-        validationSchema: validationSchema,
-        validateOnMount: true,
+  const formik = useFormik({
+    initialValues: formValue,
+    onSubmit: (values) => {
+      posthotelHandler(values);
+    },
+    validationSchema: validationSchema,
+    validateOnMount: true,
 
-    })
-    console.log(formik.values);
+  })
+  console.log(formik.values);
 
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
-        <Grid container spacing={1}>
+        <Grid container spacing={2}>
           <Grid item md={6} xs={6}>
             <STextField
-              // id="first_name"
               fullWidth
               error={
                 formik.errors["name"] && formik.touched["name"]
@@ -120,15 +118,8 @@ const Hotelregister = () => {
               }
               {...formik.getFieldProps("name")}
             />
-            {/* <Input label="نام" name="name" formik={formik} type="text" /> */}
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              label="نام خانوادگی"
-              name="family"
-              formik={formik}
-              type="text"
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["family"] && formik.touched["family"]}
@@ -146,7 +137,6 @@ const Hotelregister = () => {
           </Grid>
           <Grid item md={12} xs={12}>
             <STextField
-              // id="first_name"
               fullWidth
               error={formik.errors["email"] && formik.touched["email"]}
               variant="outlined"
@@ -160,17 +150,9 @@ const Hotelregister = () => {
               }
               {...formik.getFieldProps("email")}
             />
-            {/* <Input label="ایمیل" name="email" formik={formik} type="email" /> */}
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              label="رمز عبور"
-              name="pass"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
-              // id="first_name"
               fullWidth
               error={formik.errors["pass"] && formik.touched["pass"]}
               variant="outlined"
@@ -186,12 +168,6 @@ const Hotelregister = () => {
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              label="تکرار رمز عبور"
-              name="rPass"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["rPass"] && formik.touched["rPass"]}
@@ -207,9 +183,11 @@ const Hotelregister = () => {
               {...formik.getFieldProps("rPass")}
             />
           </Grid>
-          <br />
           <Grid item md={12} xs={12}>
-            <button disabled={!(formik.isValid && formik.dirty)} type="submit">
+            <button disabled={!(formik.isValid && formik.dirty)}
+              style={{
+                marginTop: "15%",
+              }} type="submit">
               ثبت نام
             </button>
           </Grid>
