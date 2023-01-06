@@ -13,6 +13,8 @@ import { useHistory } from "react-router-dom";
 import { baseURL } from "../../../utils/useAxios";
 
 
+
+
 const STextField = styled(TextField)({
   "& .MuiFilledInput-root": {
     background: "#fefefe",
@@ -42,6 +44,7 @@ const validationSchema = Yup.object({
 
 
 const Hotelregister = () => {
+  const history = useHistory();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfrim, setShowPasswordConfrim] = useState(false);
   const [user, setUser] = useState([]);
@@ -53,7 +56,6 @@ const Hotelregister = () => {
   const { loginUser } = useContext(AuthContext);
 
   function posthotelHandler(hotel) {
-
     axios.post(
       `${baseURL}/api/hotel/owner/new/`,
       {
