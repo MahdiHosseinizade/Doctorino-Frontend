@@ -11,10 +11,10 @@ import theme from '../../../assets/theme/defaultTheme';
 import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import SentimentDissatisfiedOutlinedIcon from '@mui/icons-material/SentimentDissatisfiedOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
 
 function ReviewCard({ voter, score, text }) {
-    const [voterInfo, setVoterInfo] = useState();
 
     return (
         <>
@@ -26,7 +26,12 @@ function ReviewCard({ voter, score, text }) {
                 <Typography sx={{
                     marginBottom: "10px",
                 }}>
-                    کاربر: <span>    </span> {voter}
+                    <AccountCircleOutlinedIcon 
+                        sx={{
+                            marginRight: "5px",
+                            marginBottom: "-8px",
+                        }}
+                    /> {voter ? voter.first_name + " " + voter.last_name : "ناشناس"}
                 </Typography>
                 <Typography sx={{
                     marginBottom: "10px",

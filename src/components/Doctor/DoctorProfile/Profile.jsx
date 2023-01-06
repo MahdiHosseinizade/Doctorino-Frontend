@@ -195,8 +195,16 @@ const Profile = (props) => {
           Authorization: `Bearer ${authData?.access}`
         }
       }).then((res) => {
-
-        setReviews([...reviews, res.data]);
+        console.log("haha", res.data);
+        setReviews([...reviews, {
+          doctor: props.doctor?.id,
+          voter: {
+            first_name: user.first_name,
+            last_name: user.last_name,
+          },
+          score: values.score,
+          text: values.text,
+        }]);
 
         toast.success("نظر شما با موفقیت ثبت شد.", {
           position: "top-right",
