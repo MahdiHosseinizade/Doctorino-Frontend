@@ -225,7 +225,7 @@ export default function HotelProfileCompletion() {
 
     api
       // .get("/api/hotel/room/")
-      .get(`/api/hotel/${hotel === '' ?  '' : String(hotel)+'/'}room/`)
+      .get(`/api/hotel/${hotel === '' ? '' : String(hotel) + '/'}room/`)
       .then((res) => setRooms(res.data))
       .catch((err) => console.error(err));
 
@@ -442,9 +442,7 @@ export default function HotelProfileCompletion() {
         formData.append("province", values.province);
         formData.append("city", values.city);
 
-        features.forEach(feat => {
-          formData.append("features", feat)
-        })
+        formData.append("features", values.features);
 
         if (values.cover_image) {
           formData.append("cover_image", values.cover_image);
@@ -515,7 +513,7 @@ export default function HotelProfileCompletion() {
         roomFormData.append("room_title", values.room_title);
         roomFormData.append("hotel", hotel);
 
-        console.log('formData',roomFormData);
+        console.log('formData', roomFormData);
 
         api.post(`/api/hotel/room/`, roomFormData, {
           headers: {
@@ -563,8 +561,8 @@ export default function HotelProfileCompletion() {
         <Box sx={{ width: '100%' }}>
           <Box sx={{ marginLeft: '10px', borderBottom: 0, borderColor: 'divider' }}>
             <Tabs
-              variant="scrollable"
-              scrollButtons="auto"
+              scrollButtons={false}
+              allowScrollButtonsMobile={true}
               sx={{
                 marginBottom: '10px',
                 '& .MuiTab-root': {
@@ -576,11 +574,14 @@ export default function HotelProfileCompletion() {
                 '& .MuiTabs-indicator': {
                   backgroundColor: theme.palette.hotel.dark,
                 },
+                '& .muirtl-6v51ir-MuiButtonBase-root-MuiTab-root': {
+                  minWidth: "25%",
+                }
               }} value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab sx={{ width: '25%' }} label="اطلاعات جامع هتل" {...a11yProps(0)} />
-              <Tab sx={{ width: '25%' }} label="اتاق ها" {...a11yProps(1)} />
-              <Tab sx={{ width: '25%' }} label="اتاق جدید" {...a11yProps(2)} />
-              <Tab sx={{ width: '25%' }} label="گالری تصاویر" {...a11yProps(3)} />
+              <Tab sx={{ width: '15px' }} label="اطلاعات جامع هتل" {...a11yProps(0)} />
+              <Tab sx={{ width: '15px' }} label="اتاق ها" {...a11yProps(1)} />
+              <Tab sx={{ width: '15px' }} label="اتاق جدید" {...a11yProps(2)} />
+              <Tab sx={{ width: '15px' }} label="گالری تصاویر" {...a11yProps(3)} />
             </Tabs>
           </Box>
 
@@ -652,7 +653,7 @@ export default function HotelProfileCompletion() {
                     onSubmit={formik.handleSubmit}
                     component="form"
                   >
-                    <Dialog 
+                    <Dialog
                       open={hotelDeleteDialog}
                       onClose={() => setHotelDeleteDialog(false)}
                     >
@@ -685,11 +686,11 @@ export default function HotelProfileCompletion() {
 
                     <Grid container spacing={2}>
                       <Grid item xs={12} md={12}>
-                        <Dropzone 
+                        <Dropzone
                           imageToShow={winSize.width < 900 && coverImage ? coverImage : null}
-                          CssBaseLine={true} 
-                          handleFile={handleCoverImage} 
-                          iconColor={'hotel'} 
+                          CssBaseLine={true}
+                          handleFile={handleCoverImage}
+                          iconColor={'hotel'}
                         />
                       </Grid>
                       <Grid item xs={12} md={6}>
@@ -894,7 +895,7 @@ export default function HotelProfileCompletion() {
 
                     <Grid container spacing={2}>
                       <Grid container spacing={1} sx={{ marginTop: '10px' }}>
-                      {console.log(rooms)}
+                        {console.log(rooms)}
                         {rooms.map((room, index) => {
                           return (
                             <Grid key={room.id} item xs={12} md={12}>
@@ -983,13 +984,13 @@ export default function HotelProfileCompletion() {
                         justifyContent: 'center',
                       }}
                     >
-                      <Grid item xs={12}
+                      <Grid item xs={12} md={12}
                         sx={{
                           dispaly: 'flex',
                           justifyContent: 'center',
                         }}>
                         <STextField
-                          sx={{ left: '25%', minWidth: '50%' }}
+                          fullWidth
                           error={
                             formikRoom.errors["room_title"] && formikRoom.touched["room_title"]
                           }
@@ -1002,13 +1003,13 @@ export default function HotelProfileCompletion() {
                         />
                       </Grid>
                       <br />
-                      <Grid item xs={12}
+                      <Grid item xs={12} md={12}
                         sx={{
                           dispaly: 'flex',
                           justifyContent: 'center',
                         }}>
                         <STextField
-                          sx={{ left: '25%', minWidth: '50%' }}
+                          fullWidth
                           error={
                             formikRoom.errors["bed_count"] && formikRoom.touched["bed_count"]
                           }
@@ -1021,13 +1022,13 @@ export default function HotelProfileCompletion() {
                         />
                       </Grid>
                       <br />
-                      <Grid item xs={12}
+                      <Grid item xs={12} md={12}
                         sx={{
                           dispaly: 'flex',
                           justifyContent: 'center',
                         }} >
                         <STextField
-                          sx={{ left: '25%', minWidth: '50%' }}
+                          fullWidth
                           error={
                             formikRoom.errors["number_of_room"] && formikRoom.touched["number_of_room"]
                           }
@@ -1040,13 +1041,13 @@ export default function HotelProfileCompletion() {
                         />
                       </Grid>
                       <br />
-                      <Grid item xs={12}
+                      <Grid item xs={12} md={12}
                         sx={{
                           dispaly: 'flex',
                           justifyContent: 'center',
                         }} >
                         <STextField
-                          sx={{ left: '25%', minWidth: '50%' }}
+                          fullWidth
                           error={
                             formikRoom.errors["price_per_night"] && formikRoom.touched["price_per_night"]
                           }
@@ -1059,13 +1060,14 @@ export default function HotelProfileCompletion() {
                         />
                       </Grid>
                       <br />
-                      <Grid item xs={5} sx={{
-                        dispaly: 'flex',
-                        justifyContent: 'center',
-                        marginTop: '15px',
-                      }}>
-                        <Button color="hotel" type="submit" variant="contained"
-                          sx={{ Width: '50%', marginRight: '10px' }}>
+                      <Grid item xs={12} md={12}
+                        sx={{
+                          dispaly: 'flex',
+                          justifyContent: 'center',
+                          marginTop: '15px',
+                        }}
+                      >
+                        <Button color="hotel" type="submit" variant="contained" fullWidth>
                           ذخیره
                         </Button>
                       </Grid>
@@ -1131,7 +1133,7 @@ function useWindowSize() {
     }
 
     window.addEventListener("resize", handleResize);
-    
+
     handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
