@@ -30,7 +30,6 @@ export default function HotelSearch() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("city id: ", city.id);
     await axios
       .post("http://188.121.113.74/api/hotel/search/", {
         province: city.id,

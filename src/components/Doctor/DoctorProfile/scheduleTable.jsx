@@ -26,6 +26,7 @@ import AuthContext from "../../../context/AuthContext";
 import useAxios from "../../../utils/useAxios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Provinces from "../../../db/Provinces";
 
 export default function ScheduleTime({ doctor, ...props }) {
   const formValue = {
@@ -90,6 +91,7 @@ export default function ScheduleTime({ doctor, ...props }) {
 
   let show_time = [];
   const [open, setOpen] = React.useState(false);
+  const [openHotelOffer, setOpenHotelOffer] = React.useState(false);
   const history = useHistory();
   const [_from_time, set_from_time] = useState("");
   const [_to_time, set_to_time] = useState("");
@@ -113,6 +115,7 @@ export default function ScheduleTime({ doctor, ...props }) {
 
   const handleClose = () => {
     setOpen(false);
+
   };
 
   const [reservation, setReservation] = useState([]);
@@ -389,10 +392,11 @@ export default function ScheduleTime({ doctor, ...props }) {
             position: "top-right",
             autoClose: 2000,
           });
-          window.setTimeout(reload, 1000)
+          setOpenHotelOffer(true);
+          // window.setTimeout(reload, 1000)
         })
         .catch((err) => {
-          toast.error("خطایی رخ داده است", {
+          toast.error("این زمان قبلا رزرو شده است", {
             position: "top-right",
             autoClose: 2000,
           });
@@ -403,6 +407,61 @@ export default function ScheduleTime({ doctor, ...props }) {
     validationSchema: validationSchema,
   });
 
+
+  function HotelOffer() {
+    return (
+      <Box>
+        <DialogContent>
+          <DialogContentText
+            id="hotel-offer"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Typography sx={{justifyItems: 'right'}}>
+              شما می تولنید در صورت تمایل نزدیک ترین اقامتگاه نزدیک بیمارستان یا مطب پزشک مورد نظر خود را نیز رزرو کنید
+            </Typography>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {
+            axios
+              .post("http://188.121.113.74/api/hotel/search/", {
+                province: Provinces.filter(pro => pro.value === doctor?.province)[0]?.id,
+              })
+              .then((response) => {
+                if (response.data.length !== 0) {
+                  console.log("the response of found hotels: ", response.data);
+                  history.push("/found-hotels", { hotels: response.data });
+                } else {
+                  toast.error("هیچ هتلی یافت نشد");
+                  setOpenHotelOffer(false);
+                }
+              })
+              .catch((err) => {
+                toast.error(err.response.data.message);
+              });
+          }
+          } autoFocus>
+            انتخاب هتل
+          </Button>
+          <Button 
+          onClick={() =>{
+            setOpenHotelOffer(false)
+            history.push(
+            user?.role === "patient" ? "/patient-panel" : "/"
+            )
+          }}
+          >
+            رد کردن
+          </Button>
+        </DialogActions>
+      </Box>
+    );
+  }
+
+
   function ReservePopUp() {
     return (
       <Box onSubmit={formik.handleSubmit} component="form">
@@ -412,15 +471,12 @@ export default function ScheduleTime({ doctor, ...props }) {
             sx={{
               display: "flex",
               justifyContent: "center",
+              fontWeight: '700px',
             }}
           >
-            {/* جهت رزرو نهایی نوبت برای دکتر { }، { } در زمان { } ، لطفا روی <span>&nbsp;<b>تایید نهایی رزرو</b>&nbsp;</span> کلیک کنید */}
-            {/* {console.log(props?.scheduleTime[0])} */}
-            جهت ثبت نهایی نوبت پزشک خود لطفا روی{" "}
-            <span>
-              &nbsp;<b>تایید نهایی رزرو</b>&nbsp;
-            </span>{" "}
-            کلیک کنید
+            <Typography sx={{justifyItems: 'right'}}>
+              جهت ثبت نهایی نوبت برای دکتر {doctor?.user.first_name + ' ' + doctor?.user.last_name} در روز {days[activeStep]} از ساعت {_from_time} تا ساعت {_to_time} لطفا روی تایید نهایی رزرو کلیک کنید
+            </Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -449,7 +505,7 @@ export default function ScheduleTime({ doctor, ...props }) {
         <DialogActions>
           <Button
             onClick={() => {
-              history.push("/login", { destination: window.location.pathname});
+              history.push("/login", { destination: window.location.pathname });
             }}
           >
             &nbsp;ورود
@@ -465,7 +521,7 @@ export default function ScheduleTime({ doctor, ...props }) {
       </div>
     );
   }
-  function reload(){
+  function reload() {
     window.location.reload()
   }
 
@@ -562,22 +618,20 @@ export default function ScheduleTime({ doctor, ...props }) {
                               ) == "45"
                             ) {
                               set_to_time(
-                                `${
-                                  Number(time.substring(0, time.indexOf(":"))) +
-                                  1
+                                `${Number(time.substring(0, time.indexOf(":"))) +
+                                1
                                 }:00:00`
                               );
                             } else {
                               set_to_time(
                                 `${Number(
                                   time.substring(0, time.indexOf(":"))
-                                )}:${
-                                  Number(
-                                    time.substring(
-                                      time.indexOf(":") + 1,
-                                      time.indexOf(":") + 3
-                                    )
-                                  ) + 15
+                                )}:${Number(
+                                  time.substring(
+                                    time.indexOf(":") + 1,
+                                    time.indexOf(":") + 3
+                                  )
+                                ) + 15
                                 }:00`
                               );
                             }
@@ -592,34 +646,34 @@ export default function ScheduleTime({ doctor, ...props }) {
                   })}
                 {show_time.filter((item) => item[0] == day[activeStep])[0][1]
                   .length === 0 && (
-                  <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    sx={{ justifyContent: "center", display: "flex" }}
-                  >
-                    <Box
-                      sx={{
-                        diasplay: "flex",
-                        width: "100%",
-                      }}
+                    <Grid
+                      item
+                      xs={12}
+                      md={12}
+                      sx={{ justifyContent: "center", display: "flex" }}
                     >
-                      <Typography
-                        textAlign="center"
+                      <Box
                         sx={{
-                          fontWeight: "550",
-                          fontSize: "14px",
-                          justifyContent: "center",
-                          display: "flex",
-                          marginTop: "50px",
-                          marginBottom: "40px",
+                          diasplay: "flex",
+                          width: "100%",
                         }}
                       >
-                        متاسفانه زمانی برای نمایش وجود ندارد
-                      </Typography>
-                    </Box>
-                  </Grid>
-                )}
+                        <Typography
+                          textAlign="center"
+                          sx={{
+                            fontWeight: "550",
+                            fontSize: "14px",
+                            justifyContent: "center",
+                            display: "flex",
+                            marginTop: "50px",
+                            marginBottom: "40px",
+                          }}
+                        >
+                          متاسفانه زمانی برای نمایش وجود ندارد
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  )}
               </Grid>
             </Box>
           </Stack>
@@ -696,6 +750,26 @@ export default function ScheduleTime({ doctor, ...props }) {
           {user && ReservePopUp()}
           {!user && logInPopUp()}
         </Dialog>
+
+        <Dialog
+          open={openHotelOffer}
+          onClose={() => setOpenHotelOffer(false)}
+          aria-labelledby="alert-hotel-offer"
+          aria-describedby="hotel-offer"
+        >
+          <DialogTitle id="alert-hotel-offer">
+            <Typography
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {"رزرو هتل"}
+            </Typography>
+          </DialogTitle>
+          {HotelOffer()}
+        </Dialog>
+
       </Grid>
     </Card>
   );

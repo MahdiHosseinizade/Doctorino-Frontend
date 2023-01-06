@@ -145,7 +145,6 @@ const Profile = (props) => {
       api.get(`/api/doctor/${props.doctorId}/reviews/`)
         .then(res => {
           setReviews(res.data);
-          console.log(res.data);
           setLoading(false);
         })
         .catch(err => {
@@ -241,7 +240,7 @@ const Profile = (props) => {
                 <Grid container spacing={3.5} >
                   <Grid item xs={12} md={12} >
                     <Typography variant="body2" sx={{ fontSize: "20px", }}>
-                      <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{props.doctor?.city}
+                      <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{props.doctor?.province} - {props.doctor?.city}
                     </Typography>
                   </Grid>
 
@@ -312,7 +311,7 @@ const Profile = (props) => {
             <h4 style={{ marginBottom: "15px" }}> نشانی مطب</h4>
             <Typography>
               <LocationOnIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
-              {`${props.doctor?.province}، ${props.doctor?.city}، ${props.doctor?.clinic_address}`}
+              {`${props.doctor?.clinic_address}`}
             </Typography>
           </TabPanel>
           <TabPanel value={value} index={2}>
