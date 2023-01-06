@@ -54,7 +54,7 @@ const Hotelregister = () => {
   const handleMouseDownPasswordConfrim = () => setShowPasswordConfrim(!showPasswordConfrim);
 
   const { loginUser } = useContext(AuthContext);
-  const history = useHistory();
+  
   function posthotelHandler(hotel) {
     axios.post(
       `${baseURL}/api/hotel/owner/new/`,
