@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 //schedule time
 import React, { useState, useEffect, useContext } from "react";
 import {
@@ -100,7 +101,11 @@ export default function ScheduleTime({ doctor, ...props }) {
   const maxSteps = day.length;
   const [flag, setFlag] = useState(true);
   const [deleteValue, setDalateValue] = useState("");
+  const [ loading, setLoading] = useState(true);
   var today = new Date();
+  // var doctorTodayTimes = [];
+  const [doctorTodayTimes, setDoctorTodayTimes] = useState([]);
+  const [newTims, setNewTimes] = useState([]);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -124,6 +129,15 @@ export default function ScheduleTime({ doctor, ...props }) {
     setReservation(event);
     console.log(event.outerText);
   };
+
+  useEffect(() => {
+
+    if (loading) {
+      GetAvailableTimes()
+      setLoading(false)
+    }
+
+}, [loading, doctor, GetAvailableTimes, doctorTodayTimes, ])
 
   const data = doctor?.work_periods;
   for (let time in data) {
@@ -350,19 +364,20 @@ export default function ScheduleTime({ doctor, ...props }) {
     },
 
     onSubmit: (values) => {
+
       // today.setDate(today.getDate() + activeStep);
 
-      console.log({
-        date_reserved: today
-          .toLocaleDateString("fa-IR-u-nu-latn")
-          .replaceAll("/", "-"),
-        from_time: _from_time,
-        to_time: _to_time,
-        patient_name: `${authData["first-name"] + " " + authData["last-name"]}`,
-        national_code: "0987654321",
-        doctor: doctor?.id,
-        patient: authData.id,
-      });
+      // console.log({
+      //   date_reserved: today
+      //     .toLocaleDateString("fa-IR-u-nu-latn")
+      //     .replaceAll("/", "-"),
+      //   from_time: _from_time,
+      //   to_time: _to_time,
+      //   patient_name: `${authData["first-name"] + " " + authData["last-name"]}`,
+      //   national_code: "0987654321",
+      //   doctor: doctor?.id,
+      //   patient: authData.id,
+      // });
 
       api
         .post(
@@ -407,20 +422,15 @@ export default function ScheduleTime({ doctor, ...props }) {
     validationSchema: validationSchema,
   });
 
-  // console.log('1day',today.getUTCDate()%7, today.toLocaleDateString("fa-IR-u-nu-latn").replaceAll("/", "-"),)
-  let doctorTodayTimes = [];
-  function GetAvailableTimes()
-  { 
+  function GetAvailableTimes() {
+
     if (doctor?.id) {
-
-      if (today.getUTCDate()%7 < activeStep){
-        today.setDate(today.getDate() + activeStep - today.getUTCDate()%7);
+      if (today.getUTCDate() % 7 < activeStep) {
+        today.setDate(today.getDate() + activeStep - today.getUTCDate() % 7);
       }
-      else if (today.getUTCDate()%7 > activeStep){
-        today.setDate(today.getDate() + activeStep - (today.getUTCDate()%7) + 7);
+      else if (today.getUTCDate() % 7 > activeStep) {
+        today.setDate(today.getDate() + activeStep - (today.getUTCDate() % 7) + 7);
       }
-
-      // console.log('2day',today.getUTCDate()%7, today.toLocaleDateString("fa-IR-u-nu-latn").replaceAll("/", "-"),)
 
       api
         .post(`/api/doctor/times/`, {
@@ -430,8 +440,8 @@ export default function ScheduleTime({ doctor, ...props }) {
             .replaceAll("/", "-"),
         })
         .then((res) => {
-          doctorTodayTimes = res.data
-          console.log('data set', doctorTodayTimes)
+          setDoctorTodayTimes(res.data);
+          // console.log('axios doctorTodayTimes', doctorTodayTimes)
         })
         .catch((err) => {
           toast.error("خطایی در سیستم رخ داده", {
@@ -466,7 +476,6 @@ export default function ScheduleTime({ doctor, ...props }) {
               })
               .then((response) => {
                 if (response.data.length !== 0) {
-                  console.log("the response of found hotels: ", response.data);
                   history.push("/found-hotels", { hotels: response.data });
                 } else {
                   toast.error("هیچ هتلی یافت نشد");
@@ -555,9 +564,12 @@ export default function ScheduleTime({ doctor, ...props }) {
       </div>
     );
   }
+  
   function reload() {
     window.location.reload()
   }
+
+
 
   return (
     <Card
@@ -638,8 +650,7 @@ export default function ScheduleTime({ doctor, ...props }) {
                           variant="outlined"
                           id={`${time}`}
                           className={`${time}`}
-                          // disabled='true'
-                          // color={(flag && Button.id == `${time}`) ? "primary" : 'error'}
+                          disabled =  { !doctorTodayTimes ?  true : !doctorTodayTimes?.filter(item => Number(item?.from_time.split(':')[0]) === Number(time?.split(':')[0]) && Number(item?.from_time.split(':')[1]) === Number(time?.split(':')[1]))[0]?.is_available}      
                           sx={{
                             borderRadius: "15px",
                           }}
@@ -754,6 +765,7 @@ export default function ScheduleTime({ doctor, ...props }) {
             </Typography>
             <br />
             <Button
+              disabled={!_from_time}
               sx={{
                 width: "100%",
                 backgroundColor: "primary",
