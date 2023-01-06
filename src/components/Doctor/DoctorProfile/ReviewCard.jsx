@@ -4,7 +4,7 @@ import {
     Rating,
     Box,
 } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
 import ThumbUpAlt from '@mui/icons-material/ThumbUpAlt';
 import theme from '../../../assets/theme/defaultTheme';
@@ -14,16 +14,7 @@ import SentimentDissatisfiedOutlinedIcon from '@mui/icons-material/SentimentDiss
 
 
 function ReviewCard({ voter, score, text }) {
-
-    const [loading, setLoading] = useState(true);
     const [voterInfo, setVoterInfo] = useState();
-
-    useEffect(() => {
-        if (loading) {
-
-        }
-    }, [loading])
-
 
     return (
         <>
@@ -56,7 +47,7 @@ function ReviewCard({ voter, score, text }) {
                     }
                     <Rating
                         value={score}
-                        readOnly="true"
+                        readOnly={true}
                         sx={{
                             color: theme.palette.doctor.main,
                         }}
