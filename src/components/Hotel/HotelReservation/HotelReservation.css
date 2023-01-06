@@ -80,3 +80,12 @@
     font-size: 17px;
     font-weight: bold;
 }
+.BedCountIcon{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.BedIcon{
+    margin-left: 10px;
+    color: #eab308;
+}

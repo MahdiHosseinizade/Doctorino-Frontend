@@ -19,8 +19,8 @@ import useAxios from "../../../utils/useAxios";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router";
 import NavBar from "../../NavBar/newNavBar";
-import moment from "jalali-moment";
-import { getTime } from "date-fns-jalali";import theme from '../../../assets/theme/defaultTheme'
+import {IoBedSharp} from 'react-icons/io5'
+import theme from '../../../assets/theme/defaultTheme'
 
 
 const useStyles = makeStyles({
@@ -157,7 +157,10 @@ const HotelReservation = () => {
                   اسم اتاق : {data.room.room_title}
                 </div>
                 <div className="BedCount">
-                  تعداد تخت : {data.room.bed_count}{" "}
+                  <div className="BedCountIcon">
+                    <IoBedSharp className="BedIcon" />
+                    <div>تعداد تخت : {data.room.bed_count}</div>
+                  </div>
                 </div>
               </div>
             </div>
