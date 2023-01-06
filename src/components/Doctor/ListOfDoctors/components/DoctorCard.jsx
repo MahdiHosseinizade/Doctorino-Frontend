@@ -1,4 +1,5 @@
 import {
+  autocompleteClasses,
   Box,
   Button,
   Card,
@@ -11,7 +12,8 @@ import {
 import React from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import theme from "../../../../assets/theme/defaultTheme";
-import {makeStyles} from "@mui/styles";
+import { makeStyles } from "@mui/styles";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const useStyles = makeStyles({
   card: {
@@ -28,38 +30,52 @@ export default function DoctorCard({ doctor }) {
   const history = useHistory();
 
   // console.log(doctor)
-  const {url} = useRouteMatch();
+  const { url } = useRouteMatch();
   const classes = useStyles();
 
   return (
     <Card
       sx={{
         m: 2,
+        // margin: "auto",
         backgroundColor: "#efefef",
         display: "flex",
         borderRadius: "10px",
         maxWidth: "80%",
-        maxHeight: "85%",
+        maxHeight: "95%",
       }}
       // className={classes.card}
     >
       <Grid container>
-        <Grid item md={3}>
-          <a href={`${url}/${doctor.id}`}>
+        {/* image of doctor */}
+        <Grid
+          item
+          md={3}
+          sm={5}
+          xs={12}
+          sx={{ justifyContent: "center", display: "flex" }}
+        >
+          <a
+            href={`${url}/${doctor.id}`}
+            sx={{ justifyContent: "center", display: "flex" }}
+          >
             <CardMedia
               component="img"
               sx={{
-                width: "85%",
-                height: "90%",
+                margin: "auto",
+                marginTop: "15px",
+                width: "90%",
+                height: "80%",
                 padding: "10px",
-                borderRadius: "20px",
+                borderRadius: "50%",
               }}
               image={doctor.image}
               alt="profile-picture"
             />
           </a>
         </Grid>
-        <Grid item md={9} sm={8} xs={12}>
+
+        <Grid item md={9} sm={7} xs={12}>
           <Box
             sx={{
               display: "flex",
@@ -78,43 +94,77 @@ export default function DoctorCard({ doctor }) {
                   marginBottom: "10px",
                 }}
               >
-                <a
-                  style={{
-                    color: theme.palette.text.primary,
-                    textDecoration: "none",
-                  }}
-                  href={`${url}/${doctor.id}`}
-                >
-                  <Typography
-                    component="div"
-                    variant="h5"
-                    sx={{
-                      display: "inline",
-                    }}
+                <Grid container>
+                  <Grid item md={9} sm={12} xs={12}>
+                    <a
+                      style={{
+                        color: theme.palette.text.primary,
+                        textDecoration: "none",
+                      }}
+                      href={`${url}/${doctor.id}`}
+                    >
+                      <Typography
+                        component="div"
+                        variant="h5"
+                        sx={{
+                          display: "inline",
+                        }}
+                      >
+                        دکتر {doctor.user.first_name} {doctor.user.last_name}
+                      </Typography>
+                      <br />
+                      <Typography
+                        component="div"
+                        variant="subtitle2"
+                        sx={{
+                          marginTop: "50px",
+                          display: "inline",
+                          color: "#7F8487",
+                        }}
+                      >
+                        {doctor.specialties[0].name}
+                      </Typography>
+                      <br />
+                      <Typography
+                        component="div"
+                        variant="subtitle2"
+                        sx={{
+                          display: "inline",
+                        }}
+                      >
+                        کد نظام پزشکی: {doctor.medical_system_number}
+                      </Typography>
+                    </a>
+                  </Grid>
+                  <Grid
+                    item
+                    md={3}
+                    sm={12}
+                    xs={12}
+                    sx={{ display: "flex", justifyContent: "center" }}
                   >
-                    دکتر {doctor.user.first_name} {doctor.user.last_name}
-                  </Typography>
-                </a>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    width: "150px",
-                    float: "right",
-                  }}
-                  onClick={() => history.push(`${url}/` + doctor.id)}
-                >
-                  مشاهده اطلاعات
-                </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      sx={{
+                        width: "150px",
+                        height: "45px",
+                        float: "right",
+                        borderRadius: "10px",
+                        marginTop: "20px",
+                      }}
+                      onClick={() => history.push(`${url}/` + doctor.id)}
+                    >
+                      نوبت بگیرید
+                    </Button>
+                  </Grid>
+                </Grid>
               </Box>
 
-              {/* <Rating
-                size="small"
-                name="doctorRating"
-                value={doctor.rating}
-                readOnly
-              /> */}
-              <hr width="100%" />
+              <hr
+                width="100%"
+                style={{ borderTop: "dotted 1px #7F8487", marginTop: "30px" }}
+              />
               <Typography
                 component="div"
                 variant="subtitle1"
@@ -126,9 +176,8 @@ export default function DoctorCard({ doctor }) {
                   overflow: "hidden",
                 }}
               >
-                آدرس مطب: 
-                {doctor.province}، {doctor.city}،{" "}
-                {doctor.clinic_address}
+                <LocationOnIcon style={{ color: theme.palette.doctor.main }} />
+                {doctor.province}، {doctor.city}
               </Typography>
             </CardContent>
           </Box>
