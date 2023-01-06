@@ -8,6 +8,10 @@ import React, { useState, useEffect } from 'react';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
 import ThumbUpAlt from '@mui/icons-material/ThumbUpAlt';
 import theme from '../../../assets/theme/defaultTheme';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
+import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import SentimentDissatisfiedOutlinedIcon from '@mui/icons-material/SentimentDissatisfiedOutlined';
+
 
 function ReviewCard({ voter, score, text }) {
 
@@ -36,6 +40,20 @@ function ReviewCard({ voter, score, text }) {
                 <Typography sx={{
                     marginBottom: "10px",
                 }}>
+                    {score > 2 ? 
+                        <SentimentSatisfiedAltOutlinedIcon 
+                            sx={{
+                                color: theme.palette.secondary.main,
+                                marginRight: "5px",
+                            }}
+                        /> : 
+                        <SentimentDissatisfiedOutlinedIcon 
+                            sx={{
+                                color: theme.palette.error.main,
+                                marginRight: "5px",
+                            }}
+                        />
+                    }
                     <Rating
                         value={score}
                         readOnly="true"
@@ -50,7 +68,10 @@ function ReviewCard({ voter, score, text }) {
                     fontSize: "14px",
                     fontWeight: "600",
                 }}>
-                    {text}
+                    <MessageOutlinedIcon sx={{
+                        marginBottom: "-8px",
+                        marginRight: "5px",
+                    }} /> {text}
                 </Typography>
             </Box>
         </>
