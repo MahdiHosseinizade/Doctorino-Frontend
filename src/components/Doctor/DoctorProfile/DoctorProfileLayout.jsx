@@ -48,11 +48,27 @@ export default function DoctorProfileLayout() {
         <>
             {loaded ?
                 <Container>
-                    <NavBar bgColor={theme.palette.doctor}/>
+                    <NavBar bgColor={theme.palette.doctor} />
                     <CssBaseline />
                     <Grid container spacing={4}>
                         <Grid
-                            xs={7}
+                            item
+                            xs={12}
+                            sx={{
+                                mr: "10px",
+                                Width: "100%",
+                                display: {xs: "static", md: "none", lg: "none"},
+                                position: "static",
+                                flexDirection: "row",
+                                height: "auto",
+                                alignItems: "center",
+                                boxSizing: "border-box"
+                            }}
+                        >
+                            <ScheduleTime doctor={doctor} />
+                        </Grid>
+                        <Grid
+                            xs={12}
                             md={7}
                             lg={7}
                             item
@@ -69,16 +85,14 @@ export default function DoctorProfileLayout() {
 
                         <Grid
                             item
-
                             xs={4.5}
                             md={4.5}
-                            lg={4.5}
                             sx={{
                                 mr: "10px",
                                 Width: "100%",
-                                display: "static",
-                                position: "static",
-                                flexDirection: "row",
+                                display: {xs: "none", md: "flex", lg: "flex"},
+                                flexDirection: "column",
+                                justifyContent: "flex-start",
                                 height: "auto",
                                 alignItems: "center",
                                 boxSizing: " border-box"
@@ -89,7 +103,7 @@ export default function DoctorProfileLayout() {
                     </Grid>
                 </Container >
                 :
-                <NotFound /> 
+                <NotFound />
             }
         </>
     );
