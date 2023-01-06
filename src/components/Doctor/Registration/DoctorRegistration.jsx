@@ -4,13 +4,14 @@ import styles from "./doctor.module.css";
 import * as Yup from "yup";
 // import Select from 'react-select';
 import { useState } from "react";
-import { Grid, TextField, Typography } from "@mui/material";
+import { Grid, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { getDoctorScale } from "../../../services/getDoctorScale";
 import { postDoctorRegister } from "../../../services/postDocotorRegister";
 import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const value = {
   first_name: "",
@@ -45,11 +46,14 @@ const STextField = styled(TextField)({
 })
 
 const DoctorRegister = () => {
+    const [showPassword, setShowPassword] = useState(false);
   const [scale, setscale] = useState("پزشک عمومی");
   const [doctor, setDoctor] = useState({ ...value });
   const [doctorScale, setDoctorScale] = useState(null);
   const [error, setError] = useState("Ooops !!!!");
-  
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+
   const history = useHistory();
   useEffect(() => {
     getdoctorScale();
@@ -216,10 +220,23 @@ const DoctorRegister = () => {
                 error={
                   formik.errors["password"] && formik.touched["password"] 
                 }
-                variant="filled"
+                variant="outlined"
                 label="کلمه عبور"
                 name="password"
-                type="password"
+                type = {showPassword ? "text" : "password"}
+                InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 helperText={ formik.errors["password"] && formik.touched["password"] && formik.errors["password"]}
                 {...formik.getFieldProps("password")}
             />
