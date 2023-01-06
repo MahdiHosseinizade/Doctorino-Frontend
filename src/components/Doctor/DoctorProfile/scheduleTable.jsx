@@ -385,11 +385,11 @@ export default function ScheduleTime({ doctor, ...props }) {
           delete show_time[activeStep][
             show_time[activeStep].indexOf(_from_time)
           ];
-          window.location.reload();
           toast.success("نوبت شما با موفقیت رزرو شد", {
             position: "top-right",
             autoClose: 2000,
           });
+          window.setTimeout(reload, 1000)
         })
         .catch((err) => {
           toast.error("خطایی رخ داده است", {
@@ -464,6 +464,9 @@ export default function ScheduleTime({ doctor, ...props }) {
         </DialogActions>
       </div>
     );
+  }
+  function reload(){
+    window.location.reload()
   }
 
   return (
