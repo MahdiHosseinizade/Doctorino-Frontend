@@ -34,15 +34,6 @@ export default function DoctorProfileLayout() {
         setLoading(false);
     }
 
-    // function fetchData2() {
-    //     axios.get(`http://188.121.113.74/api/doctor/workday/${id}/`)
-    //         .then(res => {
-    //             setScheduleTime(res.data);
-    //         })
-    //         .catch(err => console.log(err))
-
-    //     setLoading(false);
-    // }
 
     useEffect(() => {
 

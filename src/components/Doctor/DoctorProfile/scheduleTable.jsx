@@ -100,6 +100,7 @@ export default function ScheduleTime({ doctor, ...props }) {
   const maxSteps = day.length;
   const [flag, setFlag] = useState(true);
   const [deleteValue, setDalateValue] = useState("");
+  var today = new Date();
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -337,8 +338,6 @@ export default function ScheduleTime({ doctor, ...props }) {
     show_time.push([days[i], scedule_time[i]]);
   }
 
-  var today = new Date();
-
   const [form, setForm] = useState("");
   const { authData } = useContext(AuthContext);
   const { user, authTokens, logoutUser } = useContext(AuthContext);
@@ -351,7 +350,8 @@ export default function ScheduleTime({ doctor, ...props }) {
     },
 
     onSubmit: (values) => {
-      today.setDate(today.getDate() + activeStep);
+      // today.setDate(today.getDate() + activeStep);
+
       console.log({
         date_reserved: today
           .toLocaleDateString("fa-IR-u-nu-latn")
@@ -407,6 +407,43 @@ export default function ScheduleTime({ doctor, ...props }) {
     validationSchema: validationSchema,
   });
 
+console.log(today.getUTCDate())
+  let doctorTodayTimes = [];
+  function GetAvailableTimes()
+  { 
+    if (doctor?.id) {
+      // console.log('now', now.getUTCDate(),now
+      // .toLocaleDateString("fa-IR-u-nu-latn")
+      // .replaceAll("/", "-"),)
+      // let add_day = activeStep + now.getUTCDate() > 6 ? (activeStep + now.getUTCDate())%7 : activeStep + now.getUTCDate()
+      // now.setDate(today.getDate() + add_day);
+      // console.log(now)
+
+      if (today.getUTCDate() < activeStep){
+        today.setDate(today.getDate() + activeStep - today.getUTCDate());
+      }
+      else if (today.getUTCDate() > activeStep){
+        today.setDate(today.getDate() + activeStep - today.getUTCDate() + 7);
+      }
+
+      today.setDate(today.getDate());
+
+      api
+        .post(`/api/doctor/times/`, {
+          doctor: doctor?.id,
+          date: today
+            .toLocaleDateString("fa-IR-u-nu-latn")
+            .replaceAll("/", "-"),
+        })
+        .then((res) => {
+          doctorTodayTimes = res.data
+          console.log('data set', doctorTodayTimes)
+        })
+        .catch((err) => {
+          console.log('error in setting data reservation')
+        })
+    }
+  }
 
   function HotelOffer() {
     return (
@@ -419,7 +456,7 @@ export default function ScheduleTime({ doctor, ...props }) {
               justifyContent: "center",
             }}
           >
-            <Typography sx={{justifyItems: 'right'}}>
+            <Typography sx={{ justifyItems: 'right' }}>
               شما می تولنید در صورت تمایل نزدیک ترین اقامتگاه نزدیک بیمارستان یا مطب پزشک مورد نظر خود را نیز رزرو کنید
             </Typography>
           </DialogContentText>
@@ -446,13 +483,13 @@ export default function ScheduleTime({ doctor, ...props }) {
           } autoFocus>
             انتخاب هتل
           </Button>
-          <Button 
-          onClick={() =>{
-            setOpenHotelOffer(false)
-            history.push(
-            user?.role === "patient" ? "/patient-panel" : "/"
-            )
-          }}
+          <Button
+            onClick={() => {
+              setOpenHotelOffer(false)
+              history.push(
+                user?.role === "patient" ? "/patient-panel" : "/"
+              )
+            }}
           >
             رد کردن
           </Button>
@@ -474,7 +511,7 @@ export default function ScheduleTime({ doctor, ...props }) {
               fontWeight: '700px',
             }}
           >
-            <Typography sx={{justifyItems: 'right'}}>
+            <Typography sx={{ justifyItems: 'right' }}>
               جهت ثبت نهایی نوبت برای دکتر {doctor?.user.first_name + ' ' + doctor?.user.last_name} در روز {days[activeStep]} از ساعت {_from_time} تا ساعت {_to_time} لطفا روی تایید نهایی رزرو کلیک کنید
             </Typography>
           </DialogContentText>
@@ -587,6 +624,7 @@ export default function ScheduleTime({ doctor, ...props }) {
               }
             />
           </Stack>
+          {GetAvailableTimes()}
         </Grid>
         <hr style={{ width: "100%", color: "black" }} />
         <Grid item>

@@ -216,32 +216,53 @@ export default function ManagerProfile(props) {
 
     onSubmit: (values) => {
       
-      let formData = new FormData();
-      let user = {
-        first_name: values.first_name,
-        last_name: values.last_name,
-        email: ownerInfos.email,
-        usrname: ownerInfos.username,
-      };
-      formData.append("user", user);
-      formData.append("first_phone_number", values.first_phone_number);
-      formData.append("gender", genders.indexOf(values.gender));
-      formData.append("national_code", values.national_code);
-      formData.append("father_name", values.father_name);
-      formData.append("second_phone_number", "");
-      formData.append("area_code", values.area_code);
-      formData.append("telephone_number", values.telephone_number);
-      formData.append("address", values.address);
-      formData.append(
-        "birth_day",
-        `${values.birthYear}-${months.indexOf(values.birthMonth)+1}-${values.birthDay}`
-      );
-      formData.append("shaba_code", values.shaba_code);
+      // let formData = new FormData();
+      // let user = {
+      //   first_name: values.first_name,
+      //   last_name: values.last_name,
+      //   email: ownerInfos.email,
+      //   usrname: ownerInfos.username,
+      // };
+      // console.log("USER",user, user.email)
+      // formData.append("user", {
+      //   first_name: values.first_name,
+      //   last_name: values.last_name,
+      //   email: ownerInfos.email,
+      //   usrname: ownerInfos.username,
+      // });
+      // formData.append("first_phone_number", values.first_phone_number);
+      // formData.append("gender", genders.indexOf(values.gender));
+      // formData.append("national_code", values.national_code);
+      // formData.append("father_name", values.father_name);
+      // formData.append("area_code", values.area_code);
+      // formData.append("telephone_number", values.telephone_number);
+      // formData.append("address", values.address);
+      // formData.append(
+      //   "birth_day",
+      //   `${values.birthYear}-${months.indexOf(values.birthMonth)+1}-${values.birthDay}`
+      // );
+      // formData.append("shaba_code", values.shaba_code);
 
-      
+      let send_data ={
+        user: {
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: ownerInfos.email,
+          username: ownerInfos.username,
+        },
+        first_phone_number: values.first_phone_number,
+        gender: genders.indexOf(values.gender),
+        national_code: values.national_code,
+        father_name: values.father_name,
+        area_code: values.area_code,
+        telephone_number: values.telephone_number,
+        address: values.address,
+        birth_day: `${values.birthYear}-${months.indexOf(values.birthMonth)+1}-${values.birthDay}`,
+        shaba_code: values.shaba_code,
+      }
 
       api
-        .put(`/api/hotel/owner/${authData["child-id"]}/`, formData, {
+        .put(`/api/hotel/owner/${authData["child-id"]}/`, send_data, {
           headers: {
             Authorization: "Bearer " + authData?.access,
           },
@@ -252,34 +273,34 @@ export default function ManagerProfile(props) {
             position: "top-right",
             autoClose: 2000,
           });
-
+          console.log(send_data);
           setOwnerInfos({
             ...ownerInfos,
-            first_name: values.first_name,
-            last_name: values.last_name,
-            email: values.email,
-            username:  values.username,
-            father_name: values.father_name,
-            gender: values.gender,
-            first_phone_number: values.first_phone_number,
-            second_phone_number: values.second_phone_number,
-            area_code: values.area_code,
-            telephone_number: values.telephone_number,
-            address: values.address,
-            birth_day: values.birth_day,
-            shaba_code: values.shaba_code,
-            national_code: values.national_code,
+            first_name: send_data.user.first_name,
+            last_name: send_data.user.last_name,
+            email: send_data.user.email,
+            username:  send_data.user.username,
+            father_name: send_data.father_name,
+            gender: send_data.gender,
+            first_phone_number: send_data.first_phone_number,
+            second_phone_number: send_data.second_phone_number,
+            area_code: send_data.area_code,
+            telephone_number: send_data.telephone_number,
+            address: send_data.address,
+            birth_day: send_data.birth_day,
+            shaba_code: send_data.shaba_code,
+            national_code: send_data.national_code,
           });
-
           setOwnerFileds()
-          setLoading(false);
+          setLoading(true);
         })
-        .catch((err) =>
-          toast.error("مشکلی پیش آمده", {
-            position: "top-right",
-            autoClose: 2000,
-          })
-        );
+        // .catch((err) =>
+        //   toast.error("مشکلی پیش آمده", {
+        //     position: "top-right",
+        //     autoClose: 2000,
+        //   })
+        // )
+        ;
     },
 
     validationSchema: validationSchema,
@@ -603,13 +624,13 @@ export default function ManagerProfile(props) {
           <Grid item xs={12}>
             <STextField
               fullWidth
-              error={formik.errors["adress"] && formik.touched["adress"]}
+              error={formik.errors["address"] && formik.touched["address"]}
               variant="outlined"
               label="آدرس"
-              name="adress"
+              name="address"
               type="text"
-              helperText={formik.errors["adress"] && formik.touched["adress"]}
-              {...formik.getFieldProps("adress")}
+              helperText={formik.errors["address"] && formik.touched["address"]}
+              {...formik.getFieldProps("address")}
             />
           </Grid>
 

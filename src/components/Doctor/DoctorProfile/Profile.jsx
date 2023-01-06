@@ -166,7 +166,6 @@ const Profile = (props) => {
     if (loading && props.doctorId) {
       api.get(`/api/doctor/${props.doctorId}/reviews/?page_size=5`)
         .then(res => {
-          console.log("hey", res.data);
           setNextPageUrl(res.data.links.next);
           setReviews(res.data.results);
           setLoading(false);
