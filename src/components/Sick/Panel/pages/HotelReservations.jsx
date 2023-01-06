@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import React, { useEffect, useContext, useState } from "react";
 import { toast } from "react-toastify";
 import AuthContext from "../../../../context/AuthContext";
@@ -12,7 +12,7 @@ const HotelReservations = () => {
   const api = useAxios();
 
   useEffect(() => {
-    console.log("user id: " + user.id);
+
     if (loading) {
       api
         .get(`/api/hotel/${user.id}/user_reservations/`, {
@@ -21,7 +21,6 @@ const HotelReservations = () => {
           },
         })
         .then((res) => {
-          console.log("this is the res form hotel reservations:", res.data);
           setReservations(res.data);
         })
         .catch((err) => {
@@ -57,21 +56,30 @@ const HotelReservations = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        marginTop: "2%",
       }}
     >
       <Grid container spacing={2}>
         <Grid item xs={12} md={12}>
           <Grid container spacing={2}>
-            {console.log("reservations: ", reservations)}
-            {reservations &&
-                reservations.map((r, index) => (
+            {reservations?.length > 0 ?
+              reservations.map((r, index) => (
                 <Grid item key={index} xs={12} sm={12} md={12} lg={12}>
                   <ReservationCard
                     reservation={r}
                     deleteReservation={deleteReservation}
                   />
                 </Grid>
-              ))}
+              ))
+              :
+              (
+                <Grid item xs={12} sm={12} md={12} lg={12}>
+                  <Typography variant="h6" align="center"><b>
+                    هیچ رزروی برای شما ثبت نشده است.
+                  </b></Typography>
+                </Grid>
+              )
+            }
           </Grid>
         </Grid>
         <Grid item xs={12} md={12}></Grid>

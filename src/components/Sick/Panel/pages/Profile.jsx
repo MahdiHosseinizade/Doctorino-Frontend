@@ -171,6 +171,12 @@ const Profile = () => {
     initialValues: formValue,
     onSubmit: (values) => {
 
+      console.log(values.birth_day);
+
+      const birthDay = moment(values.birth_day, "jYYYY-jM-jD").format("YYYY-MM-DD");
+      
+      console.log(birthDay);
+
       api.put(`/api/auth/patient/${user.child_id}/`, {
         user: {
           first_name: values.first_name,
@@ -180,7 +186,7 @@ const Profile = () => {
         city: values.city,
         code_melli: values.social_number,
         phone_number: values.phone_number,
-        birth_day: values.birth_day,
+        birth_day: birthDay,
       }, {
         headers: {
           Authorization: `Bearer ${authData?.access}`
@@ -199,10 +205,7 @@ const Profile = () => {
   });
 
   return (
-    <Container sx={{
-      mr: 10,
-      ml: 10
-    }}>
+    <Container>
       <Box
         sx={{
           marginTop: "50px",
@@ -339,8 +342,11 @@ const Profile = () => {
               {...formik.getFieldProps("phone_number")}
             />
           </Grid>
-          <Grid item xs={6} md={6}>
-            {/* <DatePicker timePicker={false} value={birthDay} onClickSubmitButton={handleDatePicker} /> */}
+          <Grid item xs={12} md={6} sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
             <DatePicker
               inputPlaceholder='تاریخ تولد'
               value={birthDay}
@@ -354,9 +360,6 @@ const Profile = () => {
               calendarClassName='custom-calendar'
               formatInputText={() => `تاریخ تولد: ${birthDay.year}/${birthDay.month}/${birthDay.day}`}
             />
-          </Grid>
-          <Grid item xs={6} md={6}>
-            {toShow}
           </Grid>
           <Grid item md={12} xs={12} sx={{
             marginTop: 4,

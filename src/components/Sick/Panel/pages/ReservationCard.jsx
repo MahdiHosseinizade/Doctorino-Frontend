@@ -38,7 +38,7 @@ const useStyles = makeStyles({
 });
 
 const AppointmentCard = ({ reservation, deleteReservation }) => {
-  console.log("in reservation card", reservation)
+
   const [loading, setLoading] = useState(true);
   const [hotel, setHotel] = useState(null);
   const [room, setRoom] = useState(null);
@@ -69,7 +69,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
 
       setLoading(false);
     }
-  }, [loading, 
+  }, [loading,
     reservation.hotel_room,
     api,
   ]);
@@ -102,27 +102,22 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
     return `${newDate.format("DD")} ${month} ${newDate.year()}`;
   }
 
-  // function validateDate(date) {
-  //   // const date = moment(reservation?.date_reserved);
-  //   const newDate = moment(date);
-  //   const time = reservation?.from_time;
+  function validateDate(is_from) {
+    let date = moment(reservation?.to_time);
+    if (is_from) 
+      date = moment(reservation?.from_time);
+    const newDate = moment(date);
 
-  //   const now = moment();
+    const now = moment();
 
-  //   now.locale("fa");
+    now.locale("fa");
 
-  //   if (newDate.format("YYYY/MM/DD") < now.format("YYYY/MM/DD")) {
-  //     return false;
-  //   } else if (newDate.format("YYYY/MM/DD") === now.format("YYYY/MM/DD")) {
-  //     if (getTime(time) < now.format("HH:mm:ss")) {
-  //       return false;
-  //     } else {
-  //       return true;
-  //     }
-  //   } else {
-  //     return true;
-  //   }
-  // }
+    if (newDate.format("YYYY/MM/DD") < now.format("YYYY/MM/DD")) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   const classes = useStyles();
 
@@ -139,7 +134,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
       <Grid container sx={{ marginTop: "10px" }}>
         {/* <Grid
           item
-          xs={6}
+          xs={12}
           md={4}
           sx={{ display: "flex", position: "sticky", justifyContent: "center" }}
         >
@@ -150,7 +145,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
             alt="doctor image"
           />
         </Grid> */}
-        <Grid item xs={6} md={9}>
+        <Grid item xs={12} md={9}>
           <CardContent>
             <Box>
               <Grid container spacing={3.5}>
@@ -179,7 +174,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
                       sx={{ marginBottom: "-7px", color: "darkblue" }}
                     />
                     <span> </span>
-                    {hotel?.address}
+                    {hotel?.province} - {hotel?.city}: {hotel?.address}
                     {/* <span> </span>
                     {room?.clinic_address} */}
                   </Typography>
@@ -187,50 +182,32 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
                 <Grid
                   item
                   xs={12}
-                  md={12}
-                  sx={{ display: "flex", flexDirection: "row" }}  
+                  md={6}
+                  sx={{ display: "flex", flexDirection: "row" }}
                 >
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="body2" sx={{ fontSize: "20px" }}>
-                      <CalendarMonthIcon
-                        sx={{
-                          marginBottom: "-7px",
-                          // color: validateDate() ? "darkblue" : "darkred",
-                        }}
-                      />
-                      <span> </span>
-                      از تاریخ {getDate(reservation?.from_date)}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="body2" sx={{ fontSize: "20px" }}>
-                      <CalendarMonthIcon
-                        sx={{
-                          marginBottom: "-7px",
-                          // color: validateDate() ? "darkblue" : "darkred",
-                        }}
-                      />
-                      <span> </span>
-                      تا تاریخ {getDate(reservation?.to_date)}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                {/* <Grid item xs={12} md={12}>
                   <Typography variant="body2" sx={{ fontSize: "20px" }}>
-                    <AccessTimeIcon
+                    <CalendarMonthIcon
                       sx={{
                         marginBottom: "-7px",
-                        color: validateDate() ? "darkblue" : "darkred",
+                        color: validateDate(true) ? "darkblue" : "darkred",
                       }}
                     />
                     <span> </span>
-                    از ساعت{" "}
-                    <b>
-                      {reservation && getTime(reservation?.from_time)}
-                    </b> تا{" "}
-                    <b>{reservation && getTime(reservation?.to_time)}</b>
+                    از تاریخ {getDate(reservation?.from_date)}
                   </Typography>
-                </Grid> */}
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography variant="body2" sx={{ fontSize: "20px" }}>
+                    <CalendarMonthIcon
+                      sx={{
+                        marginBottom: "-7px",
+                        color: validateDate(false) ? "darkblue" : "darkred",
+                      }}
+                    />
+                    <span> </span>
+                    تا تاریخ {getDate(reservation?.to_date)}
+                  </Typography>
+                </Grid>
               </Grid>
             </Box>
           </CardContent>

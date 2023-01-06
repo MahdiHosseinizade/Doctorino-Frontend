@@ -21,6 +21,8 @@ const useStyles = makeStyles({
     display: "fix",
     paddingInline: "13px",
     marginBottom: "20px",
+    marginRight: "5%",
+    marginLeft: "5%",
   },
   doctor_image: {
     width: "250px",
@@ -124,7 +126,7 @@ const AppointmentCard = ({ appointment, deleteAppointment }) => {
       <Grid container sx={{ marginTop: "10px" }}>
         <Grid
           item
-          xs={6}
+          xs={12}
           md={4}
           sx={{ display: "flex", position: "sticky", justifyContent: "center" }}
         >
@@ -135,7 +137,7 @@ const AppointmentCard = ({ appointment, deleteAppointment }) => {
             alt="doctor image"
           />
         </Grid>
-        <Grid item xs={6} md={6}>
+        <Grid item xs={12} md={6}>
           <CardContent>
             <Box>
               <Grid container spacing={3.5}>
