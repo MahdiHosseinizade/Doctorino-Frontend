@@ -4,22 +4,17 @@ import {
     Rating,
     Box,
 } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
 import ThumbUpAlt from '@mui/icons-material/ThumbUpAlt';
 import theme from '../../../assets/theme/defaultTheme';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
+import SentimentSatisfiedAltOutlinedIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import SentimentDissatisfiedOutlinedIcon from '@mui/icons-material/SentimentDissatisfiedOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+
 
 function ReviewCard({ voter, score, text }) {
-
-    const [loading, setLoading] = useState(true);
-    const [voterInfo, setVoterInfo] = useState();
-
-    useEffect(() => {
-        if (loading) {
-
-        }
-    }, [loading])
-
 
     return (
         <>
@@ -31,14 +26,33 @@ function ReviewCard({ voter, score, text }) {
                 <Typography sx={{
                     marginBottom: "10px",
                 }}>
-                    کاربر: <span>    </span> {voter}
+                    <AccountCircleOutlinedIcon 
+                        sx={{
+                            marginRight: "5px",
+                            marginBottom: "-8px",
+                        }}
+                    /> {voter ? voter.first_name + " " + voter.last_name : "ناشناس"}
                 </Typography>
                 <Typography sx={{
                     marginBottom: "10px",
                 }}>
+                    {score > 2 ? 
+                        <SentimentSatisfiedAltOutlinedIcon 
+                            sx={{
+                                color: theme.palette.secondary.main,
+                                marginRight: "5px",
+                            }}
+                        /> : 
+                        <SentimentDissatisfiedOutlinedIcon 
+                            sx={{
+                                color: theme.palette.error.main,
+                                marginRight: "5px",
+                            }}
+                        />
+                    }
                     <Rating
                         value={score}
-                        readOnly="true"
+                        readOnly={true}
                         sx={{
                             color: theme.palette.doctor.main,
                         }}
@@ -50,7 +64,10 @@ function ReviewCard({ voter, score, text }) {
                     fontSize: "14px",
                     fontWeight: "600",
                 }}>
-                    {text}
+                    <MessageOutlinedIcon sx={{
+                        marginBottom: "-8px",
+                        marginRight: "5px",
+                    }} /> {text}
                 </Typography>
             </Box>
         </>

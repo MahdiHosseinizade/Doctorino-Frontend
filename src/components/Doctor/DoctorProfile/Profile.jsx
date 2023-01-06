@@ -31,6 +31,7 @@ import useAxios from '../../../utils/useAxios';
 import AuthContext from '../../../context/AuthContext';
 import { toast } from 'react-toastify';
 import ReviewCard from './ReviewCard';
+import axios from 'axios';
 
 // show the directory to the use with <basic breadcrums (mui)>
 
@@ -131,10 +132,31 @@ const Profile = (props) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [checked, setChecked] = useState(false);
+  const [nextPageUrl, setNextPageUrl] = useState(null);
 
   const secondaryHandleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const handleMoreReviews = () => {
+    if (nextPageUrl) {
+      axios.get(nextPageUrl,
+        {
+          headers: {
+            Authorization: `Bearer ${authData?.access}`
+          }
+        }
+      ).then(res => {
+        console.log("next page", res.data);
+        setNextPageUrl(res.data.links.next);
+        setReviews([...reviews, ...res.data.results]);
+      }).catch(err => {
+        console.log(err);
+      })
+    } else {
+      toast.error("موردی برای نمایش وجود ندارد.");
+    }
+  }
 
   const api = useAxios();
   const { user, authData } = useContext(AuthContext);
@@ -142,9 +164,11 @@ const Profile = (props) => {
 
   useEffect(() => {
     if (loading && props.doctorId) {
-      api.get(`/api/doctor/${props.doctorId}/reviews/`)
+      api.get(`/api/doctor/${props.doctorId}/reviews/?page_size=5`)
         .then(res => {
-          setReviews(res.data);
+          console.log("hey", res.data);
+          setNextPageUrl(res.data.links.next);
+          setReviews(res.data.results);
           setLoading(false);
         })
         .catch(err => {
@@ -171,8 +195,16 @@ const Profile = (props) => {
           Authorization: `Bearer ${authData?.access}`
         }
       }).then((res) => {
-
-        setReviews([...reviews, res.data]);
+        console.log("haha", res.data);
+        setReviews([...reviews, {
+          doctor: props.doctor?.id,
+          voter: {
+            first_name: user.first_name,
+            last_name: user.last_name,
+          },
+          score: values.score,
+          text: values.text,
+        }]);
 
         toast.success("نظر شما با موفقیت ثبت شد.", {
           position: "top-right",
@@ -375,6 +407,9 @@ const Profile = (props) => {
                 <ReviewCard key={id} voter={voter} score={score} text={text} />
               </Card>
             ))}
+            <Button color="doctor" variant="contained" onClick={handleMoreReviews}>
+              نظرات بیشتر
+            </Button>
           </TabPanel>
         </Box>
       </Card>
