@@ -650,7 +650,7 @@ export default function ScheduleTime({ doctor, ...props }) {
                           variant="outlined"
                           id={`${time}`}
                           className={`${time}`}
-                          disabled =  { !doctorTodayTimes ?  true : !doctorTodayTimes?.filter(item => Number(item?.from_time.split(':')[0]) === Number(time.split(':')[0]) && Number(item?.from_time.split(':')[1]) === Number(time.split(':')[1]))[0]?.is_available}      
+                          disabled =  { !doctorTodayTimes ?  true : !doctorTodayTimes?.filter(item => Number(item?.from_time.split(':')[0]) === Number(time?.split(':')[0]) && Number(item?.from_time.split(':')[1]) === Number(time?.split(':')[1]))[0]?.is_available}      
                           sx={{
                             borderRadius: "15px",
                           }}
