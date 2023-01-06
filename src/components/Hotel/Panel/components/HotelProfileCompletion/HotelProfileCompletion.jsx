@@ -442,11 +442,17 @@ export default function HotelProfileCompletion() {
         formData.append("province", values.province);
         formData.append("city", values.city);
 
-        formData.append("features", values.features);
+        features.forEach(feat => {
+          formData.append("features", feat);
+        });
 
         if (values.cover_image) {
           formData.append("cover_image", values.cover_image);
         }
+
+        let formData2 = new FormData();
+        formData2.append("hotel_id", values.hotel_id);
+        formData2.append("features", values.features);
 
         api.put(`/api/hotel/${values.hotel_id}/`, formData, {
           headers: {
@@ -454,12 +460,22 @@ export default function HotelProfileCompletion() {
             "Authorization": "Bearer " + authData?.access,
           }
         }).then(res => {
+
+          api.post(`/api/hotel/feature/update/`, formData2, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
+          }).then(res => {
+            handleHotels(values.hotel_id);
+          }).catch(err => {
+            console.error(err);
+          })
+
           toast.success("هتل با موفقیت ویرایش شد", {
             position: "top-right",
             autoClose: 2000,
           })
           setLoading(true);
-          handleHotels(values.hotel_id);
         }).catch(err => {
           toast.error("خطایی رخ داده است", {
             position: "top-right",

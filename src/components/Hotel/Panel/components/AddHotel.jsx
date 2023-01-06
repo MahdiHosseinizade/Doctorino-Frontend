@@ -240,12 +240,6 @@ export default function HotelProfileCompletion() {
         formData.append('province', hotel.province);
 
 
-        // log all the form data
-        console.log("send data");
-        for (var key of formData.entries()) {
-            console.log(key[0] + ': ' + formData.getAll(key[0]));
-        }
-
         api.post('/api/hotel/new/',
             formData,
             {
@@ -257,7 +251,6 @@ export default function HotelProfileCompletion() {
             }
         )
             .then(res => {
-                console.log(res);
                 toast.success("هتل با موفقیت ایجاد شد", {
                     position: "top-right",
                     autoClose: 2000,
@@ -281,9 +274,8 @@ export default function HotelProfileCompletion() {
             <Box
                 sx={{
                     marginTop: "50px",
+                    marginBottom: "50px",
                     bgcolor: 'rgb(245, 246, 248)',
-                    // height: '80%',
-                    // width: '80%',
                     border: '1px solid #ccc',
                     borderRadius: '10px',
                     padding: '20px',
