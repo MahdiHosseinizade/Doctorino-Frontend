@@ -46,9 +46,6 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 
 const useStyles = makeStyles({
-  // root: {
-  //   textAlign: "center",
-  // },
   boxContainer: {
     marginBottom: "3rem",
   },
@@ -280,7 +277,6 @@ const formValues = {
 
 export default function AppointmentReports() {
   const classes = useStyles();
-  // const [userID, setUserID] = useState(0);
   const [values, setValues] = useState({ ...formValues });
   const [errors, setErrors] = useState({ ...formValues });
   const [availableTimes, setAvailableTimes] = useState([]);
