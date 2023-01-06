@@ -170,7 +170,6 @@ export default function ManagerProfile(props) {
           });
 
           recieved_values = response.data;
-          console.log(recieved_values)
           setOwnerFileds()
           setLoading(false);
         })
@@ -215,34 +214,7 @@ export default function ManagerProfile(props) {
     initialValues: formValue,
 
     onSubmit: (values) => {
-      
-      // let formData = new FormData();
-      // let user = {
-      //   first_name: values.first_name,
-      //   last_name: values.last_name,
-      //   email: ownerInfos.email,
-      //   usrname: ownerInfos.username,
-      // };
-      // console.log("USER",user, user.email)
-      // formData.append("user", {
-      //   first_name: values.first_name,
-      //   last_name: values.last_name,
-      //   email: ownerInfos.email,
-      //   usrname: ownerInfos.username,
-      // });
-      // formData.append("first_phone_number", values.first_phone_number);
-      // formData.append("gender", genders.indexOf(values.gender));
-      // formData.append("national_code", values.national_code);
-      // formData.append("father_name", values.father_name);
-      // formData.append("area_code", values.area_code);
-      // formData.append("telephone_number", values.telephone_number);
-      // formData.append("address", values.address);
-      // formData.append(
-      //   "birth_day",
-      //   `${values.birthYear}-${months.indexOf(values.birthMonth)+1}-${values.birthDay}`
-      // );
-      // formData.append("shaba_code", values.shaba_code);
-
+    
       let send_data ={
         user: {
           first_name: values.first_name,
@@ -273,7 +245,6 @@ export default function ManagerProfile(props) {
             position: "top-right",
             autoClose: 2000,
           });
-          console.log(send_data);
           setOwnerInfos({
             ...ownerInfos,
             first_name: send_data.user.first_name,
@@ -457,7 +428,6 @@ export default function ManagerProfile(props) {
                 error={formik.errors["gender"] && formik.touched["gender"]}
                 {...formik.getFieldProps("gender")}
               >
-              {console.log(gender)}
                 {genders.map((feat, ind) => (
                   <MenuItem key={ind} value={feat}>
                     <ListItemText primary={feat} />

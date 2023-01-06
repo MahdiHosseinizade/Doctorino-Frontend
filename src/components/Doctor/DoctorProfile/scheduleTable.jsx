@@ -407,26 +407,20 @@ export default function ScheduleTime({ doctor, ...props }) {
     validationSchema: validationSchema,
   });
 
-console.log(today.getUTCDate())
+  // console.log('1day',today.getUTCDate()%7, today.toLocaleDateString("fa-IR-u-nu-latn").replaceAll("/", "-"),)
   let doctorTodayTimes = [];
   function GetAvailableTimes()
   { 
     if (doctor?.id) {
-      // console.log('now', now.getUTCDate(),now
-      // .toLocaleDateString("fa-IR-u-nu-latn")
-      // .replaceAll("/", "-"),)
-      // let add_day = activeStep + now.getUTCDate() > 6 ? (activeStep + now.getUTCDate())%7 : activeStep + now.getUTCDate()
-      // now.setDate(today.getDate() + add_day);
-      // console.log(now)
 
-      if (today.getUTCDate() < activeStep){
-        today.setDate(today.getDate() + activeStep - today.getUTCDate());
+      if (today.getUTCDate()%7 < activeStep){
+        today.setDate(today.getDate() + activeStep - today.getUTCDate()%7);
       }
-      else if (today.getUTCDate() > activeStep){
-        today.setDate(today.getDate() + activeStep - today.getUTCDate() + 7);
+      else if (today.getUTCDate()%7 > activeStep){
+        today.setDate(today.getDate() + activeStep - (today.getUTCDate()%7) + 7);
       }
 
-      today.setDate(today.getDate());
+      // console.log('2day',today.getUTCDate()%7, today.toLocaleDateString("fa-IR-u-nu-latn").replaceAll("/", "-"),)
 
       api
         .post(`/api/doctor/times/`, {
@@ -440,7 +434,10 @@ console.log(today.getUTCDate())
           console.log('data set', doctorTodayTimes)
         })
         .catch((err) => {
-          console.log('error in setting data reservation')
+          toast.error("خطایی در سیستم رخ داده", {
+            position: "top-right",
+            autoClose: 5000,
+          });
         })
     }
   }
@@ -673,8 +670,6 @@ console.log(today.getUTCDate())
                                 }:00`
                               );
                             }
-                            // setFlag(!flag)
-                            // console.log(_from_time, _to_time)
                           }}
                         >
                           <Typography textAlign="center">{time}</Typography>
