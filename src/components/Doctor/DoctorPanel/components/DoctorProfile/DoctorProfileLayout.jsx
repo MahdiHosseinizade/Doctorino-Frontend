@@ -322,11 +322,50 @@ export default function DoctorProfileLayout() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("in handle submit");
-    console.log("this is the profile photo: ", profilePhoto);
 
     if (doctorImage) {
-      console.log("in profilePhoto if statement, the photo is: ", doctorImage);
-      console.log("in profilePhoto if statement, the photo is: ", doctor.image);
+
+      console.log("the doctor, ", doctor);
+
+      const temp = { 
+        // ...doctor,
+        id: doctor.id,
+        user: {
+          id: doctor.inner_id,
+          first_name: doctor.first_name,
+          last_name: doctor.last_name,
+          email: doctor.email,
+          username: doctor.username,
+        },
+        specialties: [
+          availableSpecilaities.filter((specialty) => {
+            if (specialty.name === doctor.specialties) {
+              return specialty.id;
+            }
+          })[0]["id"],
+        ],
+        medical_system_number: doctor.medical_system_number,
+        is_active: true,
+        city: cities.filter((city) => {
+          if (city.name === doctor.city) {
+            return city.id;
+          }
+        })[0]["id"],
+        province: provinces.filter((province) => {
+          if (province.name === doctor.province) {
+            return province.id;
+          }
+        })[0]["id"],
+        national_code: doctor.national_code,
+        phone_number: doctor.phone_number,
+        office_number: doctor.office_number,
+        education: doctor.education,
+        clinic_address: doctor.clinic_address,
+        // work_periods: doctor.work_periods,
+        description: doctor.description,
+        image: doctorImage,
+       };
+
       const formData = new FormData();
       formData.append("id", doctor.id);
       formData.append("user", {
@@ -368,17 +407,17 @@ export default function DoctorProfileLayout() {
         })[0]["id"]
       );
       formData.append("clinic_address", doctor.clinic_address);
-      formData.append("work_periods", doctor.work_periods);
+      // formData.append("work_periods", doctor.work_periods);
       formData.append("description", doctor.description);
       // if (doctor.cover_image) {
       formData.append("image", doctor.image);
       // }
 
-      axios
-        .put(`http://188.121.113.74/api/doctor/${doctor.id}/`, formData, {
+      API
+        .put(`/api/doctor/${doctor.id}/`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${authData?.access}`,
+            "Authorization": `Bearer ${authData?.access}`,
           },
         })
         .then((response) => {
@@ -450,15 +489,10 @@ export default function DoctorProfileLayout() {
                 > */}
                 <Box
                   component="img"
-                  // src={
-                  //   doctor.image
-                  //     ? doctor.image
-                  //     : "http://188.121.113.74/media/hotel-images/default_hotel_image.jpg"
-                  // }
                   src={
                     doctorImage
                       ? doctorImage
-                      : "http://188.121.113.74/media/hotel-images/default_hotel_image.jpg"
+                      : "http://188.121.113.74/media/doctor-image/DoctorProfilePhoto_Ymp68AL.jpg"
                   }
                   style={{
                     display: { 

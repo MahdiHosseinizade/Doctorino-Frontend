@@ -27,7 +27,7 @@ const theme = createTheme({
         doctor: {
             main: '#00cccc',
             light: "#",
-            dark: "#",
+            dark: "#096085",
             contrastText: "#",
         },
         navbar: {

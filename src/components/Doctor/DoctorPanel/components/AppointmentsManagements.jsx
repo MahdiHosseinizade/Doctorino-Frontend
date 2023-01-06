@@ -5,6 +5,7 @@ import { makeStyles } from "@mui/styles";
 import AuthContext from "../../../../context/AuthContext";
 import { useContext } from "react";
 import useAxios from "../../../../utils/useAxios";
+import theme from "../../../../assets/theme/defaultTheme";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -16,34 +17,26 @@ import {
   Container,
   Grid,
   Box,
+  Tab,
+  Tabs,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
   TextField,
   Button,
   FormControl,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   InputLabel,
   Select,
   MenuItem,
   Typography,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PropTypes from "prop-types";
-import { alpha } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
 
 const useStyles = makeStyles({
   boxContainer: {
@@ -91,172 +84,6 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(day, fromTime, toTime) {
-  return {
-    day,
-    fromTime,
-    toTime,
-  };
-}
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-const headCells = [
-  { id: "day", numeric: false, disablePadding: true, label: "روز" },
-  { id: "fromTime", numeric: false, disablePadding: false, label: "از ساعت" },
-  { id: "toTime", numeric: false, disablePadding: false, label: "تا ساعت" },
-];
-function EnhancedTableHead(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-          fullwidth
-        >
-          زمان ها
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        {
-          /* <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip> */
-        }
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-}
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 const weekdays = [
   { id: 1, name: "شنبه" },
   { id: 2, name: "یکشنبه" },
@@ -275,10 +102,46 @@ const formValues = {
   doctorId: 0,
 };
 
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
 export default function AppointmentReports() {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [tabValue, setTabValue] = React.useState(0);
   const [values, setValues] = useState({ ...formValues });
   const [errors, setErrors] = useState({ ...formValues });
+  const [flag, setFlag] = useState(false);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
@@ -288,80 +151,6 @@ export default function AppointmentReports() {
     dayjs("2014-08-18T21:11:54")
   );
   const [endTime, setEndTime] = React.useState(dayjs("2014-08-18T21:11:54"));
-  const rows = [
-    ...availableTimes.map((item) => {
-      return createData(
-        weekdays.find((day) => day.id - 1 === item.day),
-        item.fromTime,
-        item.toTime
-      );
-    }),
-  ];
-
-  // Table Info
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
-  const isSelected = (id) => {
-    console.log("selected: ", selected);
-    return selected.indexOf(id) !== -1;
-  };
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -370,6 +159,65 @@ export default function AppointmentReports() {
       [name]: value,
     });
   };
+
+  const handleTabValueChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
+  const handleDeleteTime = (time) => {
+    console.log("in delete time function", time);
+    API.delete(`/api/doctor/workday/${time.id}/`, {
+      headers: {
+        Authorization: "Bearer " + authData?.access,
+      },
+    })
+      .then((res) => {
+        toast.success("زمان موردنظر با موفقیت حذف شد", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+        // formikRoom.resetForm();
+        // setLoading(true);
+      })
+      .catch((err) => {
+        toast.error("خطایی رخ داده است", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+      });
+    setAvailableTimes(
+      availableTimes.filter((availableTime) => availableTime.id !== time.id)
+    );
+    setOpen(false);
+  };
+
+  // function DeleteTimePopUp(time) {
+  //   console.log("the time", time);
+  //   return (
+  //     <Box onSubmit={() => handleDeleteTime(time)} component="form">
+  //       <DialogContent>
+  //         <DialogContentText
+  //           id="alert-dialog-description"
+  //           sx={{
+  //             display: "flex",
+  //             justifyContent: "center",
+  //           }}
+  //         >
+  //           آیا از حذف زمان مشخص شده اطمینان دارید؟
+  //         </DialogContentText>
+  //       </DialogContent>
+  //       <DialogActions>
+  //         <Button
+  //           type="submit"
+  //           // onClick={() => {}}
+  //           autoFocus
+  //         >
+  //           حذف
+  //         </Button>
+  //       </DialogActions>
+  //     </Box>
+  //   );
+  // }
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
@@ -408,45 +256,46 @@ export default function AppointmentReports() {
         },
       })
         .then(async (res) => {
-          // console.log("this is res.data.id: ", res.data.id);
+          console.log("recieved doctor ID: ", res.data.id);
           setValues({
             ...values,
             doctorId: res.data.id,
           });
           // console.log("this is the values: ", values);
-          API.get("http://188.121.113.74/api/doctor/workday/", {
+          API.get(`http://188.121.113.74/api/doctor/${res.data.id}/workday/`, {
             headers: {
               Authorization: `Bearer ${authData.access}`,
             },
           })
             .then(async (response) => {
               setTimeout(() => {
-                try {
-                  // setLoading(true);
-                  console.log(
-                    "this is the response of workday: ",
-                    response.data
-                  );
-                  const temptimes = response.data.filter((item) => {
-                    if (item.doctor === res.data.id) {
-                      console.log(
-                        "in useEffect condition setting availableTimes"
-                      );
-                      return {
-                        id: item.id,
-                        day: item.day,
-                        fromTime: item.from_time,
-                        toTime: item.to_time,
-                        doctorId: item.doctor,
-                      };
-                    }
-                  });
-                  console.log("this is the temptimes: ", temptimes);
-                  setAvailableTimes([...temptimes]);
-                  console.log("this is the availableTimes: ", availableTimes);
-                } catch (error) {
-                  console.log("this is the error of availableTimes: ", error);
-                }
+                setAvailableTimes(response.data);
+                // try {
+                //   // setLoading(true);
+                //   console.log(
+                //     "this is the response of workday: ",
+                //     response.data
+                //   );
+                //   const temptimes = response.data.filter((item) => {
+                //     if (item.doctor === res.data.id) {
+                //       console.log(
+                //         "in useEffect condition setting availableTimes"
+                //       );
+                //       return {
+                //         id: item.id,
+                //         day: item.day,
+                //         fromTime: item.from_time,
+                //         toTime: item.to_time,
+                //         doctorId: item.doctor,
+                //       };
+                //     }
+                //   });
+                //   console.log("this is the temptimes: ", temptimes);
+                //   setAvailableTimes([...temptimes]);
+                //   console.log("this is the availableTimes: ", availableTimes);
+                // } catch (error) {
+                //   console.log("this is the error of availableTimes: ", error);
+                // }
               }, 1);
             })
             .catch((error) => {
@@ -462,9 +311,6 @@ export default function AppointmentReports() {
     };
 
     if (loading) {
-      // fetchData();
-      // console.log("this is the availableTimes: ", availableTimes);
-      // setLoading(false);
       try {
         console.log("loading: ", loading);
         fetchData();
@@ -474,7 +320,6 @@ export default function AppointmentReports() {
       } finally {
         console.log("setting the loading to false");
         setLoading(false);
-        // console.log("loading: ", loading);
       }
     }
     console.log("loading after if statement: ", loading);
@@ -497,12 +342,8 @@ export default function AppointmentReports() {
     e.preventDefault();
     if (validate()) {
       console.log("in submit func: ", values);
-      console.log("fromTime checking: ", typeof values.fromTime.$H)
+      console.log("fromTime checking: ", typeof values.fromTime.$H);
       const temp = {
-        // ...values,
-        // from_time: startTime,
-        // to_time: endTime,
-        // from_time: `{values.fromTime.$H}:${values.fromTime.$m}:00`,
         from_time:
           (String(values.fromTime.$H).length !== 2
             ? `0${values.fromTime.$H}`
@@ -512,7 +353,6 @@ export default function AppointmentReports() {
             ? `0${values.fromTime.$m}`
             : values.fromTime.$m) +
           ":00",
-        // to_time: `{values.toTime.$H}:${values.toTime.$m}:00`,
         to_time:
           (String(values.toTime.$H).length !== 2
             ? `0${values.toTime.$H}`
@@ -522,20 +362,15 @@ export default function AppointmentReports() {
             ? `0${values.toTime.$m}`
             : values.toTime.$m) +
           ":00",
-        day: values.day - 1,
+        day: values.day,
         doctor: values.doctorId,
         id: values.id,
       };
       console.log("this is the temp values when sending the time: ", temp);
       axios
         .post(
-          // `http://188.121.113.74/api/doctor/workday/${values.id}/`,
           `http://188.121.113.74/api/doctor/workday/`,
           {
-            // ...values,
-            // from_time: startTime,
-            // to_time: endTime,
-            // from_time: `{values.fromTime.$H}:${values.fromTime.$m}:00`,
             from_time:
               (String(values.fromTime.$H).length !== 2
                 ? `0${values.fromTime.$H}`
@@ -545,7 +380,6 @@ export default function AppointmentReports() {
                 ? `0${values.fromTime.$m}`
                 : values.fromTime.$m) +
               ":00",
-            // to_time: `{values.toTime.$H}:${values.toTime.$m}:00`,
             to_time:
               (String(values.toTime.$H).length !== 2
                 ? `0${values.toTime.$H}`
@@ -582,207 +416,427 @@ export default function AppointmentReports() {
   };
 
   return (
-    <Grid container spacing={3} sx={{ marginBottom: "4%" }}>
-      {/* <Grid item md={6} xs={12} className={classes.table}>
+    <Container>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          width: "65%",
+          bgcolor: "rgb(245, 246, 248)",
+          border: "1px solid #ccc",
+          margin: "auto",
+          marginTop: "100px",
+          marginBottom: "50px",
+          borderRadius: "10px",
+          padding: "20px",
+          "& .MuiTextField-root": { m: 0.5 },
+          boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+        }}
+      >
         <Box sx={{ width: "100%" }}>
-          <Paper sx={{ width: "100%", mb: 2 }} className={classes.table}>
-            <EnhancedTableToolbar numSelected={selected.length} />
-            <TableContainer>
-              <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby="tableTitle"
-                size={dense ? "small" : "medium"}
-              >
-                <EnhancedTableHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={rows.length}
-                />
-                <TableBody>
-                  {console.log("this is the rows in TableBody: ", rows)}
-                  {stableSort(rows, getComparator(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => {
-                      const isItemSelected = isSelected(row.name);
-                      const labelId = `enhanced-table-checkbox-${index}`;
+          <Box
+            sx={{
+              width: "80%",
+              display: "flex",
+              justifyContent: "center",
+              marginLeft: "10px",
+              borderBottom: 0,
+              borderColor: "divider",
+            }}
+          >
+            <Tabs
+              variant="scrollable"
+              scrollButtons="auto"
+              sx={{
+                width: "100%",
+                marginBottom: "10px",
+                "& .MuiTab-root": {
+                  color: theme.palette.grey[700],
+                },
+                "& .Mui-selected": {
+                  color: theme.palette.doctor.dark,
+                },
+                "& .MuiTabs-indicator": {
+                  backgroundColor: theme.palette.doctor.dark,
+                },
+              }}
+              value={tabValue}
+              onChange={handleTabValueChange}
+              aria-label="basic tabs example"
+            >
+              <Tab
+                sx={{ width: "50%" }}
+                label="انتخاب روز و زمان"
+                {...a11yProps(0)}
+              />
+              <Tab
+                sx={{ width: "50%" }}
+                label="زمان های مشخص شده"
+                {...a11yProps(1)}
+              />
+            </Tabs>
+          </Box>
 
-                      return (
-                        <TableRow
-                          hover
-                          onClick={(event) => handleClick(event, row.name)}
-                          role="checkbox"
-                          aria-checked={isItemSelected}
-                          tabIndex={-1}
-                          key={row.name}
-                          selected={isItemSelected}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                              inputProps={{
-                                "aria-labelledby": labelId,
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            padding="none"
-                          >
-                            {row.name}
-                          </TableCell>
-                          <TableCell align="right">{row.calories}</TableCell>
-                          <TableCell align="right">{row.fat}</TableCell>
-                          <TableCell align="right">{row.carbs}</TableCell>
-                          <TableCell align="right">{row.protein}</TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {emptyRows > 0 && (
-                    <TableRow
-                      style={{
-                        height: (dense ? 33 : 53) * emptyRows,
+          <hr
+            width="100%"
+            style={{
+              backgroundColor: "#000",
+              marginBottom: "1rem",
+              marginTop: "1rem",
+            }}
+          />
+
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              display: "flex",
+              justifyContent: { xs: "center", md: "flex-start" },
+              alignItems: { xs: "center", md: "flex-start" },
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={12}>
+                <TabPanel value={tabValue} index={0}>
+                  <Grid container spacing={3} sx={{ marginBottom: "4%" }}>
+                    {/** Time Selection */}
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        marginTop: "5%",
+                        display: "flex",
+                        justifyContent: "center",
                       }}
                     >
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer> */}
-            {/* <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            /> */}
-          {/* </Paper> */}
-          {/* <FormControlLabel
-            control={<Switch checked={dense} onChange={handleChangeDense} />}
-            label="Dense padding"
-          /> */}
-        {/* </Box>
-      </Grid> */}
+                      <form
+                        style={{ width: "90%", margin: "auto" }}
+                        onSubmit={handleSubmit}
+                        className={classes.box}
+                        autoComplete="off"
+                      >
+                        <Container className={classes.boxContainer}>
+                          <Grid>
+                            <Typography
+                              className={classes.formHeader}
+                              align="center"
+                              variant="h5"
+                              component="h5"
+                            >
+                              روز و زمان مورد نظر خود را انتخاب کنید
+                            </Typography>
+                          </Grid>
 
-      {/** Time Selection */}
-      <Grid item xs={12} sx={{marginTop: "5%"}}>
-        <form
-          onSubmit={handleSubmit}
-          className={classes.box}
-          autoComplete="off"
-        >
-          <Container className={classes.boxContainer}>
-            <Grid>
-              <Typography
-                className={classes.formHeader}
-                align="center"
-                variant="h5"
-                component="h5"
-              >
-                روز و زمان مورد نظر خود را انتخاب کنید
-              </Typography>
-            </Grid>
+                          <hr className={classes.breakLine} />
 
-            <hr className={classes.breakLine} />
+                          <Grid container spacing={2}>
+                            <Grid
+                              item
+                              xs={12}
+                              // md={6}
+                            >
+                              <FormControl fullWidth>
+                                <InputLabel>روز هفته</InputLabel>
+                                <Select
+                                  fullwidth
+                                  label="روز هفته"
+                                  name="day"
+                                  value={values.day}
+                                  onChange={handleInputChange}
+                                  error={errors.day ? true : false}
+                                  helperText={errors.day ? errors.day : null}
+                                >
+                                  {weekdays.map((weekday) => (
+                                    <MenuItem
+                                      key={weekday.id}
+                                      value={weekday.id}
+                                    >
+                                      {weekday.name}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+                            </Grid>
 
-            <Grid container spacing={2}>
-              <Grid
-                item
-                xs={12}
-                // md={6}
-              >
-                <FormControl fullWidth>
-                  <InputLabel>روز هفته</InputLabel>
-                  <Select
-                    fullwidth
-                    label="روز هفته"
-                    name="day"
-                    value={values.day}
-                    onChange={handleInputChange}
-                    error={errors.day ? true : false}
-                    helperText={errors.day ? errors.day : null}
+                            <Grid
+                              item
+                              xs={12}
+                              // md={6}
+                            >
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <Stack spacing={3}>
+                                  <TimePicker
+                                    // className={classes.timePicker}
+                                    ampm={false}
+                                    fullWidth
+                                    label="از ساعت"
+                                    value={values.fromTime}
+                                    onChange={(newValue) => {
+                                      console.log(
+                                        "this is the new fromTime value: ",
+                                        newValue
+                                      );
+                                      setValues({
+                                        ...values,
+                                        fromTime: newValue,
+                                      });
+                                      setStartTime(newValue);
+                                    }}
+                                    renderInput={(params) => (
+                                      <TextField {...params} />
+                                    )}
+                                    error={errors.fromTime ? true : false}
+                                    helperText={
+                                      errors.fromTime ? errors.fromTime : null
+                                    }
+                                  />
+                                </Stack>
+                              </LocalizationProvider>
+                            </Grid>
+                            <Grid
+                              item
+                              xs={12}
+                              // md={6}
+                            >
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <Stack spacing={3}>
+                                  <TimePicker
+                                    ampm={false}
+                                    label="تا ساعت"
+                                    value={values.toTime}
+                                    onChange={(newValue) => {
+                                      setValues({
+                                        ...values,
+                                        toTime: newValue,
+                                      });
+                                      setEndTime(newValue);
+                                    }}
+                                    renderInput={(params) => (
+                                      <TextField {...params} />
+                                    )}
+                                    error={errors.toTime ? true : false}
+                                    helperText={
+                                      errors.toTime ? errors.toTime : null
+                                    }
+                                  />
+                                </Stack>
+                              </LocalizationProvider>
+                            </Grid>
+
+                            <Grid
+                              item
+                              xs={12}
+                              // md={6}
+                            >
+                              <button className={classes.button} type="submit">
+                                ذخیره اطلاعات
+                              </button>
+                            </Grid>
+                          </Grid>
+                        </Container>
+                      </form>
+                    </Grid>
+                  </Grid>
+                  {/* </Box> */}
+                </TabPanel>
+
+                <TabPanel value={tabValue} index={1}>
+                  <Box
+                    sx={{
+                      color: theme.palette.doctor.dark,
+                      marginTop: { xs: 1, md: "20px" },
+                      border: `2px solid ${theme.palette.doctor.dark}`,
+                      borderRadius: "5px",
+                      padding: "20px",
+                      "& .MuiTextField-root": { m: 0.5 },
+                      boxShadow: "0 0 5px 0 rgba(0,0,0,0.5)",
+                    }}
                   >
-                    {weekdays.map((weekday) => (
-                      <MenuItem key={weekday.id} value={weekday.id}>
-                        {weekday.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid
-                item
-                xs={12}
-                // md={6}
-              >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Stack spacing={3}>
-                    <TimePicker
-                      // className={classes.timePicker}
-                      ampm={false}
-                      fullWidth
-                      label="از ساعت"
-                      value={values.fromTime}
-                      onChange={(newValue) => {
-                        console.log(
-                          "this is the new fromTime value: ",
-                          newValue
-                        );
-                        setValues({ ...values, fromTime: newValue });
-                        setStartTime(newValue);
+                    {/* <Typography
+                      sx={{
+                        textAlign: "center",
+                        margin: "10px",
                       }}
-                      renderInput={(params) => <TextField {...params} />}
-                      error={errors.fromTime ? true : false}
-                      helperText={errors.fromTime ? errors.fromTime : null}
-                    />
-                  </Stack>
-                </LocalizationProvider>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                // md={6}
-              >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Stack spacing={3}>
-                    <TimePicker
-                      ampm={false}
-                      label="تا ساعت"
-                      value={values.toTime}
-                      onChange={(newValue) => {
-                        setValues({ ...values, toTime: newValue });
-                        setEndTime(newValue);
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                      error={errors.toTime ? true : false}
-                      helperText={errors.toTime ? errors.toTime : null}
-                    />
-                  </Stack>
-                </LocalizationProvider>
-              </Grid>
+                      variant="h5"
+                    >
+                      اتاق های فعال
+                    </Typography> */}
 
-              <Grid
-                item
-                xs={12}
-                // md={6}
-              >
-                <button className={classes.button} type="submit">
-                  ذخیره اطلاعات
-                </button>
+                    {/* <hr
+                      width="100%"
+                      style={{
+                        backgroundColor: theme.palette.doctor.dark,
+                        marginBottom: "1rem",
+                        marginTop: "1rem",
+                      }}
+                    /> */}
+
+                    <Grid container spacing={2}>
+                      <Grid
+                        container
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        spacing={1}
+                        sx={{
+                          marginTop: "10px",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {/* {console.log(rooms)} */}
+                        {availableTimes.length !== 0 ? (
+                          availableTimes
+                            .sort((a, b) => a.day - b.day)
+                            .sort((a, b) => a.fromTime - b.fromTime)
+                            .map((time, index) => {
+                              return (
+                                <Grid key={time.id} item xs={12} md={12}>
+                                  <Accordion
+                                    sx={{
+                                      width: "70%",
+                                      justifyContent: "center",
+                                      right: "-20%",
+                                      margin: "0px 0px 0px 0px",
+                                    }}
+                                  >
+                                    <AccordionSummary
+                                      expandIcon={<ExpandMoreIcon />}
+                                      aria-controls={`aria${time.id}`}
+                                      id={`id${time.id}`}
+                                    >
+                                      <Grid
+                                        container
+                                        spacing={1}
+                                        sx={{
+                                          flexDirection: "column",
+                                          height: "40px",
+                                          minWidth: "50px",
+                                        }}
+                                      >
+                                        <Grid
+                                          item
+                                          xs={12}
+                                          md={6}
+                                          sx={{ minWidth: "50px" }}
+                                        >
+                                          <Typography>
+                                            روز{" "}
+                                            {
+                                              weekdays.find(
+                                                (day) => day.id - 1 === time.day
+                                              ).name
+                                            }
+                                            {":"}
+                                          </Typography>
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          xs={12}
+                                          md={6}
+                                          sx={{ minWidth: "50px" }}
+                                        >
+                                          <Typography
+                                            sx={{ marginBottom: "7px" }}
+                                          >
+                                            {time.from_time} تا {time.to_time}
+                                          </Typography>
+                                        </Grid>
+                                      </Grid>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                      {/* <Typography sx={{ marginBottom: "7px" }}>
+                                    از ساعت: {time.from_time}
+                                  </Typography>
+                                  <Typography sx={{ marginBottom: "7px" }}>
+                                    تا ساعت: {time.to_time}
+                                  </Typography> */}
+                                      <Button
+                                        sx={{ marginTop: "10px" }}
+                                        type="button"
+                                        variant="outlined"
+                                        color="doctor"
+                                        onClick={() => {
+                                          // setFlag(true);
+                                          // setOpen(true);
+                                          // DeleteTimePopUp(time);
+                                          handleDeleteTime(time);
+
+                                          // API.delete(
+                                          //   `/api/doctor/workday/${time.id}/`,
+                                          //   {
+                                          //     headers: {
+                                          //       Authorization:
+                                          //         "Bearer " + authData?.access,
+                                          //     },
+                                          //   }
+                                          // )
+                                          //   .then((res) => {
+                                          //     setAvailableTimes(
+                                          //       time.filter(
+                                          //         (rm) => rm.id !== time.id
+                                          //       )
+                                          //     );
+                                          //     toast.success(
+                                          //       "زمان موردنظر با موفقیت حذف شد",
+                                          //       {
+                                          //         position: "top-right",
+                                          //         autoClose: 2000,
+                                          //       }
+                                          //     );
+                                          //     // formikRoom.resetForm();
+                                          //     setLoading(true);
+                                          //   })
+                                          //   .catch((err) => {
+                                          //     toast.error("خطایی رخ داده است", {
+                                          //       position: "top-right",
+                                          //       autoClose: 2000,
+                                          //     });
+                                          //   });
+                                        }}
+                                      >
+                                        حذف زمان موردنظر
+                                      </Button>
+                                      {/* <Dialog
+                                        open={open}
+                                        onClose={() => setOpen(false)}
+                                        aria-labelledby="alert-dialog-title"
+                                        aria-describedby="alert-dialog-description"
+                                      >
+                                        <DialogTitle id="alert-dialog-title">
+                                          <Typography
+                                            sx={{
+                                              display: "flex",
+                                              justifyContent: "center",
+                                            }}
+                                          >
+                                            {"حذف زمان انتخاب شده"}
+                                          </Typography>
+                                        </DialogTitle>
+                                        {flag && DeleteTimePopUp(time)}
+                                      </Dialog> */}
+                                    </AccordionDetails>
+                                  </Accordion>
+                                </Grid>
+                              );
+                            })
+                        ) : (
+                          <Typography
+                            sx={{ textAlign: "center", marginTop: "10px" }}
+                            variant="h6"
+                          >
+                            زمانی برای نمایش وجود ندارد
+                          </Typography>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </TabPanel>
               </Grid>
             </Grid>
-          </Container>
-        </form>
-      </Grid>
-    </Grid>
+          </Grid>
+        </Box>
+      </Box>
+    </Container>
   );
 }
