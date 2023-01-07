@@ -166,6 +166,7 @@ const Hotel = () => {
       })
       .catch((err) => console.log(err));
   };
+  console.log("hotelrules: ", hotel?.rules);
 
   return (
     <>
@@ -394,7 +395,7 @@ const Hotel = () => {
                           variant="subtitle2"
                           sx={{ fontSize: "18px", display: "inline" }}
                         >
-                          <p className="hotel_rules">{hotel?.rules}</p>
+                          <pre className="hotel_rules">{hotel?.rules}</pre>
                         </Typography>
                       </Grid>
                     </Grid>
