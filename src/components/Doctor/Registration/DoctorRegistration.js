@@ -4,7 +4,7 @@ import styles from "./doctor.module.css";
 import * as Yup from "yup";
 // import Select from 'react-select';
 import { useState } from "react";
-import { FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { FormControl, Grid, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import getDoctorScale from "./services/getDoctorScale";
@@ -14,6 +14,7 @@ import postDoctorRegister from "./services/postDoctorRegister";
 import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
 import {makeStyles} from "@mui/styles";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const value = {
   first_name: "",
@@ -58,6 +59,8 @@ const DoctorRegister = () => {
   const [doctor, setDoctor] = useState({ ...value });
   const [doctorScale, setDoctorScale] = useState([]);
   const [error, setError] = useState("Ooops !!!!");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfrim, setShowPasswordconfrim] = useState(false);
 
   // var profilePicture = <img src="/src/assets/img/DoctorProfilePhoto.jpg" alt="Doctor"/>;
 
@@ -65,6 +68,10 @@ const DoctorRegister = () => {
   useEffect(() => {
     getdoctorScale();
   }, [doctorScale]);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const handleClickShowPasswordConfrim = () => setShowPasswordconfrim(!showPasswordConfrim);
+  const handleMouseDownPasswordConfrim = () => setShowPasswordconfrim(!showPasswordConfrim);
 
 
   const formik = useFormik({
@@ -197,7 +204,20 @@ const DoctorRegister = () => {
               variant="outlined"
               label="کلمه عبور"
               name="password"
-              type="password"
+              type = {showPassword ? "text" : "password"}
+                InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
               helperText={
                 formik.errors["password"] &&
                 formik.touched["password"] &&
@@ -216,7 +236,20 @@ const DoctorRegister = () => {
               variant="outlined"
               label="تایید کلمه عبور"
               name="passwordConfrim"
-              type="password"
+              type = {showPasswordConfrim ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPasswordConfrim}
+                          onMouseDown={handleMouseDownPasswordConfrim}
+                        >
+                          {showPasswordConfrim ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
               helperText={
                 formik.errors["passwordConfrim"] &&
                 formik.touched["passwordConfrim"] &&
