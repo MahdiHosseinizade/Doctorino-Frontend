@@ -1,0 +1,5 @@
+.about-us{
+    display: flex;
+    flex-direction: row;
+    font-size: 1px !important;
+}
