@@ -161,11 +161,12 @@ export default function LandingPage() {
             <Grid item xs={6} md={4}  key={index}>
               <a 
                 href={`/specialist/${+findIndex }`}
+                style = {{backgroundImage : `url(${item.image})`, backgroundSize : 'cover', backgroundPosition : 'center', backgroundRepeat : 'no-repeat'}}
                 className="doctorScale2"
                 onClick={() => setFindIndex(item.id)}
                 key={index}
               >
-                {item.name}
+                <h3>{item.name}</h3>
               </a>
             </Grid>
           ))}
