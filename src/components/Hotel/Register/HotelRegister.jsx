@@ -47,13 +47,10 @@ const Hotelregister = () => {
   const history = useHistory();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfrim, setShowPasswordConfrim] = useState(false);
-  const [user, setUser] = useState([]);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
   const handleClickShowPasswordConfrim = () => setShowPasswordConfrim(!showPasswordConfrim);
   const handleMouseDownPasswordConfrim = () => setShowPasswordConfrim(!showPasswordConfrim);
-
-  const { loginUser } = useContext(AuthContext);
   
   function posthotelHandler(hotel) {
     axios.post(
@@ -76,7 +73,6 @@ const Hotelregister = () => {
             autoClose: 2000,
           }
         )
-        loginUser(hotel.email, hotel.pass);
         history.push("/login", { destination: "/" })
       })
       .catch(

@@ -95,12 +95,17 @@ export default function SideBar() {
             path: "/hotel-panel/hotel-info",
             icon: <MenuIcon color="hotel" />
         },
+        {
+            text: "تغییر رمز عبور",
+            path: "/hotel-panel/verify-email",
+            icon: <PasswordIcon color="hotel" />
+        }
     ]
 
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
-        // find out the size of the screen, if the size is less than xs, the drawer will be closed
+        // if the size is less than xs, the drawer will be closed
         if (window.innerWidth < 600) {
             setOpen(false);
             return;

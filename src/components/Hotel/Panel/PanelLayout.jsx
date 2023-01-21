@@ -14,6 +14,14 @@ export default function PanelLayout({ children }) {
         setButtonsInNavBar(
           [
             {
+              text: "لیست پزشکان",
+              path: "/list-of-doctors",
+            },
+            {
+              text: "جستجوی هتل",
+              path: "/hotel-search",
+            },
+            {
               text: "اضافه کردن هتل",
               path: "/hotel-panel/add-hotel",
             },
@@ -24,6 +32,10 @@ export default function PanelLayout({ children }) {
             {
               text: "اطلاعات تکمیلی هتل",
               path: "/hotel-panel/hotel-info",
+            },
+            {
+              text: "تغییر رمز عبور",
+              path: "/hotel-panel/verify-email"
             },
           ]
         );

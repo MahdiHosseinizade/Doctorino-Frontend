@@ -5,7 +5,8 @@ import Dashboard from './components/Dashboard';
 import ManagerProfile from './components/ManagerProfile';
 import BookingReport from './components/BookingReport';
 import Finances from './components/Finances';
-import ChangePass from './components/ChangePass';
+import VerifyEmail from './components/VerifyEmail';
+import ChangePass from "./components/ChangePass";
 import AddHotel from './components/AddHotel';
 import PanelLayout from './PanelLayout';
 
@@ -22,6 +23,7 @@ export default function HotelPanel() {
                 <Route path={`${path}/hotel-info`} component={HotelProfileCompletion} />
                 <Route path={`${path}/booking-reports`} component={BookingReport} />
                 <Route path={`${path}/finances`} component={Finances} />
+                <Route path={`${path}/verify-email`} component={VerifyEmail} />
                 <Route path={`${path}/change-password`} component={ChangePass} />
             </Switch>
         </PanelLayout>
