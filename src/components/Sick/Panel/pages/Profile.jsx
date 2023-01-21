@@ -209,6 +209,7 @@ const Profile = () => {
       <Box
         sx={{
           marginTop: "50px",
+          marginBottom: "50px",
           bgcolor: "rgb(245, 246, 248)",
           border: "1px solid #ccc",
           borderRadius: "10px",

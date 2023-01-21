@@ -7,6 +7,9 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Dialog,
+  DialogActions,
+  DialogTitle,
   Grid,
   Typography,
 } from "@mui/material";
@@ -42,6 +45,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
   const [loading, setLoading] = useState(true);
   const [hotel, setHotel] = useState(null);
   const [room, setRoom] = useState(null);
+  const [reservationDeleteDialog, setReservationDeleteDialog] = useState(false);
   const { user, authData } = useContext(AuthContext);
   const api = useAxios();
 
@@ -224,7 +228,7 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
         >
           <Button
             variant="contained"
-            onClick={() => deleteReservation(reservation.id)}
+            onClick={() => setReservationDeleteDialog(true)}
             sx={{
               marginBottom: "15px",
               marginLeft: "15px",
@@ -236,6 +240,31 @@ const AppointmentCard = ({ reservation, deleteReservation }) => {
           >
             لغو رزرو
           </Button>
+        </Grid>
+        <Grid>
+          <Dialog
+            open={reservationDeleteDialog}
+            onClose={() => setReservationDeleteDialog(false)}
+          >
+            <DialogTitle>
+              آیا از لغو رزرو اطمینان دارید؟
+            </DialogTitle>
+            <DialogActions>
+              <Button
+                onClick={() => setReservationDeleteDialog(false)}
+              >
+                انصراف
+              </Button>
+              <Button
+                onClick={() => {
+                  setReservationDeleteDialog(false);
+                  deleteReservation(reservation.id);
+                }}
+              >
+                حذف
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
       </Grid>
     </Card>
