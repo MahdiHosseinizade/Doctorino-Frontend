@@ -225,7 +225,7 @@ export default function HotelProfileCompletion() {
 
     api
       // .get("/api/hotel/room/")
-      .get(`/api/hotel/${hotel === '' ? '' : String(hotel) + '/'}room/`)
+      .get(`/api/hotel/${!hotel === '' ? '' : String(hotel) + '/'}room/`)
       .then((res) => setRooms(res.data))
       .catch((err) => console.error(err));
 
