@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@mui/styles";
 import {
   Card,
@@ -10,6 +10,8 @@ import {
   Grid,
   Typography,
   TextField,
+  Rating,
+  Button,
 } from "@mui/material";
 import './Hotel.css';
 import AvailableRooms from "./AvailableRooms";
@@ -35,6 +37,14 @@ import { AiFillSafetyCertificate } from "react-icons/ai";
 import NavBar from "../../NavBar/newNavBar";
 import theme from "../../../assets/theme/defaultTheme"
 import NotFound from "../../../pages/NotFoundPage";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
+import ThumbUpAlt from '@mui/icons-material/ThumbUpAlt';
+import useAxios from '../../../utils/useAxios';
+import AuthContext from '../../../context/AuthContext';
+import { toast } from 'react-toastify';
+import ReviewCard from './ReviewCard';
 
 const useStyles = makeStyles({
   container: {
@@ -42,36 +52,35 @@ const useStyles = makeStyles({
     paddingTop: "30px",
   },
   card: {
-    // display: "fix",
-    width: "100%",
-    height: "200px",
-    position: "relative",
-    display: "flex",
-    flexDirection: "row",
-    paddingInline: "13px",
     marginBottom: "40px",
   },
   featureCard: {
-    width: "750px",
+    width: "100%",
     height: "100%",
-    display: "fix",
+    display: "flex",
     paddingInline: "13px",
     marginBottom: "20px",
+  },
+  reviewCard: {
+    display: 'fix',
+    marginBottom: "20px",
+  },
+  reviewFormCard: {
+    width: "100%",
+    height: "100%",
   },
   availableRoomsCard: {
     textAlign: "center",
-    width: "350px",
-    height: "95%",
-    display: "fix",
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     paddingInline: "13px",
     marginBottom: "20px",
-    marginRight: "215px",
   },
   hotel_image: {
-    position: "absolute",
     right: "5px",
-    width: "90%",
-    height: "90%",
     marginBottom: "30px",
     border: "2px solid #ccc",
     borderRadius: "10%",
@@ -94,6 +103,19 @@ const useStyles = makeStyles({
     width: "100%",
   },
 });
+
+
+const formValue = {
+  score: 0,
+  text: "",
+};
+
+const validationSchema = Yup.object({
+  score: Yup.number().required("امتیاز را وارد کنید."),
+  text: Yup.string().required("نظر خود را وارد کنید."),
+});
+
+
 const Hotel = () => {
   // let date = new Date();
   // date = moment(date).locale("fa").format("YYYY/MM/DD").split("/");
@@ -114,11 +136,28 @@ const Hotel = () => {
   const [loaded, setLoaded] = useState(true);
   const { id } = useParams();
   const [hotel, setHotel] = useState();
-  console.log(hotel);
+  const [nextPageUrl, setNextPageUrl] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const api = useAxios();
+  const { user, authData } = useContext(AuthContext);
 
   useEffect(() => {
-    getHotel();
-  }, []);
+    if (loading && id) {
+      api.get(`/api/hotel/${id}/reviews/?page_size=5`)
+        .then(res => {
+          setNextPageUrl(res.data.links.next);
+          setReviews(res.data.results);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
+      getHotel();
+    }
+  }, [loading, reviews]);
 
   const getHotel = () => {
     axios
@@ -134,8 +173,64 @@ const Hotel = () => {
         console.log(err)
       });
   };
-  
 
+  const handleMoreReviews = () => {
+    if (nextPageUrl) {
+      axios.get(nextPageUrl,
+        {
+          headers: {
+            Authorization: `Bearer ${authData?.access}`
+          }
+        }
+      ).then(res => {
+        console.log("next page", res.data);
+        setNextPageUrl(res.data.links.next);
+        setReviews([...reviews, ...res.data.results]);
+      }).catch(err => console.log(err))
+    } else {
+      toast.info("موردی برای نمایش وجود ندارد.");
+    }
+  }
+
+  const formik = useFormik({
+    initialValues: formValue,
+
+    onSubmit: (values) => {
+      api.post("/api/hotel/reviews/", {
+        hotel: id,
+        voter: user.id,
+        score: values.score,
+        text: values.text,
+      }, {
+        headers: {
+          Authorization: `Bearer ${authData?.access}`
+        }
+      }).then((res) => {
+        console.log("haha", res.data);
+        setReviews([...reviews, {
+          hotel: id,
+          voter: {
+            first_name: user.first_name,
+            last_name: user.last_name,
+          },
+          score: values.score,
+          text: values.text,
+        }]);
+
+        toast.success("نظر شما با موفقیت ثبت شد.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        formik.resetForm();
+      }).catch((err) => {
+        toast.error("مشکلی در ثبت نظر پیش آمد.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      });
+    },
+    validationSchema: validationSchema,
+  });
 
   const iconsFeatures = [
     { icon: <MdPool />, title: "استخر" },
@@ -166,13 +261,13 @@ const Hotel = () => {
       })
       .catch((err) => console.log(err));
   };
-  console.log("hotelrules: ", hotel?.rules);
+
 
   return (
     <>
       {loaded ?
         <Container className={classes.container}>
-          <NavBar bgColor={theme.palette.hotel}/>
+          <NavBar bgColor={theme.palette.hotel} />
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
               <Card className={classes.card}>
@@ -180,11 +275,9 @@ const Hotel = () => {
                   <Grid
                     item
                     xs={12}
-                    lg={6}
+                    md={4}
                     sx={{
                       display: "flex",
-                      // position: "sticky",
-                      top: "0",
                       alignItems: "center",
                       justifyContent: "center",
                       marginTop: "20px",
@@ -198,79 +291,90 @@ const Hotel = () => {
                       alt="hotel image"
                     />
                   </Grid>
-                  <Grid item xs={12} lg={6}>
-                    <CardContent sx={{ marginTop: "20px" }}>
-                      <Box>
-                        <Grid container spacing={3.5}>
-                          <Grid item xs={12} md={12}>
-                            {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
-                            <Typography
-                              variant="subtitle2"
-                              sx={{ fontSize: "20px", display: "flex" }}
-                            >
-                              <PlaceOutlinedIcon
-                                color="warning"
-                                sx={{ marginBottom: "-2px" }}
-                              />
-                              <span> آدرس : </span>
-                              {hotel?.address}
-                            </Typography>
-                          </Grid>
+                  <Grid item xs={12} md={8}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CardContent>
+                      <Grid container rowSpacing={3.5}>
+                        <Grid item xs={12} md={12}>
+                          {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontSize: "20px" }}
+                          >
+                            {`آدرس `}
+                          </Typography>
+
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontSize: "18px",
+                              marginTop: "5px",
+                            }}
+                          >
+                            <PlaceOutlinedIcon
+                              color="warning"
+                              sx={{ marginBottom: "-7px" }}
+                            /> <span>    </span>
+                            {hotel?.address}
+                          </Typography>
                         </Grid>
+
                         <Grid item xs={12} md={12}>
                           <Typography
-                            noWrap
                             variant="subtitle2"
-                            sx={{ fontSize: "18px", display: "inline" }}
+                            sx={{ fontSize: "18px" }}
+                          >
+                            {`نام هتل `}
+                          </Typography>
+
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontSize: "18px",
+                              marginTop: "5px",
+                            }}
                           >
                             <VerifiedIcon
                               color="warning"
                               sx={{ marginBottom: "-7px" }}
-                            />
-                            <span> </span> هتل
+                            /> <span>    </span>
+                            {hotel?.hotel_name}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={12} md={12}>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontSize: "18px", display: "inline" }}
+                          >
+                            <Star color="warning" sx={{ marginBottom: "-7px" }} /> <span>    </span>
                           </Typography>
 
-                      <Typography
-                        noWrap
-                        variant="subtitle1"
-                        sx={{
-                          fontSize: "17px",
-                          display: "inline",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        <span> </span> {hotel?.hotel_name}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                      <Typography
-                        noWrap
-                        variant="subtitle2"
-                        sx={{ fontSize: "18px", display: "inline" }}
-                      >
-                        <Star color="warning" sx={{ marginBottom: "-7px" }} />
-                      </Typography>
-
                           <Typography
-                            noWrap
                             variant="subtitle1"
                             sx={{
                               fontSize: "17px",
                               display: "inline",
-                              marginLeft: "10px",
                             }}
                           >
-                            {hotel?.hotel_stars}
-                            <span> </span> ستاره
+                            <b>{hotel?.hotel_stars}</b> <span>  </span>
+                            ستاره
                           </Typography>
+
                         </Grid>
-                      </Box>
+                      </Grid>
                     </CardContent>
                   </Grid>
                 </Grid>
               </Card>
             </Grid>
-            <Grid item xs={12} md={6}>
+
+            <Grid item xs={12} md={8}>
               <Card className={classes.featureCard}>
                 <div>
                   <CardHeader
@@ -291,10 +395,10 @@ const Hotel = () => {
                           return iconsFeatures.map((icon, index) => {
                             if (item.title === icon.title) {
                               return (
-                                <p className="features_hotel" key={index}>
+                                <div className="features_hotel" key={index}>
                                   <div className="features_icon">{icon.icon}</div>{" "}
                                   {item.title}
-                                </p>
+                                </div>
                               );
                             }
                           });
@@ -305,7 +409,7 @@ const Hotel = () => {
               </Card>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <Card className={classes.availableRoomsCard}>
                 <form onSubmit={handleSubmit}>
                   <CardContent>
@@ -379,6 +483,7 @@ const Hotel = () => {
                 />
               )}
             </Grid>
+
             <Grid item xs={12} md={12}>
               <Card className={classes.rulesCard}>
                 <div>
@@ -391,16 +496,86 @@ const Hotel = () => {
                     <Grid container spacing={3.5}>
                       <Grid item xs={12} md={6}>
                         <Typography
-                          noWrap
                           variant="subtitle2"
-                          sx={{ fontSize: "18px", display: "inline" }}
+                          sx={{ fontSize: "18px", whiteSpace: "pre-line" }}
                         >
-                          <pre className="hotel_rules">{hotel?.rules}</pre>
+                          {hotel?.rules}
                         </Typography>
                       </Grid>
                     </Grid>
                   </CardContent>
                 </div>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={12} sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+              <Card className={classes.reviewFormCard}>
+                <Box
+                  component="form"
+                  onSubmit={formik.handleSubmit}
+                >
+                  <Grid container spacing={2} sx={{
+                    padding: "10px",
+                  }}>
+                    <Grid item xs={12} md={12}>
+                      <Grid item xs={12} md={12}>
+                        <Rating
+                          name="score"
+                          label="امتیاز"
+                          defaultValue={0}
+                          value={formik.getFieldProps("score").value}
+                          onChange={(event, newValue) => {
+                            formik.setFieldValue("score", newValue);
+                          }}
+                          icon={<ThumbUpAlt fontSize="inherit" />}
+                          emptyIcon={<ThumbDownAltOutlinedIcon fontSize="inherit" />}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={12}>
+                        <TextField
+                          fullWidth
+                          className={classes.textField}
+                          error={
+                            formik.errors["text"] &&
+                            formik.touched["text"]
+                          }
+                          variant="outlined"
+                          label="نظر"
+                          name="text"
+                          type="text"
+                          helperText={formik.touched["text"] && formik.errors["text"]}
+                          multiline
+                          rows={3}
+                          {...formik.getFieldProps("text")}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} md={12} sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "flex-end",
+                      marginBottom: "20px",
+                    }}>
+                      <Button disabled={!(formik.dirty && formik.isValid && formik.values["score"] > 0)} color="primary" type="submit" variant="contained">
+                        ثبت نظر
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      {reviews.map(({ id, voter, score, text }) => (
+                        <Card className={classes.reviewCard} key={id}>
+                          <ReviewCard key={id} voter={voter} score={score} text={text} />
+                        </Card>
+                      ))}
+                      <Button color="primary" variant="contained" onClick={handleMoreReviews}>
+                        نظرات بیشتر
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
               </Card>
             </Grid>
           </Grid>
