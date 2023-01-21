@@ -10,6 +10,7 @@ import {
   Grid,
   Typography,
   TextField,
+  Rating,
 } from "@mui/material";
 import './Hotel.css';
 import AvailableRooms from "./AvailableRooms";
@@ -42,36 +43,27 @@ const useStyles = makeStyles({
     paddingTop: "30px",
   },
   card: {
-    // display: "fix",
-    width: "100%",
-    height: "200px",
-    position: "relative",
-    display: "flex",
-    flexDirection: "row",
-    paddingInline: "13px",
     marginBottom: "40px",
   },
   featureCard: {
-    width: "750px",
+    width: "100%",
     height: "100%",
-    display: "fix",
+    display: "flex",
     paddingInline: "13px",
     marginBottom: "20px",
   },
   availableRoomsCard: {
     textAlign: "center",
-    width: "350px",
-    height: "95%",
-    display: "fix",
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     paddingInline: "13px",
     marginBottom: "20px",
-    marginRight: "215px",
   },
   hotel_image: {
-    position: "absolute",
     right: "5px",
-    width: "90%",
-    height: "90%",
     marginBottom: "30px",
     border: "2px solid #ccc",
     borderRadius: "10%",
@@ -134,7 +126,7 @@ const Hotel = () => {
         console.log(err)
       });
   };
-  
+
 
 
   const iconsFeatures = [
@@ -166,13 +158,13 @@ const Hotel = () => {
       })
       .catch((err) => console.log(err));
   };
-  console.log("hotelrules: ", hotel?.rules);
+
 
   return (
     <>
       {loaded ?
         <Container className={classes.container}>
-          <NavBar bgColor={theme.palette.hotel}/>
+          <NavBar bgColor={theme.palette.hotel} />
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
               <Card className={classes.card}>
@@ -180,11 +172,9 @@ const Hotel = () => {
                   <Grid
                     item
                     xs={12}
-                    lg={6}
+                    md={4}
                     sx={{
                       display: "flex",
-                      // position: "sticky",
-                      top: "0",
                       alignItems: "center",
                       justifyContent: "center",
                       marginTop: "20px",
@@ -198,79 +188,90 @@ const Hotel = () => {
                       alt="hotel image"
                     />
                   </Grid>
-                  <Grid item xs={12} lg={6}>
-                    <CardContent sx={{ marginTop: "20px" }}>
-                      <Box>
-                        <Grid container spacing={3.5}>
-                          <Grid item xs={12} md={12}>
-                            {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
-                            <Typography
-                              variant="subtitle2"
-                              sx={{ fontSize: "20px", display: "flex" }}
-                            >
-                              <PlaceOutlinedIcon
-                                color="warning"
-                                sx={{ marginBottom: "-2px" }}
-                              />
-                              <span> آدرس : </span>
-                              {hotel?.address}
-                            </Typography>
-                          </Grid>
+                  <Grid item xs={12} md={8}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CardContent>
+                      <Grid container rowSpacing={3.5}>
+                        <Grid item xs={12} md={12}>
+                          {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontSize: "20px" }}
+                          >
+                            {`آدرس `}
+                          </Typography>
+
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontSize: "18px",
+                              marginTop: "5px",
+                            }}
+                          >
+                            <PlaceOutlinedIcon
+                              color="warning"
+                              sx={{ marginBottom: "-7px" }}
+                            /> <span>    </span>
+                            {hotel?.address}
+                          </Typography>
                         </Grid>
+
                         <Grid item xs={12} md={12}>
                           <Typography
-                            noWrap
                             variant="subtitle2"
-                            sx={{ fontSize: "18px", display: "inline" }}
+                            sx={{ fontSize: "18px" }}
+                          >
+                            {`نام هتل `}
+                          </Typography>
+                          
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontSize: "18px",
+                              marginTop: "5px",
+                            }}
                           >
                             <VerifiedIcon
                               color="warning"
                               sx={{ marginBottom: "-7px" }}
-                            />
-                            <span> </span> هتل
+                            /> <span>    </span>
+                            {hotel?.hotel_name}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={12} md={12}>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontSize: "18px", display: "inline" }}
+                          >
+                            <Star color="warning" sx={{ marginBottom: "-7px" }} /> <span>    </span>
                           </Typography>
 
-                      <Typography
-                        noWrap
-                        variant="subtitle1"
-                        sx={{
-                          fontSize: "17px",
-                          display: "inline",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        <span> </span> {hotel?.hotel_name}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                      <Typography
-                        noWrap
-                        variant="subtitle2"
-                        sx={{ fontSize: "18px", display: "inline" }}
-                      >
-                        <Star color="warning" sx={{ marginBottom: "-7px" }} />
-                      </Typography>
-
                           <Typography
-                            noWrap
                             variant="subtitle1"
                             sx={{
                               fontSize: "17px",
                               display: "inline",
-                              marginLeft: "10px",
                             }}
                           >
-                            {hotel?.hotel_stars}
-                            <span> </span> ستاره
+                            <b>{hotel?.hotel_stars}</b> <span>  </span>
+                            ستاره
                           </Typography>
+
                         </Grid>
-                      </Box>
+                      </Grid>
                     </CardContent>
                   </Grid>
                 </Grid>
               </Card>
             </Grid>
-            <Grid item xs={12} md={6}>
+
+            <Grid item xs={12} md={8}>
               <Card className={classes.featureCard}>
                 <div>
                   <CardHeader
@@ -291,10 +292,10 @@ const Hotel = () => {
                           return iconsFeatures.map((icon, index) => {
                             if (item.title === icon.title) {
                               return (
-                                <p className="features_hotel" key={index}>
+                                <div className="features_hotel" key={index}>
                                   <div className="features_icon">{icon.icon}</div>{" "}
                                   {item.title}
-                                </p>
+                                </div>
                               );
                             }
                           });
@@ -305,7 +306,7 @@ const Hotel = () => {
               </Card>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <Card className={classes.availableRoomsCard}>
                 <form onSubmit={handleSubmit}>
                   <CardContent>
@@ -379,6 +380,7 @@ const Hotel = () => {
                 />
               )}
             </Grid>
+
             <Grid item xs={12} md={12}>
               <Card className={classes.rulesCard}>
                 <div>
@@ -391,11 +393,10 @@ const Hotel = () => {
                     <Grid container spacing={3.5}>
                       <Grid item xs={12} md={6}>
                         <Typography
-                          noWrap
                           variant="subtitle2"
-                          sx={{ fontSize: "18px", display: "inline" }}
+                          sx={{ fontSize: "18px", whiteSpace: "pre-line" }}
                         >
-                          <pre className="hotel_rules">{hotel?.rules}</pre>
+                          {hotel?.rules}
                         </Typography>
                       </Grid>
                     </Grid>
