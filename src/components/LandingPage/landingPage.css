@@ -243,14 +243,19 @@
     font-family: 'IranYekan';
     font-size: 14px;
     margin: 5px 10px;    
-    height: 60px;
+    height: 300px;
     border-radius: 10px;
     border: 1px solid #ccc;
     text-decoration: none;
     color: white;
     /* margin-right: 10px; */
 }
-
+.showSpecialieties h3{
+    font-family: 'IranYekan';
+    font-size: 16px;
+    color: #010101;
+    margin-top: 53%;
+}
 /* .SelectSpeciality{
     display: flex;
     justify-content: center;

@@ -16,6 +16,7 @@ import DoctorSpecialitie from "./components/Doctor/SpecialitiePage/DoctorSpecial
 import HotelReservation from "./components/Hotel/HotelReservation/HotelReservation";
 import SearchDoctorResponse from "./components/LandingPage/SearchDocResponse";
 import SickPanel from './components/Sick/Panel/SickPanel';
+import AboutUs from "./components/AboutUs/AboutUs";
 
 
 const routes = [
@@ -46,7 +47,7 @@ const routes = [
   { path: "/hotels", component: Hotels },
   { path: "/hotel-search", component: HotelSearch },
   { path: "/found-hotels", component: FoundHotels },
-
+  {path:"/about-us" , component: AboutUs},
   { path: "/login", component: Login },
   { path: "/signup", component: SignUpPage },
   { path: "/", component: LandingPage, exact: true },

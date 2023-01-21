@@ -54,7 +54,13 @@ const validationSchema = Yup.object({
 });
 
 const DoctorRegister = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfrim, setShowPasswordconfrim] = useState(false);
   const classes = useStyles();
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const handleClickShowPasswordConfrim = () => setShowPasswordconfrim(!showPasswordConfrim);
+  const handleMouseDownPasswordConfrim = () => setShowPasswordconfrim(!showPasswordConfrim);
   const [scale, setscale] = useState("");
   const [doctor, setDoctor] = useState({ ...value });
   const [doctorScale, setDoctorScale] = useState([]);
@@ -205,7 +211,10 @@ const DoctorRegister = () => {
               label="کلمه عبور"
               name="password"
               type = {showPassword ? "text" : "password"}
+                  InputProps={{
+
                 InputProps={{
+
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton

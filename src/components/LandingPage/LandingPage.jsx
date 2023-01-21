@@ -65,7 +65,6 @@ export default function LandingPage() {
 
   useEffect(() => {
     getSpecialites();
-    filteredScaleHandler(searchScale);
   }, []);
 
 
@@ -94,41 +93,21 @@ export default function LandingPage() {
         toast.error(err.response.data.message);
       });
   };
-  // console.log(resDoctor);
+  
 
-  const filteredScaleHandler = (search) => {
-    if (!search || search === "") {
-      setFilteredScale(specialitie);
-      return;
-    } else {
-      const filtered = specialitie.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase())
-      );
-      setFilteredScale(filtered);
-    }
-  };
-
-  const inputHandler = (e) => {
-    setSearchScale(e.target.value);
-    filteredScaleHandler(e.target.value);
-  };
+  
 
 
-  const goSPecialitieSearch = (id) => {
-    console.log(id);
-  };
+  
 
-  const findIndexFunction = (id) => {
-    const index = specialitie.findIndex((item) => item.id === id);
-    setFindIndex(index + 1);
-    goSPecialitieSearch(findIndex);
-  };
+  
   const cityHandler = (e) =>{
     setCity(e)
   }
   const SpecialityHandler = (e) =>{
     setSpeciality(e)
   }
+  console.log("speciality",specialitie)
   
 
   return (
@@ -181,12 +160,13 @@ export default function LandingPage() {
           {specialitie && specialitie.map((item, index) => (
             <Grid item xs={6} md={4}  key={index}>
               <a 
-                href={`/specialist/${+findIndex + 1}`}
+                href={`/specialist/${+findIndex }`}
+                style = {{backgroundImage : `url(${item.image})`, backgroundSize : 'cover', backgroundPosition : 'center', backgroundRepeat : 'no-repeat'}}
                 className="doctorScale2"
-                onClick={() => findIndexFunction(index)}
+                onClick={() => setFindIndex(item.id)}
                 key={index}
               >
-                {item.name}
+                <h3>{item.name}</h3>
               </a>
             </Grid>
           ))}
