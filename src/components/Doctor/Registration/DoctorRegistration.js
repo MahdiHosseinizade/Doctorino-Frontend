@@ -65,6 +65,8 @@ const DoctorRegister = () => {
   const [doctor, setDoctor] = useState({ ...value });
   const [doctorScale, setDoctorScale] = useState([]);
   const [error, setError] = useState("Ooops !!!!");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfrim, setShowPasswordconfrim] = useState(false);
 
   // var profilePicture = <img src="/src/assets/img/DoctorProfilePhoto.jpg" alt="Doctor"/>;
 
@@ -72,6 +74,10 @@ const DoctorRegister = () => {
   useEffect(() => {
     getdoctorScale();
   }, [doctorScale]);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const handleClickShowPasswordConfrim = () => setShowPasswordconfrim(!showPasswordConfrim);
+  const handleMouseDownPasswordConfrim = () => setShowPasswordconfrim(!showPasswordConfrim);
 
 
   const formik = useFormik({
@@ -206,6 +212,9 @@ const DoctorRegister = () => {
               name="password"
               type = {showPassword ? "text" : "password"}
                   InputProps={{
+
+                InputProps={{
+
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton

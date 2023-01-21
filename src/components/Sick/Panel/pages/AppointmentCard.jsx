@@ -7,6 +7,9 @@ import {
   Card,
   CardContent,
   CardMedia,
+  DialogActions,
+  DialogTitle,
+  Dialog,
   Grid,
   Typography,
 } from "@mui/material";
@@ -21,8 +24,7 @@ const useStyles = makeStyles({
     display: "fix",
     paddingInline: "13px",
     marginBottom: "20px",
-    marginRight: "5%",
-    marginLeft: "5%",
+    marginRight: "10%",
   },
   doctor_image: {
     width: "250px",
@@ -41,6 +43,7 @@ const useStyles = makeStyles({
 const AppointmentCard = ({ appointment, deleteAppointment }) => {
   const [loading, setLoading] = useState(true);
   const [doctor, setDoctor] = useState(null);
+  const [appintmentDeleteDialog, setAppointmentDeleteDialog] = useState(false);
   const { user, authData } = useContext(AuthContext);
   const api = useAxios();
 
@@ -109,6 +112,11 @@ const AppointmentCard = ({ appointment, deleteAppointment }) => {
     } else {
       return true;
     }
+  }
+
+  const appointmentDeleteHandle = (appointmentId) => {
+    deleteAppointment(appointmentId)
+    setAppointmentDeleteDialog(false);
   }
 
   const classes = useStyles();
@@ -222,7 +230,7 @@ const AppointmentCard = ({ appointment, deleteAppointment }) => {
         >
           <Button
             variant="contained"
-            onClick={() => deleteAppointment(appointment.id)}
+            onClick={() => setAppointmentDeleteDialog(true)}
             sx={{
               marginBottom: "15px",
               marginLeft: "15px",
@@ -234,6 +242,28 @@ const AppointmentCard = ({ appointment, deleteAppointment }) => {
           >
             لغو نوبت
           </Button>
+        </Grid>
+        <Grid>
+          <Dialog
+            open={appintmentDeleteDialog}
+            onClose={() => setAppointmentDeleteDialog(false)}
+          >
+            <DialogTitle>
+              مطمئن هستید این نوبت را حذف می کنید؟ 
+            </DialogTitle>
+            <DialogActions>
+              <Button
+                onClick={() => setAppointmentDeleteDialog(false)}
+              >
+                انصراف
+              </Button>
+              <Button
+                onClick={() => appointmentDeleteHandle(appointment.id)}
+              >
+                حذف
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
       </Grid>
     </Card>
