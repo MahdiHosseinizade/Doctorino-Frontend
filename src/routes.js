@@ -17,6 +17,8 @@ import HotelReservation from "./components/Hotel/HotelReservation/HotelReservati
 import SearchDoctorResponse from "./components/LandingPage/SearchDocResponse";
 import SickPanel from './components/Sick/Panel/SickPanel';
 import AboutUs from "./components/AboutUs/AboutUs";
+import EmailForgotPassword from "./components/Login/SendEmail";
+import ChangePassword from "./components/Login/changePassword";
 
 
 const routes = [
@@ -50,6 +52,8 @@ const routes = [
   {path:"/about-us" , component: AboutUs},
   { path: "/login", component: Login },
   { path: "/signup", component: SignUpPage },
+  {path:"/email-verification", component: EmailForgotPassword},
+  {path:"/change-password", component:ChangePassword },
   { path: "/", component: LandingPage, exact: true },
   { component: NotFound },
 ];

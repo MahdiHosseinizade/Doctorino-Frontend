@@ -57,3 +57,10 @@ nav{
     box-sizing: border-box;
 }
 
+.forgotPasswordlink{
+    text-decoration: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #1d1d1d;
+    font-size: 15px;
+}

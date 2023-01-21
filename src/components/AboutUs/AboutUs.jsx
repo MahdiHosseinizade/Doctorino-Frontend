@@ -15,8 +15,8 @@ const AboutUs = () => {
                 <br></br>
             </div>
             <div className="about-us">
-                <Profile name ={'سید مهدی حسینی زاده'} image={Seyed} position = {'فرانت اند'} />
                 <Profile name ={'احمد رضا طهماسبی'} image={Amad} position = {'بک اند'} />
+                <Profile name ={'سید مهدی حسینی زاده'} image={Seyed} position = {'فرانت اند'} />
                 <Profile name ={'رضا حقیقت گو'} image={houman} position = {'فرانت اند'} />
                 <Profile name ={'سید امیر حسین میر محمدی'} image={SeyedMir} position = {'بک اند'} />
                 <Profile name ={'مهدی قضاوی'} image={Mehti} position = {'فرانت اند'} />
