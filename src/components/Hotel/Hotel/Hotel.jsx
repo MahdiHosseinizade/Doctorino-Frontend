@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@mui/styles";
 import {
   Card,
@@ -11,6 +11,7 @@ import {
   Typography,
   TextField,
   Rating,
+  Button,
 } from "@mui/material";
 import './Hotel.css';
 import AvailableRooms from "./AvailableRooms";
@@ -36,6 +37,14 @@ import { AiFillSafetyCertificate } from "react-icons/ai";
 import NavBar from "../../NavBar/newNavBar";
 import theme from "../../../assets/theme/defaultTheme"
 import NotFound from "../../../pages/NotFoundPage";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
+import ThumbUpAlt from '@mui/icons-material/ThumbUpAlt';
+import useAxios from '../../../utils/useAxios';
+import AuthContext from '../../../context/AuthContext';
+import { toast } from 'react-toastify';
+import ReviewCard from './ReviewCard';
 
 const useStyles = makeStyles({
   container: {
@@ -51,6 +60,14 @@ const useStyles = makeStyles({
     display: "flex",
     paddingInline: "13px",
     marginBottom: "20px",
+  },
+  reviewCard: {
+    display: 'fix',
+    marginBottom: "20px",
+  },
+  reviewFormCard: {
+    width: "100%",
+    height: "100%",
   },
   availableRoomsCard: {
     textAlign: "center",
@@ -86,6 +103,19 @@ const useStyles = makeStyles({
     width: "100%",
   },
 });
+
+
+const formValue = {
+  score: 0,
+  text: "",
+};
+
+const validationSchema = Yup.object({
+  score: Yup.number().required("امتیاز را وارد کنید."),
+  text: Yup.string().required("نظر خود را وارد کنید."),
+});
+
+
 const Hotel = () => {
   // let date = new Date();
   // date = moment(date).locale("fa").format("YYYY/MM/DD").split("/");
@@ -106,11 +136,28 @@ const Hotel = () => {
   const [loaded, setLoaded] = useState(true);
   const { id } = useParams();
   const [hotel, setHotel] = useState();
-  console.log(hotel);
+  const [nextPageUrl, setNextPageUrl] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const api = useAxios();
+  const { user, authData } = useContext(AuthContext);
 
   useEffect(() => {
-    getHotel();
-  }, []);
+    if (loading && id) {
+      api.get(`/api/hotel/${id}/reviews/?page_size=5`)
+        .then(res => {
+          setNextPageUrl(res.data.links.next);
+          setReviews(res.data.results);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
+      getHotel();
+    }
+  }, [loading, reviews]);
 
   const getHotel = () => {
     axios
@@ -127,7 +174,63 @@ const Hotel = () => {
       });
   };
 
+  const handleMoreReviews = () => {
+    if (nextPageUrl) {
+      axios.get(nextPageUrl,
+        {
+          headers: {
+            Authorization: `Bearer ${authData?.access}`
+          }
+        }
+      ).then(res => {
+        console.log("next page", res.data);
+        setNextPageUrl(res.data.links.next);
+        setReviews([...reviews, ...res.data.results]);
+      }).catch(err => console.log(err))
+    } else {
+      toast.info("موردی برای نمایش وجود ندارد.");
+    }
+  }
 
+  const formik = useFormik({
+    initialValues: formValue,
+
+    onSubmit: (values) => {
+      api.post("/api/hotel/reviews/", {
+        hotel: id,
+        voter: user.id,
+        score: values.score,
+        text: values.text,
+      }, {
+        headers: {
+          Authorization: `Bearer ${authData?.access}`
+        }
+      }).then((res) => {
+        console.log("haha", res.data);
+        setReviews([...reviews, {
+          hotel: id,
+          voter: {
+            first_name: user.first_name,
+            last_name: user.last_name,
+          },
+          score: values.score,
+          text: values.text,
+        }]);
+
+        toast.success("نظر شما با موفقیت ثبت شد.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        formik.resetForm();
+      }).catch((err) => {
+        toast.error("مشکلی در ثبت نظر پیش آمد.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      });
+    },
+    validationSchema: validationSchema,
+  });
 
   const iconsFeatures = [
     { icon: <MdPool />, title: "استخر" },
@@ -228,7 +331,7 @@ const Hotel = () => {
                           >
                             {`نام هتل `}
                           </Typography>
-                          
+
                           <Typography
                             variant="body2"
                             sx={{
@@ -402,6 +505,77 @@ const Hotel = () => {
                     </Grid>
                   </CardContent>
                 </div>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} md={12} sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+              <Card className={classes.reviewFormCard}>
+                <Box
+                  component="form"
+                  onSubmit={formik.handleSubmit}
+                >
+                  <Grid container spacing={2} sx={{
+                    padding: "10px",
+                  }}>
+                    <Grid item xs={12} md={12}>
+                      <Grid item xs={12} md={12}>
+                        <Rating
+                          name="score"
+                          label="امتیاز"
+                          defaultValue={0}
+                          value={formik.getFieldProps("score").value}
+                          onChange={(event, newValue) => {
+                            formik.setFieldValue("score", newValue);
+                          }}
+                          icon={<ThumbUpAlt fontSize="inherit" />}
+                          emptyIcon={<ThumbDownAltOutlinedIcon fontSize="inherit" />}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={12}>
+                        <TextField
+                          fullWidth
+                          className={classes.textField}
+                          error={
+                            formik.errors["text"] &&
+                            formik.touched["text"]
+                          }
+                          variant="outlined"
+                          label="نظر"
+                          name="text"
+                          type="text"
+                          helperText={formik.touched["text"] && formik.errors["text"]}
+                          multiline
+                          rows={3}
+                          {...formik.getFieldProps("text")}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} md={12} sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "flex-end",
+                      marginBottom: "20px",
+                    }}>
+                      <Button disabled={!(formik.dirty && formik.isValid && formik.values["score"] > 0)} color="primary" type="submit" variant="contained">
+                        ثبت نظر
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      {reviews.map(({ id, voter, score, text }) => (
+                        <Card className={classes.reviewCard} key={id}>
+                          <ReviewCard key={id} voter={voter} score={score} text={text} />
+                        </Card>
+                      ))}
+                      <Button color="primary" variant="contained" onClick={handleMoreReviews}>
+                        نظرات بیشتر
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
               </Card>
             </Grid>
           </Grid>

@@ -154,7 +154,7 @@ const Profile = (props) => {
         console.log(err);
       })
     } else {
-      toast.error("موردی برای نمایش وجود ندارد.");
+      toast.info("موردی برای نمایش وجود ندارد.");
     }
   }
 
@@ -395,7 +395,7 @@ const Profile = (props) => {
                   alignItems: "flex-end",
                   marginBottom: "20px",
                 }}>
-                  <Button disabled={!(formik.dirty && formik.isValid)} color="doctor" type="submit" variant="contained">
+                  <Button disabled={!(formik.dirty && formik.isValid && formik.values["score"] > 0)} color="doctor" type="submit" variant="contained">
                     ثبت نظر
                   </Button>
                 </Grid>
