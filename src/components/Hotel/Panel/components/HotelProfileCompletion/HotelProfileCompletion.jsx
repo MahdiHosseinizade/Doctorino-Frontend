@@ -223,9 +223,9 @@ export default function HotelProfileCompletion() {
       .then((res) => setAvailableFeatures(res.data))
       .catch((err) => console.error(err));
 
-    api
+    hotel && api
       // .get("/api/hotel/room/")
-      .get(`/api/hotel/${!hotel === '' ? '' : String(hotel) + '/'}room/`)
+      .get(`/api/hotel/${String(hotel)+'/'}room/`)
       .then((res) => setRooms(res.data))
       .catch((err) => console.error(err));
 
