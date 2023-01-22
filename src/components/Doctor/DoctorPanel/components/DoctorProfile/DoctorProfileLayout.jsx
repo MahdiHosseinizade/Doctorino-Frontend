@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useParams } from "react-router-dom";
-// import axios from "axios";
 import { useEffect } from "react";
 import AuthContext from "../../../../../context/AuthContext";
 import { useContext } from "react";
@@ -32,6 +31,8 @@ import PhoneEnabledIcon from "@mui/icons-material/PhoneEnabled";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import axios from "axios";
 import { toast } from "react-toastify";
+import theme from "../../../../../assets/theme/defaultTheme";
+import Dropzone from "../../../../common/Dropzone";
 
 const useStyles = makeStyles({
   container: {
@@ -63,12 +64,8 @@ const useStyles = makeStyles({
     },
   },
   uploadPhotoButton: {
-    // backgroundColor: "#3b82f6",
     marginTop: "200px",
     contrastText: "#fff",
-    // "&:hover": {
-    //   backgroundColor: "#2563eb",
-    // },
   },
 });
 
@@ -150,6 +147,7 @@ export default function DoctorProfileLayout() {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({ ...formValues });
   const [availableSpecilaities, setAvailableSpecilaities] = useState([]);
+  const [doctorImage, setDoctorImage] = useState(null);
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const { authData } = useContext(AuthContext);
@@ -165,16 +163,10 @@ export default function DoctorProfileLayout() {
       })
         .then((response) => {
           setTimeout(() => {
-            console.log("this is the response of specialties", response.data);
             setAvailableSpecilaities(response.data);
-            console.log(
-              "this is the available specialties: ",
-              availableSpecilaities
-            );
           }, 1000);
         })
         .catch((error) => {
-          console.log("Error returned from fetching specialties: ", error);
         });
 
       // Fetching doctor's information from the database
@@ -184,20 +176,18 @@ export default function DoctorProfileLayout() {
         },
       })
         .then((response) => {
-          console.log("the response of doctorID", response.data);
           API.get(`/api/doctor/${response.data.id}/`, {
             headers: {
               Authorization: `Bearer ${authData?.access}`,
             },
           })
             .then((response) => {
-              console.log("the response of doctor", response.data);
               const temp = availableSpecilaities.filter((specialty) => {
                 if (specialty.name === response.data.specialties[0].name) {
                   return specialty.name;
                 }
               });
-              console.log("specialty temp: ", temp);
+              setDoctorImage(response.data.image);
               setDoctor({
                 ...response.data,
                 first_name: response.data.user.first_name,
@@ -210,22 +200,16 @@ export default function DoctorProfileLayout() {
                 medical_system_number: response.data.medical_system_number,
                 phone_number: response.data.phone_number,
                 office_number: response.data.office_number,
-                education: response.data.education !== "تعیین نشده" || response.data.education ? response.data.education : "تعیین نشده",
-                // educations.filter((education) => {
-                //   if (education.name === response.data.education) {
-                //     return education.name;
-                //   }
-                // })[0]["name"],
+                education:
+                  response.data.education !== "تعیین نشده" ||
+                  response.data.education
+                    ? response.data.education
+                    : "تعیین نشده",
                 specialties: availableSpecilaities.filter((specialty) => {
                   if (specialty.name === response.data.specialties[0].name) {
                     return specialty.name;
                   }
                 })[0]["name"],
-                // province: provinces.filter((province) => {
-                //   if (province.name === response.data.province) {
-                //     return province.name;
-                //   }
-                // })[0]["name"],
                 province:
                   response.data.province !== "تعیین نشده"
                     ? provinces.filter((province) => {
@@ -234,11 +218,6 @@ export default function DoctorProfileLayout() {
                         }
                       })[0]["name"]
                     : "تعیین نشده",
-                // city: cities.filter((city) => {
-                //   if (city.name === response.data.city) {
-                //     return city.name;
-                //   }
-                // })[0]["name"],
                 city:
                   response.data.city !== "تعیین نشده"
                     ? cities.filter((city) => {
@@ -252,19 +231,11 @@ export default function DoctorProfileLayout() {
                 work_periods: response.data.work_periods,
                 description: response.data.description,
                 image: response.data.image,
-                // image: response.data.image ? response.data.image : <img src="./src/assets/img/DoctorProfilePhoto.jpg" alt="doctor" />,
               });
               setLoading(false);
             })
             .catch((error) => {
               console.log("Error from fetching doctor's info: ", error);
-              console.log("availableSpecilaities: ", availableSpecilaities);
-              // const temp = availableSpecilaities.filter((specialty) => {
-              //   if (specialty.name === response.data.specialties) {
-              //     return specialty.name;
-              //   }
-              // })[0]["name"];
-              // console.log("temp: ", temp);
             });
         })
         .catch((error) => {
@@ -300,6 +271,18 @@ export default function DoctorProfileLayout() {
     });
   };
 
+  function handleCoverImage(files) {
+    let file = files[0];
+
+    setDoctorImage(URL.createObjectURL(file));
+
+    // formik.setFieldValue("cover_image", file);
+    setDoctor({
+      ...doctor,
+      image: file,
+    });
+  }
+
   const handleProfilePhoto = (e) => {
     setProfilePhoto(e.target.files[0]);
   };
@@ -329,38 +312,47 @@ export default function DoctorProfileLayout() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("in handle submit");
-    console.log("this is the profile photo: ", profilePhoto);
-    // if (validate()) {
-    //   const sendingList = {
-    //     ...doctor,
-    //     description: doctor.description,
-    //   };
-    //   console.log("sendingList: ", sendingList);
-    //   axios
-    //     .put(`http://188.121.113.74/api/doctor/${doctor.id}/`, sendingList, {
-    //       headers: {
-    //         Authorization: `Bearer ${authTokens.access}`,
-    //       },
-    //     })
-    //     .then((response) => {
-    //       toast.success(`تکمیل اطلاعات با موفقیت انجام شد.`, {
-    //         position: "top-right",
-    //         autoClose: 2000,
-    //       });
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //       toast.error("مشکلی پیش آمده است", {
-    //         position: "top-right",
-    //         autoClose: 2000,
-    //       });
-    //     });
-    //   setLoading(false);
-    // }
 
-    if (profilePhoto) {
-      console.log("in profilePhoto if statement, the photo is: ", profilePhoto);
+    if (doctorImage) {
+      const temp = {
+        // ...doctor,
+        id: doctor.id,
+        user: {
+          id: doctor.inner_id,
+          first_name: doctor.first_name,
+          last_name: doctor.last_name,
+          email: doctor.email,
+          username: doctor.username,
+        },
+        specialties: [
+          availableSpecilaities.filter((specialty) => {
+            if (specialty.name === doctor.specialties) {
+              return specialty.id;
+            }
+          })[0]["id"],
+        ],
+        medical_system_number: doctor.medical_system_number,
+        is_active: true,
+        city: cities.filter((city) => {
+          if (city.name === doctor.city) {
+            return city.id;
+          }
+        })[0]["id"],
+        province: provinces.filter((province) => {
+          if (province.name === doctor.province) {
+            return province.id;
+          }
+        })[0]["id"],
+        national_code: doctor.national_code,
+        phone_number: doctor.phone_number,
+        office_number: doctor.office_number,
+        education: doctor.education,
+        clinic_address: doctor.clinic_address,
+        // work_periods: doctor.work_periods,
+        description: doctor.description,
+        image: doctorImage,
+      };
+
       const formData = new FormData();
       formData.append("id", doctor.id);
       formData.append("user", {
@@ -370,14 +362,6 @@ export default function DoctorProfileLayout() {
         email: doctor.email,
         username: doctor.username,
       });
-      // console.log("availableSpecilaities: ", availableSpecilaities);
-      // console.log("the doctor: ", doctor);
-      // const temp = availableSpecilaities.filter((specialty) => {
-      //   if (specialty.name === doctor.specialties) {
-      //     return specialty.id;
-      //   }
-      // })[0]["id"];
-      // console.log("temp: ", temp);
 
       formData.append("specialties", [
         availableSpecilaities.filter((specialty) => {
@@ -388,37 +372,40 @@ export default function DoctorProfileLayout() {
       ]);
       formData.append("medical_system_number", doctor.medical_system_number);
       formData.append("is_active", true);
-      formData.append("image", profilePhoto);
+      // formData.append("image", profilePhoto);
       formData.append("national_code", doctor.national_code);
       formData.append("phone_number", doctor.phone_number);
       formData.append("office_number", doctor.office_number);
       formData.append("education", doctor.education);
-      // formData.append("province", doctor.province);
-      formData.append("province", provinces.filter((province) => {
-        if (province.name === doctor.province) {
-          return province.id;
-        }
-      })[0]["id"]);
-      // formData.append("city", doctor.city);
-      formData.append("city", cities.filter((city) => {
-        if (city.name === doctor.city) {
-          return city.id;
-        }
-      })[0]["id"]);
+      formData.append(
+        "province",
+        provinces.filter((province) => {
+          if (province.name === doctor.province) {
+            return province.id;
+          }
+        })[0]["id"]
+      );
+      formData.append(
+        "city",
+        cities.filter((city) => {
+          if (city.name === doctor.city) {
+            return city.id;
+          }
+        })[0]["id"]
+      );
       formData.append("clinic_address", doctor.clinic_address);
-      formData.append("work_periods", doctor.work_periods);
+      // formData.append("work_periods", doctor.work_periods);
       formData.append("description", doctor.description);
-      // console.log("profilePhoto", profilePhoto);
+      // if (doctor.cover_image) {
+      formData.append("image", doctor.image);
+      // }
 
-      // console.log("the doctor id: ", doctor.id);
-
-      axios
-        .put(`http://188.121.113.74/api/doctor/${doctor.id}/`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${authData?.access}`,
-          },
-        })
+      API.put(`/api/doctor/${doctor.id}/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${authData?.access}`,
+        },
+      })
         .then((response) => {
           toast.success(`تکمیل اطلاعات با موفقیت انجام شد.`, {
             position: "top-right",
@@ -432,7 +419,8 @@ export default function DoctorProfileLayout() {
             autoClose: 2000,
           });
         });
-      window.location.reload();
+      // setTimeout(window.location.reload(), 3000);
+      // window.location.reload();
       setLoading(false);
     }
   };
@@ -447,28 +435,27 @@ export default function DoctorProfileLayout() {
               <Grid
                 item
                 xs={12}
+                sm={12}
+                md={6}
                 lg={6}
                 sx={{
                   display: "flex",
-                  position: "sticky",
+                  // position: "sticky",
                   justifyContent: "center",
+                  // flexDirection: "column",
                 }}
               >
-                {/* <Card> */}
-                <CardMedia
+                {/* <CardMedia
                   component="img"
                   className={classes.doctor_image}
                   image={doctor?.image}
                   alt="doctor image"
                 />
                 <CardActions className={classes.uploadPhotoButton}>
-                  {/* <form onSubmit={handleSubmit}> */}
                   <Button
                     variant="contained"
                     color="primary"
                     component="label"
-                    // type="submit"
-                    // onClick={thiredHandleChange}
                   >
                     <Typography variant="subtitle2" sx={{ fontSize: "15px" }}>
                       <AddAPhotoIcon />
@@ -481,17 +468,62 @@ export default function DoctorProfileLayout() {
                       onChange={handleProfilePhoto}
                     />
                   </Button>
-                  {/* </form> */}
-                </CardActions>
-                {/* </Card> */}
+                </CardActions> */}
+                {/* <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  sx={{ justifyContent: "center", display: "flex" }}
+                > */}
+                <Box
+                  component="img"
+                  src={
+                    doctorImage
+                      ? doctorImage
+                      : "http://188.121.113.74/media/doctor-image/DoctorProfilePhoto_Ymp68AL.jpg"
+                  }
+                  style={{
+                    display: {
+                      xs: "none",
+                      md: "flex",
+                    },
+                    minWidth: "250px",
+                    maxWidth: "250px",
+                    width: "50%",
+                    marginTop: 3,
+                    height: "85%",
+                    objectFit: "fill",
+                    borderRadius: "50%",
+                    // border: `4px solid ${theme.palette.doctor.main}`,
+                    border: `2px solid #B2B2B2`,
+                  }}
+                />
+                {/* </Grid>
+                <Grid item xs={12} md={6}> */}
+                <Dropzone
+                  // imageToShow={doctorImage}
+                  CssBaseLine={true}
+                  handleFile={handleCoverImage}
+                  iconColor={"doctor"}
+                  BaseStyle={{
+                    width: "60px",
+                    height: "60px",
+                    marginTop: 200,
+                    marginRight: "20px",
+                    objectFit: "fill",
+                    borderRadius: "80%",
+                    // border: `2px solid ${theme.palette.doctor.main}`,
+                    border: `1px solid #B2B2B2`,
+                  }}
+                />
+                {/* </Grid> */}
               </Grid>
 
-              <Grid item xs={12} lg={6}>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
                 <CardContent sx={{ marginTop: "20px" }}>
                   <Box>
                     <Grid container spacing={3.5}>
                       <Grid item xs={12} md={12}>
-                        {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
                         <Typography
                           variant="subtitle2"
                           sx={{ fontSize: "30px", display: "flex" }}
@@ -529,7 +561,6 @@ export default function DoctorProfileLayout() {
                           />
                           <span> </span>
                           {doctor?.province}، {doctor?.city}
-                          {/* {props.doctor?.city} شهر */}
                         </Typography>
                       </Grid>
 
@@ -599,16 +630,11 @@ export default function DoctorProfileLayout() {
                     <Grid item xs={12} md={12}>
                       <TextField
                         variant="outlined"
-                        // label="درباره پزشک"
                         name="description"
                         type="text"
                         value={doctor?.description}
                         defaultValue={doctor?.description}
                         onChange={handleInputChange}
-                        // error={errors.clinic_address ? true : false}
-                        // helperText={
-                        //   errors.clinic_address ? errors.clinic_address : null
-                        // }
                         multiline
                         rows={4}
                         fullWidth

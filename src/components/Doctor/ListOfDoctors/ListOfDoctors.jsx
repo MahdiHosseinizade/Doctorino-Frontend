@@ -2,6 +2,7 @@ import { Container, Grid, Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import DoctorCard from "./components/DoctorCard";
 import NavBar from "../../NavBar/newNavBar";
+import Footer from "../../Footer/Footer";
 import { makeStyles } from "@mui/styles";
 import theme from "../../../assets/theme/defaultTheme";
 
@@ -19,21 +20,20 @@ export default function Doctors() {
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
-    // fetch("http://localhost:8000/doctors") 
+    // fetch("http://localhost:8000/doctors")
     // fetch("http://127.0.0.1:8000/api/doctor/")
     fetch("http://188.121.113.74/api/doctor/")
       .then((res) => res.json())
       .then((data) => {
-        console.log("this is the data to be replaced in doctor values: ", data)
-        setDoctors(data)});
+        console.log("this is the data to be replaced in doctor values: ", data);
+        setDoctors(data);
+      });
   }, []);
 
   return (
     <Container>
       <Grid className={classes.navBar}>
-        {/* <Box> */}
-          <NavBar bgColor={theme.palette.doctor}/>
-        {/* </Box> */}
+        <NavBar bgColor={theme.palette.doctor} />
       </Grid>
       <Grid container className={classes.container} sx={{ m: 3 }}>
         {doctors.map((doctor, index) => (
@@ -41,6 +41,9 @@ export default function Doctors() {
             <DoctorCard doctor={doctor} />
           </Grid>
         ))}
+      </Grid>
+      <Grid>
+        <Footer />
       </Grid>
     </Container>
   );
