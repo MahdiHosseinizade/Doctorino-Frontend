@@ -1,0 +1,27 @@
+.swiper-button-next {
+    border-radius: 100%;
+    padding: 30px;
+    margin-left: 10px;
+    color: #f3f6f9;
+}
+
+.swiper-button-next:hover {
+    background: rgba(99, 156, 254, 0);
+}
+
+.swiper-button-prev {
+    border-radius: 100%;
+    padding: 30px;
+    color: #f3f6f9;
+}
+
+.swiper-button-prev:hover {
+    background: rgba(99, 156, 254, 0);
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
