@@ -291,7 +291,6 @@ export default function DoctorProfileCompletion() {
               });
               handleCities();
               setLoading(false);
-              console.log("data when fetched: ", values);
             })
             .catch((error) => {
               console.log("Error from fetching doctor's info: ", error);
