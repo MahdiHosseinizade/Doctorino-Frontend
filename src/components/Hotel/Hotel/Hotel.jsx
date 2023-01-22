@@ -12,6 +12,8 @@ import {
   TextField,
   Rating,
   Button,
+  DialogContent,
+  Dialog,
 } from "@mui/material";
 import './Hotel.css';
 import AvailableRooms from "./AvailableRooms";
@@ -45,6 +47,8 @@ import useAxios from '../../../utils/useAxios';
 import AuthContext from '../../../context/AuthContext';
 import { toast } from 'react-toastify';
 import ReviewCard from './ReviewCard';
+import ImageGallerySwiper from "./ImageGallerySwiper";
+
 
 const useStyles = makeStyles({
   container: {
@@ -139,6 +143,7 @@ const Hotel = () => {
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [galleryPopupOpen, setGalleryPopupOpen] = useState(false);
 
   const api = useAxios();
   const { user, authData } = useContext(AuthContext);
@@ -165,6 +170,7 @@ const Hotel = () => {
       .then((res) => {
         setHotel({ ...res.data });
         setHotel({ ...res.data });
+        console.log(res.data)
       })
       .catch((err) => {
         if (err.response.status === 404) {
@@ -273,7 +279,7 @@ const Hotel = () => {
                   <Grid
                     item
                     xs={12}
-                    md={4}
+                    md={3}
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -282,14 +288,13 @@ const Hotel = () => {
                     }}
                   >
                     <CardMedia
-                      // sx={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "20px",marginRight: "20px"}}
                       component="img"
                       className={classes.hotel_image}
                       image={hotel?.cover_image}
                       alt="hotel image"
                     />
                   </Grid>
-                  <Grid item xs={12} md={8}
+                  <Grid item xs={12} md={7}
                     sx={{
                       display: "flex",
                       justifyContent: "center",
@@ -299,7 +304,6 @@ const Hotel = () => {
                     <CardContent>
                       <Grid container rowSpacing={3.5}>
                         <Grid item xs={12} md={12}>
-                          {/* <Rating name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly sx={{justifyContent:"center", display:"flex", marginTop: "-10px", marginBlockEnd:"10px"}}/> */}
                           <Typography
                             variant="subtitle2"
                             sx={{ fontSize: "20px" }}
@@ -367,6 +371,31 @@ const Hotel = () => {
                         </Grid>
                       </Grid>
                     </CardContent>
+                  </Grid>
+                  <Grid item xs={12} md={2} sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                  }}>
+                    <Button
+                      variant="contained"
+                      color="hotel"
+                      sx={{
+                        margin: "20px",
+                      }}
+                      onClick={() => {setGalleryPopupOpen(true)}}
+                    >
+                      تصاویر
+                    </Button>
+                    <Dialog
+                      open={galleryPopupOpen}
+                      onClose={() => setGalleryPopupOpen(false)}
+                    >
+                      <DialogContent>
+                        <ImageGallerySwiper images={hotel?.images} />
+                      </DialogContent>
+                    </Dialog>
                   </Grid>
                 </Grid>
               </Card>
