@@ -6,6 +6,7 @@ import houman from '../../assets/img/houman.jpg'
 import SeyedMir from '../../assets/img/SeyedMir.jpg';
 import Mehti from '../../assets/img/Ghazavi.jpg';
 import NavBar from '../NavBar/newNavBar'
+import Mohsen from '../../assets/img/Mohsen.jpg'
 const AboutUs = () => {
     return (
         <div>
@@ -20,7 +21,7 @@ const AboutUs = () => {
                 <Profile name ={'رضا حقیقت گو'} image={houman} position = {'فرانت اند'} />
                 <Profile name ={'سید امیر حسین میر محمدی'} image={SeyedMir} position = {'بک اند'} />
                 <Profile name ={'مهدی قضاوی'} image={Mehti} position = {'فرانت اند'} />
-                <Profile name = {'محسن رحیمی'} image={Mehti} position = {'فرانت اند'} />
+                <Profile name = {'محسن رحیمی'} image={Mohsen} position = {'فرانت اند'} />
             </div> 
         </div>
     );
