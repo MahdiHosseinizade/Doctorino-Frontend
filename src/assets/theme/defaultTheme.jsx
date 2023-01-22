@@ -36,7 +36,7 @@ const theme = createTheme({
             light: "#fff",
             dark: "#000",
             contrastText: "#fff",
-            icon: 'primary',
+            icon: '#2C32DB',
         }
 
 
