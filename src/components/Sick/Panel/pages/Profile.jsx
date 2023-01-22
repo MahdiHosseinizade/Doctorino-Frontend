@@ -54,11 +54,13 @@ const validationSchema = Yup.object({
   birth_day: Yup.string(),
 });
 
+const now = moment();
+now.locale("fa");
 
 const Profile = () => {
 
   const { authData, user } = useContext(AuthContext);
-  const [birthDay, setBirthDay] = useState({ day: 26, month: 10, year: 1401 });
+  const [birthDay, setBirthDay] = useState({ day: now.jDay() + 1, month: now.jMonth() + 1, year: now.jYear() });
   const [toShow, setToShow] = useState("");
   const [citiesToShow, setCitiesToShow] = useState([]);
   const [provincesToShow, setProvincesToShow] = useState([]);
