@@ -101,7 +101,7 @@ export default function ScheduleTime({ doctor, ...props }) {
   const maxSteps = day.length;
   const [flag, setFlag] = useState(true);
   const [deleteValue, setDalateValue] = useState("");
-  const [ loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   var today = new Date();
   // var doctorTodayTimes = [];
   const [doctorTodayTimes, setDoctorTodayTimes] = useState([]);
@@ -137,7 +137,7 @@ export default function ScheduleTime({ doctor, ...props }) {
       setLoading(false)
     }
 
-}, [loading, doctor, GetAvailableTimes, doctorTodayTimes, ])
+  }, [loading, doctor, GetAvailableTimes, doctorTodayTimes,])
 
   const data = doctor?.work_periods;
   for (let time in data) {
@@ -355,7 +355,6 @@ export default function ScheduleTime({ doctor, ...props }) {
   const [form, setForm] = useState("");
   const { authData } = useContext(AuthContext);
   const { user, authTokens, logoutUser } = useContext(AuthContext);
-
   const formik = useFormik({
     initialValues: formValue,
 
@@ -440,10 +439,19 @@ export default function ScheduleTime({ doctor, ...props }) {
             .replaceAll("/", "-"),
         })
         .then((res) => {
-          setDoctorTodayTimes(res.data);
-          // console.log('axios doctorTodayTimes', doctorTodayTimes)
+          setDoctorTodayTimes([])
+          setDoctorTodayTimes(perv => {
+            return [...perv,
+            {
+              from_time: "25:61:61",
+              to_time: "26:62:62",
+              is_available: false,
+            }
+            ]
+          });
         })
         .catch((err) => {
+          console.log('fault')
           toast.error("خطایی در سیستم رخ داده", {
             position: "top-right",
             autoClose: 5000,
@@ -464,7 +472,7 @@ export default function ScheduleTime({ doctor, ...props }) {
             }}
           >
             <Typography sx={{ justifyItems: 'right' }}>
-              شما می تولنید در صورت تمایل نزدیک ترین اقامتگاه نزدیک بیمارستان یا مطب پزشک مورد نظر خود را نیز رزرو کنید
+              شما می توانید در صورت تمایل نزدیک ترین اقامتگاه نزدیک بیمارستان یا مطب پزشک مورد نظر خود را نیز رزرو کنید
             </Typography>
           </DialogContentText>
         </DialogContent>
@@ -564,7 +572,7 @@ export default function ScheduleTime({ doctor, ...props }) {
       </div>
     );
   }
-  
+
   function reload() {
     window.location.reload()
   }
@@ -644,13 +652,11 @@ export default function ScheduleTime({ doctor, ...props }) {
                   .filter((item) => item[0] == day[activeStep])[0][1]
                   .map((time, index) => {
                     return (
-                      <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
+                      <Grid item xs={6} sm={4} md={3}  key={index}>
                         <Button
                           type="submit"
                           variant="outlined"
-                          id={`${time}`}
-                          className={`${time}`}
-                          disabled =  { !doctorTodayTimes?.filter(item => Number(item?.from_time.split(':')[0]) === Number(time?.split(':')[0]) && Number(item?.from_time.split(':')[1]) === Number(time?.split(':')[1]))[0]?.is_available}      
+                          // disabled =  {doctorTodayTimes?.filter(item => Number(item?.from_time.split(':')[0]) === Number(time?.split(':')[0]) && Number(item?.from_time.split(':')[1]) === Number(time?.split(':')[1]))[0]?.is_available}      
                           sx={{
                             borderRadius: "15px",
                           }}
@@ -661,7 +667,7 @@ export default function ScheduleTime({ doctor, ...props }) {
                               time.substring(
                                 time.indexOf(":") + 1,
                                 time.indexOf(":") + 3
-                              ) == "45"
+                              ) === "45"
                             ) {
                               set_to_time(
                                 `${Number(time.substring(0, time.indexOf(":"))) +
