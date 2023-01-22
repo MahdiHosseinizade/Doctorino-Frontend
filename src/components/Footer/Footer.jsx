@@ -8,7 +8,6 @@ import EmailIcon from "@mui/icons-material/Email";
 export default function Footer() {
   return (
     <Container
-    fullWidth
       maxWidth="xl"
       sx={{
         marginTop: "80px",

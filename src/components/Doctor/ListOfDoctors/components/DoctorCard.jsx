@@ -28,8 +28,6 @@ const useStyles = makeStyles({
 
 export default function DoctorCard({ doctor }) {
   const history = useHistory();
-
-  // console.log(doctor)
   const { url } = useRouteMatch();
   const classes = useStyles();
 
@@ -122,8 +120,6 @@ export default function DoctorCard({ doctor }) {
                           color: "#7F8487",
                         }}
                       >
-                        {console.log("this is the recieved doctor specialties: ", doctor.specialties)}
-                        {console.log("the name of the first specialty is: ", doctor.specialties[0]?.name)}
                         {doctor.specialties.length !== 0 ? doctor.specialties[0]?.name : "ندارد"}
                       </Typography>
                       <br />
