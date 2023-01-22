@@ -51,7 +51,7 @@ const EmailForgotPassword = () => {
         try {
             await axios.post("http://188.121.113.74/api/auth/change-password/send-code/", {email: email})
             handleClickOpen();
-            toast.success("کد تایید به ایمیل شما ارسال شد")
+            // toast.success("کد تایید به ایمیل شما ارسال شد")
         } catch (error) {
             setError(true);
         }
