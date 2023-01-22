@@ -81,6 +81,11 @@ export default function SideBar() {
 
     const menuItems = [
         {
+            text: "اطلاعات رزرو",
+            path: "/hotel-panel/booking-reports",
+            icon: <SummarizeIcon color="hotel" />
+        },
+        {
             text: "اضافه کردن هتل",
             path: "/hotel-panel/add-hotel",
             icon: <AddHomeIcon color="hotel" />
