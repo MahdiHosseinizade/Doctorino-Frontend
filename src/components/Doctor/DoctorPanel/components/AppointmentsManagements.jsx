@@ -32,6 +32,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PropTypes from "prop-types";
 
+
 const useStyles = makeStyles({
   boxContainer: {
     marginBottom: "3rem",
@@ -507,6 +508,24 @@ export default function AppointmentReports() {
                                   />
                                 </Stack>
                               </LocalizationProvider>
+
+                              {/* <TimePicker
+                                // onFocusChange={this.onFocusChange.bind(this)}
+                                // onTimeChange={this.onTimeChange.bind(this)}
+                                value={values.fromTime}
+                                onChange={(newValue) => {
+                                  console.log(
+                                    "this is the new fromTime value: ",
+                                    newValue
+                                  );
+                                  setValues({
+                                    ...values,
+                                    fromTime: newValue,
+                                  });
+                                  setStartTime(newValue);
+                                }}
+                                rend
+                              /> */}
                             </Grid>
                             <Grid item xs={12}>
                               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -556,6 +575,7 @@ export default function AppointmentReports() {
                       padding: "20px",
                       "& .MuiTextField-root": { m: 0.5 },
                       boxShadow: "0 0 5px 0 rgba(0,0,0,0.5)",
+                      // minWidth: "368px",
                     }}
                   >
                     <Grid container spacing={2}>
