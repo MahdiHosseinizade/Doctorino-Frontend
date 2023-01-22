@@ -32,11 +32,11 @@ const theme = createTheme({
             icon: '#7fffd4',
         },
         navbar: {
-            main: '#33ccff',
+            main: '#009AFF',
             light: "#fff",
             dark: "#000",
             contrastText: "#fff",
-            icon: 'primary',
+            icon: '#2C32DB',
         }
 
 
