@@ -214,9 +214,9 @@ export default function HotelSearch() {
           </Grid>
         </form>
       </Grid>
-      <Grid>
+      {/* <Grid>
         <Footer />
-      </Grid>
+      </Grid> */}
     </Container>
   );
 }

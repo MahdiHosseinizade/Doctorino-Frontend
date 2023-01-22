@@ -77,7 +77,7 @@ const PanelLayout = ({ children }) => {
           {children}
         </Box>
       </Box>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

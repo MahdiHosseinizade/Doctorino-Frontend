@@ -42,9 +42,9 @@ export default function Doctors() {
           </Grid>
         ))}
       </Grid>
-      <Grid>
+      {/* <Grid>
         <Footer />
-      </Grid>
+      </Grid> */}
     </Container>
   );
 }
