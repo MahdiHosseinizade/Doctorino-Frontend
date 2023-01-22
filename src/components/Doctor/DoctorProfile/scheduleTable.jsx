@@ -410,11 +410,12 @@ export default function ScheduleTime({ doctor, ...props }) {
           // window.setTimeout(reload, 1000)
         })
         .catch((err) => {
-          toast.error("این زمان قبلا رزرو شده است", {
+            toast.error("این زمان قبلا رزرو شده است", {
             position: "top-right",
             autoClose: 2000,
           });
-        });
+        }
+        );
       formik.resetForm();
       // setLoading(true);
     },
@@ -451,11 +452,11 @@ export default function ScheduleTime({ doctor, ...props }) {
           });
         })
         .catch((err) => {
-          console.log('fault')
-          toast.error("خطایی در سیستم رخ داده", {
+          if (authData) 
+            {toast.error("خطایی در سیستم رخ داده", {
             position: "top-right",
             autoClose: 5000,
-          });
+          });}
         })
     }
   }
