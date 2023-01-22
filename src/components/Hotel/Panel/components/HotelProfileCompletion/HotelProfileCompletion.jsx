@@ -529,8 +529,6 @@ export default function HotelProfileCompletion() {
         roomFormData.append("room_title", values.room_title);
         roomFormData.append("hotel", hotel);
 
-        console.log('formData', roomFormData);
-
         api.post(`/api/hotel/room/`, roomFormData, {
           headers: {
             "Authorization": "Bearer " + authData?.access,
@@ -911,7 +909,6 @@ export default function HotelProfileCompletion() {
 
                     <Grid container spacing={2}>
                       <Grid container spacing={1} sx={{ marginTop: '10px' }}>
-                        {console.log(rooms)}
                         {rooms.map((room, index) => {
                           return (
                             <Grid key={room.id} item xs={12} md={12}>

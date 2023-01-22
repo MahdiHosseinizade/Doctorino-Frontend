@@ -19,8 +19,8 @@ import useAxios from "../../../utils/useAxios";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router";
 import NavBar from "../../NavBar/newNavBar";
-import {IoBedSharp} from 'react-icons/io5'
-import theme from '../../../assets/theme/defaultTheme'
+import {IoBedSharp} from 'react-icons/io5';
+import theme from '../../../assets/theme/defaultTheme';
 
 
 const useStyles = makeStyles({
@@ -125,7 +125,7 @@ const HotelReservation = () => {
 
   return (
     <Container className={classes.container}>
-      <NavBar />
+      <NavBar bgColor={theme.palette.hotel}/>
       <Card className={classes.card}>
         <Grid container sx={{ marginTop: "10px" }}>
           <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
