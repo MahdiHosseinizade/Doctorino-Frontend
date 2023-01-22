@@ -918,7 +918,7 @@ export default function HotelProfileCompletion() {
                                   aria-controls={`aria${room.id}`}
                                   id={`id${room.id}`}
                                 >
-                                  <Typography>{room.room_title}</Typography>
+                                  <Typography>{room.id + " " + room.room_title}</Typography>
                                   {/* <Typography>اتاق نوع {rooms.indexOf(room) + 1}</Typography> */}
                                 </AccordionSummary>
                                 <AccordionDetails>
