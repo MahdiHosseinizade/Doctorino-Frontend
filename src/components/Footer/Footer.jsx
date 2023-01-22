@@ -8,10 +8,13 @@ import EmailIcon from "@mui/icons-material/Email";
 export default function Footer() {
   return (
     <Container
+    fullWidth
+      maxWidth="xl"
       sx={{
         marginTop: "80px",
         width: "100%",
         minWidth: "100px",
+        height: 'auto'
       }}
     >
       <Grid
@@ -55,6 +58,7 @@ export default function Footer() {
               fontSize: "15px",
               padding: "10px",
               paddingRight: "10px",
+              justifyContent: "flex-end"
             }}
           >
             در زندگی پر مشغله ی امروز اکثر ما زمان زیادی برای رسیدگی به سلامتی و

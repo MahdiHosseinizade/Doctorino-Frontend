@@ -73,8 +73,6 @@ const NavBar = ({ buttons, bgColor, ...props }) => {
       sx={{
         direction: "rtl",
         background: bgColor.main,
-        // background: user?.role === 'doctor' ? '#fff' : user?.role === 'hotel_owner' ? theme.palette.hotel.main : '#65B9D3' ,
-        // enableColorOnDark: true,
       }}
     >
       <Container

@@ -110,7 +110,7 @@ export default function DoctorCard({ doctor }) {
                           display: "inline",
                         }}
                       >
-                        دکتر {doctor.user.first_name} {doctor.user.last_name}
+                        دکتر {doctor?.user.first_name} {doctor?.user.last_name}
                       </Typography>
                       <br />
                       <Typography
@@ -123,8 +123,8 @@ export default function DoctorCard({ doctor }) {
                         }}
                       >
                         {console.log("this is the recieved doctor specialties: ", doctor.specialties)}
-                        {console.log("the name of the first specialty is: ", doctor.specialties[0].name)}
-                        {doctor.specialties.length !== 0 ? doctor.specialties[0].name : "ندارد"}
+                        {console.log("the name of the first specialty is: ", doctor.specialties[0]?.name)}
+                        {doctor.specialties.length !== 0 ? doctor.specialties[0]?.name : "ندارد"}
                       </Typography>
                       <br />
                       <Typography
