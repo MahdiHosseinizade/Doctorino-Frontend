@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import BusinessIcon from "@mui/icons-material/Business";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -7,9 +7,12 @@ import EmailIcon from "@mui/icons-material/Email";
 
 export default function Footer() {
   return (
-    <Container
+    <Box
       maxWidth="xl"
       sx={{
+
+        position: "static",
+        display: 'block',
         marginTop: "80px",
         width: "100%",
         minWidth: "100px",
@@ -21,9 +24,10 @@ export default function Footer() {
         sx={{
           width: "100%",
           backgroundColor: "#F2F2F2",
-          paddingTop: "40px",
-          paddingBottom: "40px",
+          // paddingTop: "40px",
+          // paddingBottom: "40px",
           margin: "0px",
+          padding: "40px 20px 30px 40px",
         }}
       >
         <Grid
@@ -181,6 +185,6 @@ export default function Footer() {
           © 2021 کلیه طرح و حقوق متعلق به دکترینو است.
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 }

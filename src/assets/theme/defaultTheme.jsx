@@ -26,8 +26,8 @@ const theme = createTheme({
         },
         doctor: {
             main: '#00cccc',
-            light: "#",
-            dark: "#",
+            light: "#fff",
+            dark: "#000",
             contrastText: "#FFF6E7",
             icon: '#7fffd4',
         },

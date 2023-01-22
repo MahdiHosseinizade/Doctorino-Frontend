@@ -68,7 +68,7 @@ export default function ChangePassword() {
                 })
 
                 logOut();
-                history.push("/login", { destination: "/hotel-panel/profile-completion" })
+                history.push("/login", { destination: "/patient-panel/profile-completion" })
             })
             .catch(err => {
                 console.log(err)
@@ -81,6 +81,7 @@ export default function ChangePassword() {
         validationSchema: validationSchema,
     })
 
+    
     return (
         <Container>
             <Box
@@ -146,7 +147,7 @@ export default function ChangePassword() {
                         />
                     </Grid>
                     <Grid item md={12} xs={12}>
-                        <Button type="submit" color="doctor" disabled={!(formik.isValid)} variant="contained">ذخیره کردن</Button>
+                        <Button type="submit" color="navbar" disabled={!(formik.isValid)} variant="contained">ذخیره کردن</Button>
                     </Grid>
                 </Grid>
             </Box>

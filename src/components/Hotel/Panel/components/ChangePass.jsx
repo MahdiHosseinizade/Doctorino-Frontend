@@ -43,7 +43,7 @@ const validationSchema = Yup.object({
         .oneOf([Yup.ref("new_pass"), null], "کلمه عبور مطابقت ندارد"),
 })
 
-export default function VerifyEmail() {
+export default function ChangePassword() {
 
     const [showPassword, setShowPassword] = useState(false);
 

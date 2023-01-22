@@ -12,6 +12,8 @@ import DoctorProfileCompletion from "./components/DoctorProfileCompletion";
 import DoctorProfileLayout from "./components/DoctorProfile/DoctorProfileLayout";
 import AppointmentReports from "./components/AppointmentsManagements";
 import PanelLayout from "./PanelLayout";
+import VerifyEmail from './components/VerifyEmail';
+import ChangePass from "./components/ChangePassword";
 
 export default function DoctorPanel() {
   const { path } = useRouteMatch();
@@ -34,6 +36,8 @@ export default function DoctorPanel() {
             path={`${path}/appointments-management`}
             component={AppointmentReports}
           />
+          <Route path={`${path}/verify-email`} component={VerifyEmail} />
+          <Route path={`${path}/change-password`} component={ChangePass} />
         </Switch>
       </PanelLayout>
     </div>

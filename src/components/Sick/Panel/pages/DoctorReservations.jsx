@@ -70,9 +70,9 @@ const DoctorReservations = () => {
                   />
                 </Grid>
               )) :
-              (<Grid item xs={12} sm={12} md={12} lg={12}>
+              (<Grid item xs={12} sm={12} md={12} lg={12}><br /><br /><br />
                 <Typography variant="h6" align="center"><b>هیچ نوبتی برای شما ثبت نشده است.</b></Typography>
-              </Grid>)
+                <br /><br /><br /></Grid>)
             }
           </Grid>
         </Grid>

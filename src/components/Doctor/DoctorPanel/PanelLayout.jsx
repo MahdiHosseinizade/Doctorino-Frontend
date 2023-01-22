@@ -5,7 +5,6 @@ import SideBar from "./components/SideBar";
 import NavBar from "../../NavBar/newNavBar";
 import theme from "../../../assets/theme/defaultTheme";
 import Footer from "../../Footer/Footer";
-// import "./panelLayout.css"
 
 const PanelLayout = ({ children }) => {
   const [buttonsInNavBar, setButtonsInNavBar] = React.useState([]);
@@ -25,6 +24,10 @@ const PanelLayout = ({ children }) => {
           {
             text: "مدیریت زمان نوبت دهی",
             path: `${path}/appointments-management`,
+          },
+          {
+            text: "تغییر رمز عبور",
+            path: "/hotel-panel/verify-email"
           },
         ]);
       } else {

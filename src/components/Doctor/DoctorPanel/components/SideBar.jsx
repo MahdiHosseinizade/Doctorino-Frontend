@@ -93,18 +93,23 @@ export default function SideBar() {
     {
       text: "پروفایل",
       path: "/doctor-panel/doctor-profile",
-      icon: <AccountCircleIcon color="f4f4f4" />,
+      icon: <AccountCircleIcon color="doctor" />,
     },
     {
       text: "تکمیل پنل کاربری",
       path: "/doctor-panel/doctor-profile-completion",
-      icon: <MenuIcon color="f4f4f4" />,
+      icon: <MenuIcon color="doctor" />,
     },
     {
       text: "مدیریت زمان نوبت دهی",
       path: "/doctor-panel/appointments-management",
-      icon: <SummarizeIcon color="f4f4f4" />,
+      icon: <SummarizeIcon color="doctor" />,
     },
+    {
+      text: "تغییر رمز عبور",
+      path: "/doctor-panel/verify-email",
+      icon: <PasswordIcon color="doctor" />
+  }
   ];
 
   const [open, setOpen] = React.useState(false);

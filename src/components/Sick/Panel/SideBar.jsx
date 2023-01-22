@@ -5,6 +5,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HotelIcon from '@mui/icons-material/Hotel';
 import MedicationIcon from '@mui/icons-material/Medication';
 import React, {useContext} from 'react';
+import PasswordIcon from '@mui/icons-material/Password';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import {
     List,
@@ -71,25 +72,28 @@ export default function SideBar() {
     const history = useHistory();
     const location = useLocation();
     const { path } = useRouteMatch();
-
     const {logOut} = useContext(AuthContext);
-
     const menuItems = [
         {
             text: "پروفایل",
             path: `${path}/profile`,
-            icon: <AccountCircleIcon color="f4f4f4" />
+            icon: <AccountCircleIcon color="navbar" />
         },
         {
             text: "نوبت های من",
             path: `${path}/doctor-reservations`,
-            icon: <MedicationIcon color="f4f4f4" />
+            icon: <MedicationIcon color="navbar" />
         },
         {
             text: "مدیریت رزرو هتل",
             path: `${path}/hotel-reservations`,
-            icon: <HotelIcon color="f4f4f4" />
+            icon: <HotelIcon color="navbar" />
         },
+        {
+            text: "تغییر رمز عبور",
+            path: "/patient-panel/verify-email",
+            icon: <PasswordIcon color="navbar" />
+        }
     ]
 
     const [open, setOpen] = React.useState(false);

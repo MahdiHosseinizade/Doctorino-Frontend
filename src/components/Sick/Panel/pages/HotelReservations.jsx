@@ -73,10 +73,10 @@ const HotelReservations = () => {
               ))
               :
               (
-                <Grid item xs={12} sm={12} md={12} lg={12}>
+                <Grid item xs={12} sm={12} md={12} lg={12}><br/><br/><br/>
                   <Typography variant="h6" align="center"><b>
                     هیچ رزروی برای شما ثبت نشده است.
-                  </b></Typography>
+                  </b></Typography><br/><br/>
                 </Grid>
               )
             }
