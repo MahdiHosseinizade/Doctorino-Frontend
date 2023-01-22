@@ -13,6 +13,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './assets/theme/defaultTheme';
 import { AuthProvider } from './context/AuthContext';
 import DoctorProfileLayout from "./components/Doctor/DoctorProfile/DoctorProfileLayout";
+import Footer from "./components/Footer/Footer"
 
 
 import Profile from './components/Doctor/DoctorProfile/Profile';
@@ -40,8 +41,8 @@ const App = () => {
                 route.private ? <PrivateSwitch key={index} {...route} /> : <Route key={index} {...route} />
               ))}
 
-
             </Switch>
+            <Footer />
           </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>

@@ -4,11 +4,13 @@ import * as Yup from "yup";
 import Input from "../common/Input";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
-import { Grid, TextField } from "@mui/material";
+import { Grid, IconButton, InputAdornment, TextField } from "@mui/material";
 import "./sickRegister.css";
 import { toast } from "react-toastify";
 import styled from "@emotion/styled";
-import { baseURL } from '../../utils/useAxios';
+import AuthContext from "../../context/AuthContext";
+import { useContext } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const value = {
   first_name: "",
@@ -39,45 +41,58 @@ const validationSchema = Yup.object({
 });
 
 const SickRegister = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfrim, setShowPasswordconfrim] = useState(false);
+  const {loginUser} = useContext(AuthContext);
   const history = useHistory();
-  const [user, setUser] = useState([]);
-  const [error, setError] = useState("Ooops !!!!");
-  // console.log(error);
+
+  const handleClickShowPasswordConfrim = () => setShowPasswordconfrim(!showPasswordConfrim);
+  const handleMouseDownPasswordConfrim = () => setShowPasswordconfrim(!showPasswordConfrim);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   const formik = useFormik({
     initialValues: value,
     onSubmit: (values, e) => {
       // console.log(values);
       postsickHandler(values);
-      history.push("/");
       e.preventDefault();
     },
     validationSchema: validationSchema,
     validateOnMount: true,
   });
 
-  console.log(formik.values);
-
-  const postsickHandler = (user) => {
-    // post Header in Body Request
-    axios
-      .post(`${baseURL}/api/auth/new-user/`, user)
-      .then((res) => {
-        setUser(res.data);
-        toast.success("ثبت نام با موفقیت انجام شد", {
-          position: "top-right",
-          autoClose: 2000,
-        });
-      })
-      .catch((err) => {
-        setError(err.response.data.email);
-        if (err.response.data.email) {
-          toast.error("ایمیل وارد شده تکرای است", {
+  const postsickHandler = async (user) => {
+    
+    
+    const userData = {
+      user:{
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        password: user.password,
+      }
+    }
+    await axios.post("http://188.121.113.74/api/auth/patient/new/",userData)
+    .then((res) =>{
+      toast.success(
+        `ثبت نام ${res.data.user.first_name} ${res.data.user.last_name} با موفقیت انجام شد`,
+        {
             position: "top-right",
-            autoClose: 2000,
-          });
+            autoClose: 3000,
         }
-      });
+      )
+      history.push("/login", { destination: "/" });
+    })
+    .catch((err) =>{         
+      if (err.response.data.email){
+        toast.error('ایمیل وارد شده تکراری است', {
+          position: "top-right",
+          autoClose: 3000,
+        })
+      }
+  })
+  
   };
 
   return (
@@ -86,7 +101,6 @@ const SickRegister = () => {
         <Grid container spacing={2}>
           <Grid item xs={6} md={6}>
             <STextField
-              // id="first_name"
               fullWidth
               error={
                 formik.errors["first_name"] && formik.touched["first_name"]
@@ -102,16 +116,8 @@ const SickRegister = () => {
               }
               {...formik.getFieldProps("first_name")}
             />
-            {/* <Input placeholder="نام" name="first_name" formik={formik} type="text" /> */}
           </Grid>
           <Grid item xs={6} md={6}>
-            {/* <Input
-              placeholder="نام خانوادگی"
-              label="نام خانوادگی"
-              name="last_name"
-              formik={formik}
-              type="text"
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["last_name"] && formik.touched["last_name"]}
@@ -142,23 +148,28 @@ const SickRegister = () => {
               }
               {...formik.getFieldProps("email")}
             />
-            {/* <Input placeholder="ایمیل" name="email" formik={formik} type="email" /> */}
           </Grid>
           <Grid item xs={6} md={6}>
-            {/* <Input
-              label="کلمه عبور"
-              placeholder="کلمه عبور"
-              name="password"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["password"] && formik.touched["password"]}
               variant="outlined"
               label="کلمه عبور"
               name="password"
-              type="password"
+              type = {showPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
               helperText={
                 formik.errors["password"] &&
                 formik.touched["password"] &&
@@ -168,13 +179,6 @@ const SickRegister = () => {
             />
           </Grid>
           <Grid item xs={6} md={6}>
-            {/* <Input
-              label="تایید کلمه عبور"
-              placeholder="تایید کلمه عبور"
-              name="passwordconfrim"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
               fullWidth
               error={
@@ -184,7 +188,20 @@ const SickRegister = () => {
               variant="outlined"
               label="تایید کلمه عبور"
               name="passwordconfrim"
-              type="password"
+              type = {showPasswordConfrim ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPasswordConfrim}
+                          onMouseDown={handleMouseDownPasswordConfrim}
+                        >
+                          {showPasswordConfrim ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
               helperText={
                 formik.errors["passwordconfrim"] &&
                 formik.touched["passwordconfrim"] &&

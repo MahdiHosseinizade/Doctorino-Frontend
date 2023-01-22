@@ -2,6 +2,7 @@ import { Box, CssBaseline } from "@mui/material";
 import React from "react";
 import SideBar from "./SideBar";
 import NavBar from "../../NavBar/newNavBar";
+import theme from "../../../assets/theme/defaultTheme";
 
 
 export default function PanelLayout({ children }) {
@@ -22,7 +23,7 @@ export default function PanelLayout({ children }) {
           boxSizing: " border-box",
         }}
       >
-        <NavBar />
+        <NavBar bgColor={theme.palette.navbar}/>
       </Box>
 
       <Box  sx={{ width: "100%", position: "sticky", display: "flex", justifyContent: "center"}}>

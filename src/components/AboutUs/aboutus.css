@@ -1,0 +1,6 @@
+.about-us{
+    margin-top: 100px;
+    display: flex;
+    flex-direction: row;
+    font-size: 1px !important;
+}

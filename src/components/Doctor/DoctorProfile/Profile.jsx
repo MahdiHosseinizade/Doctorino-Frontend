@@ -1,4 +1,5 @@
-import React from 'react'
+//profile
+import React, { useContext, useEffect, useState } from 'react'
 import {
   Container,
   Card,
@@ -10,6 +11,8 @@ import {
   FormControlLabel,
   Collapse,
   Button,
+  TextField,
+  Rating,
 } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import PropTypes from 'prop-types';
@@ -19,7 +22,16 @@ import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import theme from '../../../assets/theme/defaultTheme';
+import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
+import ThumbUpAlt from '@mui/icons-material/ThumbUpAlt';
+import useAxios from '../../../utils/useAxios';
+import AuthContext from '../../../context/AuthContext';
+import { toast } from 'react-toastify';
+import ReviewCard from './ReviewCard';
+import axios from 'axios';
 
 // show the directory to the use with <basic breadcrums (mui)>
 
@@ -43,6 +55,26 @@ const useStyles = makeStyles({
     maxWidth: "250px",
     position: "static",
     display: "inline-table",
+  },
+  textField: {
+    "& .MuiInputLabel-root": {
+      color: theme.palette.grey[500],
+    },
+    "& .MuiFilledInput-root": {
+      background: theme.palette.background.paper,
+    },
+    "& .MuiOutlinedInput-root": {
+      background: "#fefefe",
+      "&:hover fieldset": {
+        borderColor: theme.palette.doctor.main,
+      }
+    },
+    // style when focused
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: theme.palette.doctor.main,
+    },
+
+    spellCheck: false,
   }
 });
 
@@ -50,10 +82,10 @@ const useStyles = makeStyles({
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-  
+
 
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -65,7 +97,7 @@ function TabPanel(props) {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -82,22 +114,111 @@ function a11yProps(index) {
   };
 }
 
+const formValue = {
+  score: 0,
+  text: "",
+};
+
+const validationSchema = Yup.object({
+  score: Yup.number().required("امتیاز را وارد کنید."),
+  text: Yup.string().required("نظر خود را وارد کنید."),
+});
 
 
 
 const Profile = (props) => {
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [checked, setChecked] = useState(false);
+  const [nextPageUrl, setNextPageUrl] = useState(null);
 
   const secondaryHandleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [checked, setChecked] = React.useState(false);
+  const handleMoreReviews = () => {
+    if (nextPageUrl) {
+      axios.get(nextPageUrl,
+        {
+          headers: {
+            Authorization: `Bearer ${authData?.access}`
+          }
+        }
+      ).then(res => {
+        console.log("next page", res.data);
+        setNextPageUrl(res.data.links.next);
+        setReviews([...reviews, ...res.data.results]);
+      }).catch(err => {
+        console.log(err);
+      })
+    } else {
+      toast.info("موردی برای نمایش وجود ندارد.");
+    }
+  }
 
-  const thiredHandleChange = () => {
-    setChecked((prev) => !prev);
-  };
+  const api = useAxios();
+  const { user, authData } = useContext(AuthContext);
+
+
+  useEffect(() => {
+    if (loading && props.doctorId) {
+      api.get(`/api/doctor/${props.doctorId}/reviews/?page_size=5`)
+        .then(res => {
+          setNextPageUrl(res.data.links.next);
+          setReviews(res.data.results);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+
+  }, [loading, reviews]);
+
+  const formik = useFormik({
+    initialValues: formValue,
+
+    onReset: (e) => {
+    },
+
+    onSubmit: (values) => {
+      api.post("/api/doctor/reviews/", {
+        doctor: props.doctor?.id,
+        voter: user.id,
+        score: values.score,
+        text: values.text,
+      }, {
+        headers: {
+          Authorization: `Bearer ${authData?.access}`
+        }
+      }).then((res) => {
+        console.log("haha", res.data);
+        setReviews([...reviews, {
+          doctor: props.doctor?.id,
+          voter: {
+            first_name: user.first_name,
+            last_name: user.last_name,
+          },
+          score: values.score,
+          text: values.text,
+        }]);
+
+        toast.success("نظر شما با موفقیت ثبت شد.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        formik.resetForm();
+      }).catch((err) => {
+        toast.error("مشکلی در ثبت نظر پیش آمد.", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      });
+    },
+    validationSchema: validationSchema,
+  });
 
   const classes = useStyles();
 
@@ -123,7 +244,7 @@ const Profile = (props) => {
                       دکتر {props.doctor?.user.first_name} {props.doctor?.user.last_name}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} md={12} sx={{marginTop: "-20px", marginBottom: "20px"}}>
+                  <Grid item xs={12} md={12} sx={{ marginTop: "-20px", marginBottom: "20px" }}>
                     <Typography
                       variant="subtitle1"
                       color={'text.secondary'}
@@ -131,11 +252,17 @@ const Profile = (props) => {
                         fontSize: 20,
                       }}
                     >
-                      {props.doctor?.education} {props.doctor?.specialties.map((name) => (name.name))}
+
+                      {props.doctor?.education} {props.doctor?.specialties.map(({ name }, index) => {
+                        if (index === props.doctor?.specialties.length - 1) {
+                          return name;
+                        } else {
+                          return name + "، ";
+                        }
+                      })}
+
                       <br /><br />
 
-                      {/* متخصص {props.doctor?.specialties.name} */}
-                      
                     </Typography>
                   </Grid>
                 </Grid>
@@ -143,8 +270,8 @@ const Profile = (props) => {
               <Box>
                 <Grid container spacing={3.5} >
                   <Grid item xs={12} md={12} >
-                    <Typography variant="body2" sx={{ fontSize: "20px",}}>
-                      <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{props.doctor?.city}
+                    <Typography variant="body2" sx={{ fontSize: "20px", }}>
+                      <PlaceOutlinedIcon color='primary' sx={{ marginBottom: "-7px" }} /><span>     </span>{props.doctor?.province} - {props.doctor?.city}
                     </Typography>
                   </Grid>
 
@@ -190,68 +317,98 @@ const Profile = (props) => {
                   }
                 }}
               >
-                <div>
-                  <Collapse in={checked} collapsedSize={40}>
-                    {/* example */}
-                    <p>
-                      <p>دکتر مژگان صیادی در سال 1379 موفق به دریافت مدرک دکترای پزشکی عمومی از دانشگاه علوم پزشکی شیراز شدند و سپس دکترای تخصصی زنان، زایمان و نازایی را در سال 1387 از دانشگاه علوم پزشکی شیراز اخذ نمودند. ایشان دارای فلوشیپ نازایی، IVF و لاپاراسکوپی از دانشگاه علوم پزشکی یزد می باشند.
-                      </p>
-
-                      <p> سوابق و افتخارات دکتر مژگان صیادی
-                        تدریس در دانشگاه بوشهر در سالهای 1387 تا 1391
-                        استاد نمونه دانشگاه بوشهر در سال 1390
-                        سابقه نگارش و چاپ چندین مقاله در ISI
-                        مسئول بخش علمی بیمارستان شهریار
-                        عضو انجمن جراحان و متخصصین زنان، زایمان و نازایی ایران
-                        عضو انجمن متخصصین زنان و زایمان شیراز
-
-                      </p>
-
-
-                      <p>
-                        خدمات ارائه شده توسط دکتر مژگان صیادی
-                        تشخیص و درمان انواع نازایی (IVF,IUI)
-                        تعیین جنسیت (PGD)
-                      </p>
-                      <p>
-                        بیمارستان‌های همکار
-                        بیمارستان MRI
-                        شهر
-                        میر
-                        شهریار
-                        میرحسینی
-                        بعثت
-                      </p>
-                    </p>
-                  </Collapse>
-                </div>
+                <Collapse in={checked} collapsedSize={40}>
+                  <Typography>{props.doctor?.description}</Typography>
+                </Collapse>
 
               </Box>
-              <Box sx={{ height: "auto",}}>
-                {/* how to mv it to left? */}
+
+              {/* <Box sx={{height: "auto", display:'flex'}}>
                 <FormControlLabel
-                  control={<Button onClick={thiredHandleChange} label="▾بیشتر">بیشتر▾</Button>}
+                  control={<Button sx={{ left :'10%'}} onClick={thiredHandleChange} label="▾بیشتر">بیشتر▾</Button>}
                 />
-              </Box>
+              </Box> */}
 
             </Box>
 
           </TabPanel>
           <TabPanel value={value} index={1}>
             <h4 style={{ marginBottom: "15px" }}>  شماره تماس</h4>
-            <p>
+            <Typography>
               <PhoneEnabledIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
               {props.doctor?.office_number}
-            </p>
+            </Typography>
             <br />
             <h4 style={{ marginBottom: "15px" }}> نشانی مطب</h4>
-            <p>
+            <Typography>
               <LocationOnIcon fontSize="small" style={{ marginBottom: "-5px", marginLeft: "5px" }} />
-              {`${props.doctor?.province}، ${props.doctor?.city}، ${props.doctor?.clinic_address}`}
-            </p>
+              {`${props.doctor?.clinic_address}`}
+            </Typography>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            نظرات و امتیاز
+            <Box
+              component="form"
+              onSubmit={formik.handleSubmit}
+            >
+              <Grid container spacing={2} sx={{
+                padding: "10px",
+              }}>
+                <Grid item xs={12} md={12}>
+                  <Grid item xs={12} md={12}>
+                    <Rating
+                      name="score"
+                      label="امتیاز"
+                      defaultValue={0}
+                      value={formik.getFieldProps("score").value}
+                      onChange={(event, newValue) => {
+                        formik.setFieldValue("score", newValue);
+                      }}
+                      sx={{
+                        color: theme.palette.doctor.main,
+                      }}
+                      icon={<ThumbUpAlt fontSize="inherit" />}
+                      emptyIcon={<ThumbDownAltOutlinedIcon fontSize="inherit" />}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <TextField
+                      fullWidth
+                      className={classes.textField}
+                      error={
+                        formik.errors["text"] &&
+                        formik.touched["text"]
+                      }
+                      variant="outlined"
+                      label="نظر"
+                      name="text"
+                      type="text"
+                      helperText={formik.touched["text"] && formik.errors["text"]}
+                      multiline
+                      rows={3}
+                      {...formik.getFieldProps("text")}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} md={12} sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                  marginBottom: "20px",
+                }}>
+                  <Button disabled={!(formik.dirty && formik.isValid && formik.values["score"] > 0)} color="doctor" type="submit" variant="contained">
+                    ثبت نظر
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+            {reviews.map(({ id, voter, score, text }) => (
+              <Card className={classes.card} key={id}>
+                <ReviewCard key={id} voter={voter} score={score} text={text} />
+              </Card>
+            ))}
+            <Button color="doctor" variant="contained" onClick={handleMoreReviews}>
+              نظرات بیشتر
+            </Button>
           </TabPanel>
         </Box>
       </Card>

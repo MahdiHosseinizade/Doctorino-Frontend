@@ -1,12 +1,18 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Input from "../../common/Input";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import AuthContext from '../../../context/AuthContext';
-import { Grid, TextField } from "@mui/material";
+import { Grid, IconButton, InputAdornment, TextField } from "@mui/material";
 import styled from "@emotion/styled";
-import { baseURL } from '../../../utils/useAxios'
+import { useState } from "react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useHistory } from "react-router-dom";
+import { baseURL } from "../../../utils/useAxios";
+
+
 
 
 const STextField = styled(TextField)({
@@ -20,16 +26,16 @@ const STextField = styled(TextField)({
 });
 
 const formValue = {
-  first_name: "",
-  last_name: "",
+  name: "",
+  family: "",
   email: "",
   pass: "",
   rPass: "",
 }
 
 const validationSchema = Yup.object({
-  first_name: Yup.string().required("نام ضروری است"),
-  last_name: Yup.string().required("نام خانوادگی ضروری است"),
+  name: Yup.string().required("نام ضروری است"),
+  family: Yup.string().required("نام خانوادگی ضروری است"),
   email: Yup.string().email("ایمیل معتبر نیست").required("ایمیل ضروری است"),
   pass: Yup.string().required("کلمه عبور ضروری است"),
   rPass: Yup.string().required("تکرار کلمه عبور ضروری است")
@@ -38,11 +44,15 @@ const validationSchema = Yup.object({
 
 
 const Hotelregister = () => {
-
-  const { loginUser } = useContext(AuthContext);
-
+  const history = useHistory();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfrim, setShowPasswordConfrim] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const handleClickShowPasswordConfrim = () => setShowPasswordConfrim(!showPasswordConfrim);
+  const handleMouseDownPasswordConfrim = () => setShowPasswordConfrim(!showPasswordConfrim);
+  
   function posthotelHandler(hotel) {
-
     axios.post(
       `${baseURL}/api/hotel/owner/new/`,
       {
@@ -63,7 +73,7 @@ const Hotelregister = () => {
             autoClose: 2000,
           }
         )
-        loginUser(hotel.email, hotel.pass);
+        history.push("/login", { destination: "/" })
       })
       .catch(
         (err) => {
@@ -79,6 +89,7 @@ const Hotelregister = () => {
       );
   }
 
+
   const formik = useFormik({
     initialValues: formValue,
     onSubmit: (values) => {
@@ -86,55 +97,50 @@ const Hotelregister = () => {
     },
     validationSchema: validationSchema,
     validateOnMount: true,
+
   })
+  console.log(formik.values);
 
   return (
     <div>
       <form onSubmit={formik.handleSubmit}>
-        <Grid 
-          container 
-          spacing={4} 
-        >
+        <Grid container spacing={2}>
           <Grid item md={6} xs={6}>
             <STextField
               fullWidth
-              error={formik.errors["first_name"] && formik.touched["first_name"]}
+              error={
+                formik.errors["name"] && formik.touched["name"]
+              }
               variant="outlined"
               label="نام"
-              name="first_name"
+              name="name"
               type="text"
               helperText={
-                formik.touched["first_name"] && 
-                formik.errors["first_name"]
+                formik.errors["name"] &&
+                formik.touched["name"] &&
+                formik.errors["name"]
               }
-              {...formik.getFieldProps("first_name")}
+              {...formik.getFieldProps("name")}
             />
-            {/* <Input label="نام" name="name" formik={formik} type="text" /> */}
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              label="نام خانوادگی"
-              name="family"
-              formik={formik}
-              type="text"
-            /> */}
             <STextField
               fullWidth
-              error={formik.errors["last_name"] && formik.touched["last_name"]}
+              error={formik.errors["family"] && formik.touched["family"]}
               variant="outlined"
               label="نام خانوادگی"
-              name="last_name"
+              name="family"
               type="text"
               helperText={
-                formik.touched['last_name'] && 
-                formik.errors["last_name"]
+                formik.errors["family"] &&
+                formik.touched["family"] &&
+                formik.errors["family"]
               }
-              {...formik.getFieldProps("last_name")}
+              {...formik.getFieldProps("family")}
             />
           </Grid>
           <Grid item md={12} xs={12}>
             <STextField
-              // id="first_name"
               fullWidth
               error={formik.errors["email"] && formik.touched["email"]}
               variant="outlined"
@@ -142,59 +148,76 @@ const Hotelregister = () => {
               name="email"
               type="email"
               helperText={
-                formik.touched['email'] && 
+                formik.errors["email"] &&
+                formik.touched["email"] &&
                 formik.errors["email"]
               }
               {...formik.getFieldProps("email")}
             />
-            {/* <Input label="ایمیل" name="email" formik={formik} type="email" /> */}
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              label="رمز عبور"
-              name="pass"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
-              // id="first_name"
               fullWidth
               error={formik.errors["pass"] && formik.touched["pass"]}
               variant="outlined"
               label="کلمه عبور"
               name="pass"
-              type="password"
+              type={showPassword ? "text" : "password"}
+              InputProps={{ // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
               helperText={
-                formik.touched["pass"] && 
+                formik.errors["pass"] &&
+                formik.touched["pass"] &&
                 formik.errors["pass"]
               }
               {...formik.getFieldProps("pass")}
             />
           </Grid>
           <Grid item md={6} xs={6}>
-            {/* <Input
-              label="تکرار رمز عبور"
-              name="rPass"
-              formik={formik}
-              type="password"
-            /> */}
             <STextField
               fullWidth
               error={formik.errors["rPass"] && formik.touched["rPass"]}
               variant="outlined"
               label="تکرار کلمه عبور"
               name="tPass"
-              type="password"
+              type = {showPasswordConfrim ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPasswordConfrim}
+                          onMouseDown={handleMouseDownPasswordConfrim}
+                        >
+                          {showPasswordConfrim ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
               helperText={
-                formik.touched['rPass'] && 
+                formik.errors["rPass"] &&
+                formik.touched["rPass"] &&
                 formik.errors["rPass"]
               }
               {...formik.getFieldProps("rPass")}
             />
           </Grid>
-          <br />
-          <Grid item md={12} xs={12} sx={{ marginTop: "40px"}}>
-            <button disabled={!(formik.isValid)} type="submit">
+          <Grid item md={12} xs={12}>
+            <button disabled={!(formik.isValid && formik.dirty)}
+              style={{
+                marginTop: "15%",
+              }} type="submit">
               ثبت نام
             </button>
           </Grid>

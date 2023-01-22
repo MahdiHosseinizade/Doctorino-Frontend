@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { Link, withRouter } from "react-router-dom";
+import { Link, useLocation, withRouter } from "react-router-dom";
 import "./login.css";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
@@ -7,11 +7,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Input from "../common/Input";
 import NavBar from "../NavBar/newNavBar.jsx";
+import theme from "../../assets/theme/defaultTheme";
 import styled from "@emotion/styled";
-import { TextField } from "@mui/material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
 import AuthContext from "../../context/AuthContext";
 import { useContext } from "react";
 import { baseURL } from '../../utils/useAxios';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 
 const value = {
   email: "",
@@ -47,28 +50,35 @@ const validationSchema = Yup.object({
 //   });
 //   console.log(formik.values);
 const Login = ({ history }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
   const { loginUser } = useContext(AuthContext);
   const [user, setUser] = useState({ ...value });
-  // const history = useHistory();
-  // console.log(user);
+  
+  const location = useLocation();
+  
+  let destination = null;
+  
+  if (location.state) {
+    destination = location.state.destination;
+  }
+
   const formik = useFormik({
     initialValues: value,
     onSubmit: (values, e) => {
       // postuserHandler(values);
-      loginUser(values.email, values.password);
-      history.push("/");
+      loginUser(values.email, values.password, destination);
+      if (document.cookie.token) {
+        history.push("/");
+      }
       e.preventDefault();
     },
     validationSchema: validationSchema,
     validateOnMount: true,
   });
 
-  // useEffect(() => {
-  //   if (document.cookie.token ) {
-  //     history.push("/hotel-panel");
 
-  //   }
-  //   },[])
 
   const postuserHandler = (user) => {
     axios
@@ -100,7 +110,7 @@ const Login = ({ history }) => {
     <div className="signUpPage">
       <div>
         <nav>
-          <NavBar />
+          <NavBar bgColor={theme.palette.doctor}/>
         </nav>
         <div className="formControllogin">
           <form onSubmit={formik.handleSubmit}>
@@ -122,15 +132,8 @@ const Login = ({ history }) => {
                   }
                   {...formik.getFieldProps("email")}
                 />
-                {/* <Input formik={formik} name= "email" type="email" label="ایمیل" /> */}
               </div>
               <div className="mb4">
-                {/* <Input
-                  formik={formik}
-                  name="password"
-                  type="password"
-                  label="کلمه عبور"
-                /> */}
                 <STextField
                   fullWidth
                   error={
@@ -139,7 +142,20 @@ const Login = ({ history }) => {
                   variant="outlined"
                   label="کلمه عبور"
                   name="password"
-                  type="password"
+                  type = {showPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? <Visibility/> : <VisibilityOff/>}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                   helperText={
                     formik.errors["password"] &&
                     formik.touched["password"] &&
@@ -152,6 +168,13 @@ const Login = ({ history }) => {
             <button disabled={!(formik.isValid && formik.dirty)} type="submit">
               ورود
             </button>
+            <div className="ForgotPasword">
+                  <h2 >
+                    <Link className="forgotPasswordlink" to='/email-verification' >
+                      فراموشی رمز عبور
+                    </Link>
+                  </h2>
+            </div>
             <h2 className="h2text">
               آیا حساب کاربری ندارید ؟
               <Link className="link" to="/signup">

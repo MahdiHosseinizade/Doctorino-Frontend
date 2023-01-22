@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { Box } from "@mui/material";
 import { AppBar } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,38 +12,67 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/LocalHospitalTwoTone";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Link, useHistory } from "react-router-dom";
+import AuthContext from '../../context/AuthContext';
+import theme from "../../assets/theme/defaultTheme";
 
-const NavBar = () => {
+
+const NavBar = ({ buttons, bgColor, ...props }) => {
+  if (!bgColor) {
+    bgColor = theme.palette.navbar
+  }
+  let { user, authTokens, logOut } = useContext(AuthContext);
+
+  const defultButtons = [
+    {
+      text: "لیست پزشکان",
+      path: "/list-of-doctors",
+    },
+    {
+      text: "جستجوی هتل",
+      path: "/hotel-search",
+    }
+  ];
+
   const history = useHistory();
-  const pages = ["نوبت دهی مطب", "مشاوره پزشکی", "مراکز درمانی"];
+  const [pages, setPages] = useState(defultButtons);
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  useEffect(() => {
+    if (buttons?.length > 0 && buttons !== pages) {
+      setPages(buttons);
+    } else {
+      setPages(defultButtons);
+    }
+  }, [buttons])
+
   const handleOpenNavMenu = (event) => {
+
     setAnchorElNav(event.currentTarget);
+
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (e) => {
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
+
     setAnchorElUser(null);
   };
+
 
   return (
     <AppBar
       position="fixed"
       sx={{
-        zIndex: 100,
         direction: "rtl",
-        background: "#65B9D3",
-        enableColorOnDark: true,
+        background: bgColor.main,
       }}
     >
       <Container
@@ -57,7 +86,6 @@ const NavBar = () => {
         <Toolbar disableGutters>
           <Typography
             variant="h4"
-            noWrap
             component="a"
             href="/"
             sx={{
@@ -69,10 +97,15 @@ const NavBar = () => {
             }}
           >
             <AdbIcon
-              color="primary"
+              // color="primary"
+              color={bgColor.icon}
               onClick={() => history.push("/")}
-              sx={{ display: { xs: "none", md: "flex" }, fontSize: 45, mr: 1 }}
+              sx={{
+                color: bgColor.icon,
+                display: { xs: "none", md: "flex" }, fontSize: 45, mr: 1
+              }}
             />
+            {/* {console.log(bgColor)} */}
             دکترینو
           </Typography>
 
@@ -111,9 +144,12 @@ const NavBar = () => {
                 mr: 10,
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {pages.map(({ text, path }, index) => (
+                <MenuItem key={index} value={path} onClick={() => {
+                  history.push(path)
+                  setAnchorElNav(null)
+                }}>
+                  <Typography textAlign="center">{text}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -129,10 +165,9 @@ const NavBar = () => {
             }}
           >
             <Link to="/">
-              <AdbIcon color="primary" sx={{ fontSize: 45, mr: 1 }} />
+              {/* <AdbIcon color="primary" sx={{ fontSize: 45, mr: 1 }} /> */}
               <Typography
                 variant="h4"
-                noWrap
                 sx={{
                   display: "inline-block",
                   fontSize: "35px",
@@ -153,12 +188,14 @@ const NavBar = () => {
               sx={{ mr: 5, with: "20px", padding: "7px 7px 0px 0px" }}
               variant="inline"
             >
-              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-              {pages.map((page) => (
+              <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              {pages.map(({ text, path }, index) => (
                 <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  // sx={{padding: "2px 0px 2px", my:2 , color: "black", display: "block", innerWidth: "30px", outerWidth: "40px" }}
+                  key={index}
+                  onClick={() => {
+                    history.push(path)
+                    setAnchorElNav(null)
+                  }}
                   sx={{
                     width: "140px",
                     color: "black",
@@ -166,15 +203,14 @@ const NavBar = () => {
                     display: "block",
                   }}
                 >
-                  {page}
+                  {text}
                 </Button>
               ))}
             </ButtonGroup>
           </Box>
-          {/*///////////////////////*/}
           <Box
             sx={{
-              display: "flex",
+              display: 'flex',
               flexDirection: "column",
               alignItems: "center",
               size: "medium",
@@ -183,33 +219,79 @@ const NavBar = () => {
               },
             }}
           >
+
             <ButtonGroup
               variant="text"
               size="medium"
               aria-label="text button group"
               sx={{
+                width: 'auto',
+                margin: '0px 20px 0px 0px',
                 padding: "4px  3px 2px 0px",
+                display: user ? 'none' : 'flex',
               }}
             >
               <Button
                 onClick={() => {
-                  history.push("/login");
+                  history.push("/signup");
                 }}
+                sx={{ width: 'auto', color: 'black' }}
+              >
+                &nbsp;ثبت نام
+              </Button>
+
+              <Button
+                onClick={() => {
+                  history.push("/login", { destination: window.location.pathname });
+                }}
+                sx={{ width: 'auto', color: "Black" }}
               >
                 &nbsp;ورود
               </Button>
+            </ButtonGroup>
+
+            <ButtonGroup
+              variant="text"
+              size="medium"
+              aria-label="text button group"
+              sx={{
+                width: 'auto',
+                margin: '0px 20px 0px 0px',
+                padding: "4px  3px 2px 0px",
+                display: !user ? 'none' : 'flex',
+              }}
+            >
               <Button
                 onClick={() => {
-                  history.push("/signup");
+                  if (user.role === "doctor") {
+                    history.push("/doctor-panel/doctor-profile-completion");
+                  } else if (user.role === "hotel_owner") {
+                    history.push("/hotel-panel/profile-completion");
+                  } else {
+                    history.push("/patient-panel/profile");
+                  }
                 }}
+                sx={{ width: 'auto', color: "Black" }}
               >
-                &nbsp;&nbsp;&nbsp;عضویت
+                پنل کاربری
+              </Button>
+              <Button
+                onClick={() => {
+                  logOut();
+                }}
+                sx={{ width: 'auto', color: "Black" }}
+              >
+                خروج
               </Button>
             </ButtonGroup>
+
           </Box>
+
+
+
         </Toolbar>
-      </Container>
-    </AppBar>
+      </Container >
+    </AppBar >
   );
 };
 

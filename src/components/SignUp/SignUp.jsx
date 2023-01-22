@@ -1,7 +1,7 @@
 import "./signUp.css";
 import { useFormik } from "formik";
 import {  useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import DoctorRegister from "../Doctor/Registration/DoctorRegistration";
 import SickRegister from "../Sick/sickRegister";
@@ -9,6 +9,7 @@ import { RadioGroup ,FormControlLabel,Radio, Typography } from '@mui/material';
 // import Hotelregister from "../Hotel/Register/HotelRegister";
 import Hotelregister from "../Hotel/Register/HotelRegister";
 import NavBar from "../NavBar/newNavBar";
+import theme from '../../assets/theme/defaultTheme';
 
 
 const value = {
@@ -20,6 +21,8 @@ const SignUp = () => {
   const [doctor,setDoctor] = useState(false)
   const [hotel,setHotel] = useState(false)
   const [sick,setSick] = useState(false)
+
+  const history = useHistory();
   
   const formik = useFormik({
     initialValues: value,
@@ -50,7 +53,7 @@ const SignUp = () => {
   return (
     <div className="signUp">
       <nav>
-        <NavBar />
+        <NavBar bgColor={theme.palette.navbar}/>
       </nav>
       <div className="signUpPage">
       <div className="signUpBox">
@@ -61,9 +64,11 @@ const SignUp = () => {
         {doctor  ? <DoctorRegister/> : sick ? <SickRegister/> : hotel ? <Hotelregister/> : <SickRegister/>}
         <h2 className="h2text">
           آیا حساب کاربری دارید ؟
-          <Link className="link" to="/login">
+          <a className="a-link" onClick={
+            () => history.push("/login", { destination : "/"})
+          }>
             ورود
-          </Link>
+          </a>
         </h2>
       </div>
         </div>

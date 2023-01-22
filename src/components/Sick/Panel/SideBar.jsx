@@ -2,7 +2,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import LogoutIcon from '@mui/icons-material/Logout';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import HotelIcon from '@mui/icons-material/Hotel';
+import MedicationIcon from '@mui/icons-material/Medication';
 import React, {useContext} from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import {
@@ -75,31 +76,28 @@ export default function SideBar() {
 
     const menuItems = [
         {
-            text: "داشبورد",
-            path: `${path}/dashboard`,
-            icon: <DashboardIcon color="f4f4f4" />
-        },
-        {
             text: "پروفایل",
             path: `${path}/profile`,
             icon: <AccountCircleIcon color="f4f4f4" />
+        },
+        {
+            text: "نوبت های من",
+            path: `${path}/doctor-reservations`,
+            icon: <MedicationIcon color="f4f4f4" />
+        },
+        {
+            text: "مدیریت رزرو هتل",
+            path: `${path}/hotel-reservations`,
+            icon: <HotelIcon color="f4f4f4" />
         },
     ]
 
     const [open, setOpen] = React.useState(false);
 
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-
 
     return (
         <Box>
-            <Drawer variant="permanent" open={open} onMouseOver={handleDrawerOpen} onMouseOut={handleDrawerClose} >
+            <Drawer variant="permanent" open={false}>
                 <DrawerHeader />
                 <Divider />
                 <List>

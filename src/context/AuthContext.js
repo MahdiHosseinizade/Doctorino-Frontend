@@ -8,22 +8,40 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  let [authTokens, setAuthTokens] = useState(() =>
-    localStorage.getItem("authTokens")
-      ? JSON.parse(localStorage.getItem("authTokens"))
+  let [authData, setAuthTokens] = useState(() =>
+    localStorage.getItem("authData")
+      ? JSON.parse(localStorage.getItem("authData"))
       : null
   );
   let [user, setUser] = useState(() =>
-    localStorage.getItem("authTokens")
-      ? jwt_decode(localStorage.getItem("authTokens"))
+    localStorage.getItem("authData")
+      ? jwt_decode(localStorage.getItem("authData"))
       : null
   );
   let [loading, setLoading] = useState(true);
 
   const history = useHistory();
 
-  let loginUser = async (email, pwd) => {
-    // let response = await fetch('http://127.0.0.1:8000/api/auth/token/', {
+  function extractUserData(data) {
+    let role = "patient";
+    if (data.is_doctor) {
+      role = "doctor";
+    } else if (data.is_hotel_owner) {
+      role = "hotel_owner";
+    }
+    
+    return {
+      id: data.id,
+      child_id: data['child-id'],
+      username: data.username,
+      first_name: data['first-name'],
+      last_name: data['last-name'],
+      role: role,
+      email: data["email"],
+    };
+  }
+
+  let loginUser = async (email, pwd, destination=null) => {
     let response = await fetch("http://188.121.113.74/api/auth/token/", {
       method: "POST",
       headers: {
@@ -36,25 +54,36 @@ export const AuthProvider = ({ children }) => {
 
     if (response.status === 200) {
       setAuthTokens(data);
-      setUser(jwt_decode(data.access));
-      localStorage.setItem("authTokens", JSON.stringify(data));
+      history.push('/')
+      setUser(extractUserData(data));
+
+      localStorage.setItem("authData", JSON.stringify(data));
+
+      if (destination) {
+        history.push(destination);
+      }
 
       toast.success(`با موفقیت وارد شدید`, {
         position: "top-right",
         autoClose: 2000,
       });
-    } else {
-      toast.error("وارد نشدید", {
+    } else if (response.status === 400) {
+      toast.error("نام کاربری یا رمز عبور اشتباه است", {
         position: "top-right",
-        autoClose: 2000
-      })
+        autoClose: 2000,
+      });
+    } else {
+      toast.error("کابری با این اطلاعات پیدا نشد ", {
+        position: "top-right",
+        autoClose: 2000,
+      });
     }
   };
 
   let logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
-    localStorage.removeItem("authTokens");
+    localStorage.removeItem("authData");
 
     toast.info("خارج شدید", {
       position: "top-right",
@@ -66,20 +95,21 @@ export const AuthProvider = ({ children }) => {
 
   let contextData = {
     user: user,
-    authTokens: authTokens,
+    authData: authData,
     setAuthTokens: setAuthTokens,
     setUser: setUser,
     loginUser: loginUser,
     logOut: logoutUser,
+    extractUserData: extractUserData,
   };
 
   useEffect(() => {
-    if (authTokens) {
-      setUser(jwt_decode(authTokens.access));
+    if (authData) {
+      setUser(extractUserData(authData));
     }
 
     setLoading(false);
-  }, [authTokens, loading]);
+  }, [authData, loading]);
 
   return (
     <AuthContext.Provider value={contextData}>

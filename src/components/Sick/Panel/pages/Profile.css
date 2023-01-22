@@ -1,0 +1,38 @@
+.Calendar>:not(.Calendar__footer) button {
+    color: black;
+}
+
+.selected-day {
+    color: white !important;
+}
+
+.Calendar.-rtl .Calendar__monthArrowWrapper.-right {
+    margin-bottom: 55px;
+    margin-top: -55px;
+}
+
+
+.Calendar.-rtl .Calendar__monthArrowWrapper.-left {
+    margin-bottom: -55px;
+    margin-top: 55px;
+}
+
+.DatePicker__input {
+    width: 100% !important;
+    height: 55px;
+    margin-top: 3px;
+    margin-right: 4px;
+    margin-left: 70px;
+    display: block;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    color: #000;
+    font-family: "IranYekan" !important;
+    font-size: 16px;
+    font-weight: 550;
+    outline-color: #72b2ff;
+}
+
+.DatePicker__input:hover {
+    border: 1px solid black;
+}

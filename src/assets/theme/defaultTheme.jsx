@@ -16,7 +16,30 @@ const theme = createTheme({
             main: "#0080ff",
             dark: "#004d99",
             contrastText: '#fff',
+        }, 
+        hotel: {
+            main: "#eab308",
+            light: "#FFF6E7",
+            dark: "#c7ba28",
+            contrastText: "#fff",
+            icon: '#FFF6E7',
+        },
+        doctor: {
+            main: '#00cccc',
+            light: "#",
+            dark: "#",
+            contrastText: "#FFF6E7",
+            icon: '#7fffd4',
+        },
+        navbar: {
+            main: '#009AFF',
+            light: "#fff",
+            dark: "#000",
+            contrastText: "#fff",
+            icon: '#2C32DB',
         }
+
+
     },
     typography: {
         fontFamily: IranYekan,

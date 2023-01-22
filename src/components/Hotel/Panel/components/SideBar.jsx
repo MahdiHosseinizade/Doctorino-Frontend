@@ -81,45 +81,40 @@ export default function SideBar() {
 
     const menuItems = [
         {
-            text: "داشبورد",
-            path: "/hotel-panel/dashboard",
-            icon: <DashboardIcon color="f4f4f4" />
+            text: "اطلاعات رزرو",
+            path: "/hotel-panel/booking-reports",
+            icon: <SummarizeIcon color="hotel" />
         },
         {
             text: "اضافه کردن هتل",
             path: "/hotel-panel/add-hotel",
-            icon: <AddHomeIcon color="f4f4f4" />
+            icon: <AddHomeIcon color="hotel" />
         },
         {
-            text: "پروفایل",
+            text: "پروفایل مدیر",
             path: "/hotel-panel/profile-completion",
-            icon: <AccountCircleIcon color="f4f4f4" />
+            icon: <AccountCircleIcon color="hotel" />
         },
         {
             text: "اطلاعات تکمیلی هتل",
             path: "/hotel-panel/hotel-info",
-            icon: <MenuIcon color="f4f4f4" />
+            icon: <MenuIcon color="hotel" />
         },
         {
-            text: "گزارش رزرو ها",
-            path: "/hotel-panel/booking-reports",
-            icon: <SummarizeIcon color="f4f4f4" />
-        },
-        {
-            text: "امور مالی",
-            path: "/hotel-panel/finances",
-            icon: <AccountBalanceIcon color="f4f4f4" />
-        },
-        {
-            text: "تغییر رمزعبور",
-            path: "/hotel-panel/change-password",
-            icon: <PasswordIcon color="f4f4f4" />
+            text: "تغییر رمز عبور",
+            path: "/hotel-panel/verify-email",
+            icon: <PasswordIcon color="hotel" />
         }
     ]
 
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
+        // if the size is less than xs, the drawer will be closed
+        if (window.innerWidth < 600) {
+            setOpen(false);
+            return;
+        }
         setOpen(true);
     };
 
@@ -139,7 +134,7 @@ export default function SideBar() {
                             onClick={() => history.push(item.path)}
                             sx={{
                                 display: 'block',
-                                background: location.pathname == item.path ? '#f4f4f4' : null,
+                                background: location.pathname == item.path ? '#FFF6E7' : null,
                             }}
                         >
                             <ListItemButton
@@ -187,7 +182,7 @@ export default function SideBar() {
                                 justifyContent: 'center',
                             }}
                         >
-                            <LogoutIcon color="f4f4f4" />
+                            <LogoutIcon color="black" />
                         </ListItemIcon>
                         <ListItemText primary={"خروج"} sx={{ opacity: open ? 1 : 0 }} />
                     </ListItemButton>

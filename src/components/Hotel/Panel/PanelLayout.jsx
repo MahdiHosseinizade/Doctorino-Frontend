@@ -1,69 +1,61 @@
-// // import { Box, Container, CssBaseline } from '@mui/material';
-// // import React from 'react';
-// // import SideBar from './components/SideBar';
-// // import NavBar from "../../NavBar/newNavBar"
-// // // import "./panelLayout.css"
-
-// // const PanelLayout = ({children}) => {
-// //     return (
-// //         <div>
-// //             <Box className="navbar">
-// //                 <NavBar />
-// //             </Box>
-
-// //             <Box sx={{ marginTop: "20px", position: 'sticky', display: 'flex' }}>
-// //                 <SideBar />
-// //                 {children}
-// //             </Box>
-// //         </div>
-// //     );
-// // }
-
-// // export default PanelLayout;
-
-// import { Box, Container, CssBaseline } from '@mui/material';
-// import React from 'react';
-// import SideBar from './components/SideBar';
-// import NavBar from "../../NavBar/newNavBar";
-
-// export default function PanelLayout({ children }) {
-//     return (
-//         <Container>
-//             <Container
-//                 sx={{
-//                     position: "static",
-//                     top: "0",
-//                     right: "0",
-//                     display: "flex",
-//                     flexDirection: "row",
-//                     width: "100%",
-//                     height: "auto",
-//                     alignItems: "center",
-//                     boxSizing: " border-box"
-//                 }}
-//             >
-//                 <NavBar />
-//             </Container>
-
-//             <Container sx={{ width: '100%', position: "sticky", display: "flex" }}>
-//                 <SideBar />
-//                 {children}
-//             </Box>
-//         </div>
-//     );
-// }
-
-// export default PanelLayout;
-
 import { Box, Container, CssBaseline } from "@mui/material";
 import React from "react";
 import SideBar from "./components/SideBar";
 import NavBar from "../../NavBar/newNavBar";
+import theme from "../../../assets/theme/defaultTheme"
 
 export default function PanelLayout({ children }) {
+
+  const [buttonsInNavBar, setButtonsInNavBar] = React.useState([]);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (window.innerWidth < 600) {
+        setButtonsInNavBar(
+          [
+            {
+              text: "لیست پزشکان",
+              path: "/list-of-doctors",
+            },
+            {
+              text: "جستجوی هتل",
+              path: "/hotel-search",
+            },
+            {
+              text: "اطلاعات رزرو",
+              path: "/hotel-panel/booking-reports"
+            },
+            {
+              text: "اضافه کردن هتل",
+              path: "/hotel-panel/add-hotel",
+            },
+            {
+              text: "پروفایل مدیر",
+              path: "/hotel-panel/profile-completion",
+            },
+            {
+              text: "اطلاعات تکمیلی هتل",
+              path: "/hotel-panel/hotel-info",
+            },
+            {
+              text: "تغییر رمز عبور",
+              path: "/hotel-panel/verify-email"
+            },
+          ]
+        );
+      } else {
+        setButtonsInNavBar([]);
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  });
+
   return (
-    <Container>
-      <Container
+    <div>
+      <CssBaseline />
+      <Box
+        mt={10}
         sx={{
           position: "static",
           top: "0",
@@ -73,14 +65,24 @@ export default function PanelLayout({ children }) {
           width: "100%",
           height: "auto",
           alignItems: "center",
-          boxSizing: " border-box",
+          boxSizing: "border-box",
         }}
       >
-        <NavBar />
-      </Container>
+        <NavBar buttons={buttonsInNavBar} bgColor={theme.palette.hotel} />
+      </Box>
 
-      <Container sx={{ width: "100%", position: "sticky", display: "flex" }}>
-        <SideBar />
+      <Box sx={{
+        width: "100%",
+        position: "sticky",
+        display: "flex",
+        justifyContent: "center"
+      }}
+      >
+        <Box sx={{
+          display: { xs: "none", sm: "block" }
+        }}>
+          <SideBar />
+        </Box>
         <Box
           sx={{
             alignItems: "center",
@@ -90,7 +92,7 @@ export default function PanelLayout({ children }) {
         >
           {children}
         </Box>
-      </Container>
-    </Container>
+      </Box>
+    </div>
   );
 }
