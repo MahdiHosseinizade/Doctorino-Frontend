@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./AppointmentsManagements.css";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { makeStyles } from "@mui/styles";
@@ -37,6 +38,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PropTypes from "prop-types";
+
 
 const useStyles = makeStyles({
   boxContainer: {
@@ -165,7 +167,6 @@ export default function AppointmentReports() {
   };
 
   const handleDeleteTime = (time) => {
-    console.log("in delete time function", time);
     API.delete(`/api/doctor/workday/${time.id}/`, {
       headers: {
         Authorization: "Bearer " + authData?.access,
@@ -190,34 +191,6 @@ export default function AppointmentReports() {
     );
     setOpen(false);
   };
-
-  // function DeleteTimePopUp(time) {
-  //   console.log("the time", time);
-  //   return (
-  //     <Box onSubmit={() => handleDeleteTime(time)} component="form">
-  //       <DialogContent>
-  //         <DialogContentText
-  //           id="alert-dialog-description"
-  //           sx={{
-  //             display: "flex",
-  //             justifyContent: "center",
-  //           }}
-  //         >
-  //           آیا از حذف زمان مشخص شده اطمینان دارید؟
-  //         </DialogContentText>
-  //       </DialogContent>
-  //       <DialogActions>
-  //         <Button
-  //           type="submit"
-  //           // onClick={() => {}}
-  //           autoFocus
-  //         >
-  //           حذف
-  //         </Button>
-  //       </DialogActions>
-  //     </Box>
-  //   );
-  // }
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
@@ -431,6 +404,7 @@ export default function AppointmentReports() {
           padding: "20px",
           "& .MuiTextField-root": { m: 0.5 },
           boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+          minWidth: "368px",
         }}
       >
         <Box sx={{ width: "100%" }}>
@@ -567,6 +541,7 @@ export default function AppointmentReports() {
                                 <Stack spacing={3}>
                                   <TimePicker
                                     // className={classes.timePicker}
+                                  
                                     ampm={false}
                                     fullWidth
                                     label="از ساعت"
@@ -592,6 +567,24 @@ export default function AppointmentReports() {
                                   />
                                 </Stack>
                               </LocalizationProvider>
+
+                              {/* <TimePicker
+                                // onFocusChange={this.onFocusChange.bind(this)}
+                                // onTimeChange={this.onTimeChange.bind(this)}
+                                value={values.fromTime}
+                                onChange={(newValue) => {
+                                  console.log(
+                                    "this is the new fromTime value: ",
+                                    newValue
+                                  );
+                                  setValues({
+                                    ...values,
+                                    fromTime: newValue,
+                                  });
+                                  setStartTime(newValue);
+                                }}
+                                rend
+                              /> */}
                             </Grid>
                             <Grid
                               item
@@ -650,38 +643,20 @@ export default function AppointmentReports() {
                       padding: "20px",
                       "& .MuiTextField-root": { m: 0.5 },
                       boxShadow: "0 0 5px 0 rgba(0,0,0,0.5)",
+                      // minWidth: "368px",
                     }}
                   >
-                    {/* <Typography
-                      sx={{
-                        textAlign: "center",
-                        margin: "10px",
-                      }}
-                      variant="h5"
-                    >
-                      اتاق های فعال
-                    </Typography> */}
-
-                    {/* <hr
-                      width="100%"
-                      style={{
-                        backgroundColor: theme.palette.doctor.dark,
-                        marginBottom: "1rem",
-                        marginTop: "1rem",
-                      }}
-                    /> */}
-
                     <Grid container spacing={2}>
                       <Grid
                         container
-                        xs={12}
-                        sm={12}
-                        md={12}
+                        // xs={12}
+                        // sm={12}
+                        // md={12}
                         spacing={1}
                         sx={{
                           marginTop: "10px",
-                          display: "flex",
-                          justifyContent: "center",
+                          // display: "flex",
+                          // justifyContent: "center",
                         }}
                       >
                         {/* {console.log(rooms)} */}
@@ -705,44 +680,17 @@ export default function AppointmentReports() {
                                       aria-controls={`aria${time.id}`}
                                       id={`id${time.id}`}
                                     >
-                                      <Grid
-                                        container
-                                        spacing={1}
-                                        sx={{
-                                          flexDirection: "column",
-                                          height: "40px",
-                                          minWidth: "50px",
-                                        }}
-                                      >
-                                        <Grid
-                                          item
-                                          xs={12}
-                                          md={6}
-                                          sx={{ minWidth: "50px" }}
-                                        >
-                                          <Typography>
-                                            روز{" "}
-                                            {
-                                              weekdays.find(
-                                                (day) => day.id - 1 === time.day
-                                              ).name
-                                            }
-                                            {":"}
-                                          </Typography>
-                                        </Grid>
-                                        <Grid
-                                          item
-                                          xs={12}
-                                          md={6}
-                                          sx={{ minWidth: "50px" }}
-                                        >
-                                          <Typography
-                                            sx={{ marginBottom: "7px" }}
-                                          >
-                                            {time.from_time} تا {time.to_time}
-                                          </Typography>
-                                        </Grid>
-                                      </Grid>
+                                      <Typography>
+                                        روز{" "}
+                                        {
+                                          weekdays.find(
+                                            (day) => day.id - 1 === time.day
+                                          ).name
+                                        }
+                                        {":"}
+                                        {time.from_time.slice(0, 5)} تا{" "}
+                                        {time.to_time.slice(0, 5)}
+                                      </Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
                                       {/* <Typography sx={{ marginBottom: "7px" }}>

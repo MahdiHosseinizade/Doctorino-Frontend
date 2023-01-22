@@ -122,7 +122,9 @@ export default function DoctorCard({ doctor }) {
                           color: "#7F8487",
                         }}
                       >
-                        {doctor.specialties[0].name}
+                        {console.log("this is the recieved doctor specialties: ", doctor.specialties)}
+                        {console.log("the name of the first specialty is: ", doctor.specialties[0].name)}
+                        {doctor.specialties.length !== 0 ? doctor.specialties[0].name : "ندارد"}
                       </Typography>
                       <br />
                       <Typography
