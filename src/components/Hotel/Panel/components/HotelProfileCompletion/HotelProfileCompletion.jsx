@@ -669,7 +669,7 @@ export default function HotelProfileCompletion() {
                     onSubmit={formik.handleSubmit}
                     component="form"
                   >
-                    <Dialog
+                    <Dialog 
                       open={hotelDeleteDialog}
                       onClose={() => setHotelDeleteDialog(false)}
                     >

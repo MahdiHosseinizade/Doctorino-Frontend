@@ -24,6 +24,7 @@ import {
   Select,
   MenuItem,
   Typography,
+  Button,
 } from "@mui/material";
 
 const useStyles = makeStyles({
@@ -83,7 +84,7 @@ const formValues = {
   province: "",
   city: "",
   clinic_address: "",
-
+  // license_proof: null,
   // work_periods: [],
 };
 
@@ -105,6 +106,7 @@ export default function DoctorProfileCompletion() {
   const [availableSpecilaities, setAvailableSpecilaities] = useState([]);
   const [provinceInfo, setProvinceInfo] = useState({ ...provinceValues });
   const [citiesList, setCitiesList] = useState([]);
+  const [licenseProof, setLicenseProof] = useState(null);
   const { user } = useContext(AuthContext);
   const { authData } = useContext(AuthContext);
   const API = useAxios();
@@ -112,10 +114,6 @@ export default function DoctorProfileCompletion() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "first_name") {
-      console.log("first_name", value);
-      console.log("name", name);
-    }
     setValues({
       ...values,
       [name]: value,
@@ -126,6 +124,16 @@ export default function DoctorProfileCompletion() {
         id: value,
       });
     }
+  };
+
+  const handleLicenseProofChange = (files) => {
+    // setLicenseProof(e.target.files[0]);
+    let file = files[0];
+    setLicenseProof(URL.createObjectURL(file));
+    setValues({
+      ...values,
+      license_proof: file,
+    });
   };
 
   const validate = (fieldValues = values) => {
@@ -182,7 +190,6 @@ export default function DoctorProfileCompletion() {
 
   useEffect(() => {
     function handleCities() {
-      console.log("provinceInfo", provinceInfo);
       cities.map((city) => {
         if (city.province_id === provinceInfo.id) {
           setCitiesList([...citiesList, city]);
@@ -217,14 +224,6 @@ export default function DoctorProfileCompletion() {
             },
           })
             .then((response) => {
-              console.log("the response of doctor", response.data);
-              console.log("availableSpecilaities", availableSpecilaities);
-              console.log("response.data.province", response.data.province);
-              // const temp = provinces.filter((province) => {
-              //   return province.value === response.data.province
-              // })[0]["id"]
-              // console.log("temp is: ", temp)
-
               if (response.data.province !== "تعیین نشده") {
                 setProvinceInfo({
                   ...provinceInfo,
@@ -238,14 +237,6 @@ export default function DoctorProfileCompletion() {
                   id: 0,
                 });
               }
-              // console.log("firstName: ", response.data.user.first_name);
-              console.log("education before setting: ", response.data.education);
-              // const temp = provinces.filter((province) => {
-              //   if (province.name === response.data.province) {
-              //     return province.id;
-              //   }
-              // });
-              // console.log("the temp", temp);
               setValues({
                 ...response.data,
                 first_name: response.data.user.first_name,
@@ -260,11 +251,13 @@ export default function DoctorProfileCompletion() {
                 office_number: response.data.office_number,
                 education:
                   response.data.education !== "تعیین نشده" &&
-                  response.data.education !== "undefined" && response.data.education !== null
+                  response.data.education !== "undefined" &&
+                  response.data.education !== null
                     ? educations.filter((education) => {
                         return education.name === response.data.education;
                       })[0]["id"]
-                    : "تعیین نشده",
+                    : // : "تعیین نشده",
+                      "",
                 specialties: availableSpecilaities.filter((specialty) => {
                   return specialty.name === response.data.specialties[0].name;
                 })[0]["id"],
@@ -275,7 +268,8 @@ export default function DoctorProfileCompletion() {
                           return province.id;
                         }
                       })[0]["id"]
-                    : 0,
+                    : // : 0,
+                      "",
                 city:
                   response.data.city !== "تعیین نشده"
                     ? cities.filter((city) => {
@@ -283,13 +277,15 @@ export default function DoctorProfileCompletion() {
                           return city.id;
                         }
                       })[0]["id"]
-                    : 0,
+                    : // : 0,
+                      "",
                 // city: cities.filter((city) => {
                 //   if (city.name === response.data.city) {
                 //     return city.id;
                 //   }
                 // })[0]["id"],
                 clinic_address: response.data.clinic_address,
+                // license_proof: response.data.license_proof,
                 work_periods: response.data.work_periods,
                 description: response.data.description,
               });
@@ -328,7 +324,40 @@ export default function DoctorProfileCompletion() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log("this is the doctor when submitting:", values);
+      const temp = {
+        id: values.id,
+        user: {
+          id: values.inner_id,
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: values.email,
+          username: values.username,
+        },
+        specialties: [
+          availableSpecilaities.filter((specialty) => {
+            if (specialty.id === values.specialties) {
+              return specialty.id;
+            }
+          })[0]["id"],
+        ],
+        medical_system_number: values.medical_system_number,
+        is_active: true,
+        gender: values.gender,
+        national_code: values.national_code,
+        phone_number: values.phone_number,
+        office_number: values.office_number,
+        education: educations.filter((education) => {
+          if (education.id === values.education) {
+            return education.name;
+          }
+        })[0]["name"],
+        province: values.province,
+        city: values.city,
+        clinic_address: values.clinic_address,
+        // work_periods: values.work_periods,
+        description: values.description,
+      };
+
       const formData = new FormData();
       formData.append("id", values.id);
       formData.append("user", {
@@ -350,31 +379,7 @@ export default function DoctorProfileCompletion() {
       }
       formData.append("is_active", true);
       formData.append("gender", values.gender);
-      console.log(
-        "educations: ",
-        educations.filter((education) => {
-          if (education.id === values.education) {
-            return education.name;
-          }
-        })
-      );
-      // formData.append(
-      //   "province",
-      //   provinces.filter((province) => {
-      //     if (province.id === values.province) {
-      //       return province.id;
-      //     }
-      //   })[values.province - 1]
-      // );
       formData.append("province", values.province);
-      // formData.append(
-      //   "city",
-      //   cities.filter((city) => {
-      //     if (city.id === values.city) {
-      //       return city.id;
-      //     }
-      //   })[values.city - 1]
-      // );
       formData.append("city", values.city);
       formData.append(
         "education",
@@ -392,19 +397,10 @@ export default function DoctorProfileCompletion() {
       if (values.office_number.length === 11)
         formData.append("office_number", values.office_number);
       formData.append("clinic_address", values.clinic_address);
-      formData.append("work_periods", values.work_periods);
+      // formData.append("work_periods", values.work_periods);
+      // formData.append("license_proof", values.license_proof);
       formData.append("description", values.description);
 
-      console.log(
-        "cities: ",
-        cities.filter((city) => {
-          if (city.id === values.city) {
-            return city.id;
-          }
-        })
-      );
-      console.log("the sending data: ", formData);
-      console.log("the values setting: ", values);
       axios
         .put(`http://188.121.113.74/api/doctor/${values.id}/`, formData, {
           headers: {
@@ -416,7 +412,6 @@ export default function DoctorProfileCompletion() {
             position: "top-right",
             autoClose: 2000,
           });
-          console.log("the values are: ", values);
         })
         .catch((error) => {
           if (stringContainsNumber(values.first_name)) {
@@ -657,7 +652,7 @@ export default function DoctorProfileCompletion() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={2}>
             <FormControl>
               <FormLabel>جنسیت</FormLabel>
               <RadioGroup
@@ -674,6 +669,28 @@ export default function DoctorProfileCompletion() {
               </RadioGroup>
             </FormControl>
           </Grid>
+
+          {/* <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{ display: "flex", flexDirection: "center" }}
+          >
+            <Button
+              variant="contained"
+              component="label"
+              onChange={handleLicenseProofChange}
+              sx={{ margin: "auto", width: "300px", height: "50px" }}
+            >
+              بارگذاری مدرک پزشکی
+              <input
+                text="مدرک"
+                type="file"
+                name="بارگذاری مدرک پزشکی"
+                style={{ display: "none" }}
+              />
+            </Button>
+          </Grid> */}
 
           <Grid item md={12} xs={12}>
             <button className={classes.button} type="submit">

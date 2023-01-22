@@ -245,8 +245,6 @@ const Hotel = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("fromTime: ", fromTime.toISOString().split("T")[0]);
-    // console.log("toTime: ", toTime.toISOString().split("T")[0]);
     await axios
       .get(
         `http://188.121.113.74/api/hotel/${id}/${fromTime.toISOString().split("T")[0]
@@ -422,6 +420,11 @@ const Hotel = () => {
                         renderInput={(params) => <TextField {...params} />}
                       />
                     </LocalizationProvider>
+
+                    <Grid item xs={6} md={6}>
+                      <br />
+                    </Grid>
+
                     <LocalizationProvider
                       dateAdapter={AdapterJalali}
                       sx={{ marginTop: "20px" }}
