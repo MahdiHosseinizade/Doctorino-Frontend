@@ -102,7 +102,6 @@ export default function HotelSearch() {
       })
       .then((response) => {
         if (response.data.length !== 0) {
-          console.log("the response of found hotels: ", response.data);
           history.push("/found-hotels", { hotels: response.data });
         } else {
           toast.error("هیچ هتلی یافت نشد");

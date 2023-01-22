@@ -190,7 +190,6 @@ export default function DoctorProfileCompletion() {
 
   useEffect(() => {
     function handleCities() {
-      console.log("provinceInfo", provinceInfo);
       cities.map((city) => {
         if (city.province_id === provinceInfo.id) {
           setCitiesList([...citiesList, city]);
@@ -225,14 +224,6 @@ export default function DoctorProfileCompletion() {
             },
           })
             .then((response) => {
-              console.log("the response of doctor", response.data);
-              console.log("availableSpecilaities", availableSpecilaities);
-              console.log("response.data.province", response.data.province);
-              // const temp = provinces.filter((province) => {
-              //   return province.value === response.data.province
-              // })[0]["id"]
-              // console.log("temp is: ", temp)
-
               if (response.data.province !== "تعیین نشده") {
                 setProvinceInfo({
                   ...provinceInfo,
@@ -246,17 +237,6 @@ export default function DoctorProfileCompletion() {
                   id: 0,
                 });
               }
-              // console.log("firstName: ", response.data.user.first_name);
-              console.log(
-                "education before setting: ",
-                response.data.education
-              );
-              // const temp = provinces.filter((province) => {
-              //   if (province.name === response.data.province) {
-              //     return province.id;
-              //   }
-              // });
-              // console.log("the temp", temp);
               setValues({
                 ...response.data,
                 first_name: response.data.user.first_name,
@@ -311,7 +291,6 @@ export default function DoctorProfileCompletion() {
               });
               handleCities();
               setLoading(false);
-              console.log("data when fetched: ", values);
             })
             .catch((error) => {
               console.log("Error from fetching doctor's info: ", error);
@@ -345,14 +324,6 @@ export default function DoctorProfileCompletion() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log("the specialties when sending: ", [
-        availableSpecilaities.filter((specialty) => {
-          if (specialty.id === values.specialties) {
-            return specialty.id;
-          }
-        })[0]["id"],
-      ]);
-
       const temp = {
         id: values.id,
         user: {
@@ -386,7 +357,6 @@ export default function DoctorProfileCompletion() {
         // work_periods: values.work_periods,
         description: values.description,
       };
-      console.log("this is the doctor when submitting:", temp);
 
       const formData = new FormData();
       formData.append("id", values.id);
@@ -409,31 +379,7 @@ export default function DoctorProfileCompletion() {
       }
       formData.append("is_active", true);
       formData.append("gender", values.gender);
-      console.log(
-        "educations: ",
-        educations.filter((education) => {
-          if (education.id === values.education) {
-            return education.name;
-          }
-        })
-      );
-      // formData.append(
-      //   "province",
-      //   provinces.filter((province) => {
-      //     if (province.id === values.province) {
-      //       return province.id;
-      //     }
-      //   })[values.province - 1]
-      // );
       formData.append("province", values.province);
-      // formData.append(
-      //   "city",
-      //   cities.filter((city) => {
-      //     if (city.id === values.city) {
-      //       return city.id;
-      //     }
-      //   })[values.city - 1]
-      // );
       formData.append("city", values.city);
       formData.append(
         "education",
@@ -455,16 +401,6 @@ export default function DoctorProfileCompletion() {
       // formData.append("license_proof", values.license_proof);
       formData.append("description", values.description);
 
-      console.log(
-        "cities: ",
-        cities.filter((city) => {
-          if (city.id === values.city) {
-            return city.id;
-          }
-        })
-      );
-      console.log("the sending data: ", formData);
-      console.log("the values setting: ", values);
       axios
         .put(`http://188.121.113.74/api/doctor/${values.id}/`, formData, {
           headers: {
@@ -476,7 +412,6 @@ export default function DoctorProfileCompletion() {
             position: "top-right",
             autoClose: 2000,
           });
-          console.log("the values are: ", values);
         })
         .catch((error) => {
           if (stringContainsNumber(values.first_name)) {

@@ -11,20 +11,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Stack from "@mui/material/Stack";
-// import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker/TimePicker";
-// import { DesktopTimePicker } from "@mui/x-date-pickers/DesktopTimePicker";
 import {
   Container,
   Grid,
   Box,
   Tab,
   Tabs,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   TextField,
   Button,
   FormControl,
@@ -38,7 +31,6 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PropTypes from "prop-types";
-
 
 const useStyles = makeStyles({
   boxContainer: {
@@ -55,7 +47,6 @@ const useStyles = makeStyles({
     height: "100%",
     border: "1px solid black",
     borderRadius: "10px",
-    // padding: "20px",
     paddingTop: "1.5rem",
     paddingBottom: "0.1rem",
     "& .MuiTextField-root": { m: 0 },
@@ -194,7 +185,6 @@ export default function AppointmentReports() {
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
-    console.log("in validate func: ", fieldValues);
     if ("day" in fieldValues) {
       temp.day = fieldValues.day ? "" : "روز موردنظر را وارد کنید.";
     }
@@ -212,10 +202,7 @@ export default function AppointmentReports() {
       ...temp,
     });
 
-    console.log("This is the fieldValues: ", fieldValues);
     if (fieldValues === values) {
-      console.log("going out of validate func:");
-      // return Object.values(temp).every((x) => x === "");
       return true;
     }
   };
@@ -229,12 +216,10 @@ export default function AppointmentReports() {
         },
       })
         .then(async (res) => {
-          console.log("recieved doctor ID: ", res.data.id);
           setValues({
             ...values,
             doctorId: res.data.id,
           });
-          // console.log("this is the values: ", values);
           API.get(`http://188.121.113.74/api/doctor/${res.data.id}/workday/`, {
             headers: {
               Authorization: `Bearer ${authData.access}`,
@@ -243,32 +228,6 @@ export default function AppointmentReports() {
             .then(async (response) => {
               setTimeout(() => {
                 setAvailableTimes(response.data);
-                // try {
-                //   // setLoading(true);
-                //   console.log(
-                //     "this is the response of workday: ",
-                //     response.data
-                //   );
-                //   const temptimes = response.data.filter((item) => {
-                //     if (item.doctor === res.data.id) {
-                //       console.log(
-                //         "in useEffect condition setting availableTimes"
-                //       );
-                //       return {
-                //         id: item.id,
-                //         day: item.day,
-                //         fromTime: item.from_time,
-                //         toTime: item.to_time,
-                //         doctorId: item.doctor,
-                //       };
-                //     }
-                //   });
-                //   console.log("this is the temptimes: ", temptimes);
-                //   setAvailableTimes([...temptimes]);
-                //   console.log("this is the availableTimes: ", availableTimes);
-                // } catch (error) {
-                //   console.log("this is the error of availableTimes: ", error);
-                // }
               }, 1);
             })
             .catch((error) => {
@@ -285,25 +244,13 @@ export default function AppointmentReports() {
 
     if (loading) {
       try {
-        console.log("loading: ", loading);
         fetchData();
-        console.log("this is the availableTimes: ", availableTimes);
       } catch (error) {
-        console.log("this is the error of availableTimes: ", error);
       } finally {
-        console.log("setting the loading to false");
         setLoading(false);
       }
     }
-    console.log("loading after if statement: ", loading);
     setLoading(false);
-    console.log("loading after setting to false: ", loading);
-    console.log(
-      "this is the availableTimes after if statement in useeffect: ",
-      availableTimes
-    );
-    // console.log("this is the rows: ", row)
-
     const id = setInterval(() => {
       fetchData();
     }, 200000);
@@ -314,8 +261,6 @@ export default function AppointmentReports() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log("in submit func: ", values);
-      console.log("fromTime checking: ", typeof values.fromTime.$H);
       const temp = {
         from_time:
           (String(values.fromTime.$H).length !== 2
@@ -339,7 +284,6 @@ export default function AppointmentReports() {
         doctor: values.doctorId,
         id: values.id,
       };
-      console.log("this is the temp values when sending the time: ", temp);
       axios
         .post(
           `http://188.121.113.74/api/doctor/workday/`,
@@ -541,16 +485,12 @@ export default function AppointmentReports() {
                                 <Stack spacing={3}>
                                   <TimePicker
                                     // className={classes.timePicker}
-                                  
+
                                     ampm={false}
                                     fullWidth
                                     label="از ساعت"
                                     value={values.fromTime}
                                     onChange={(newValue) => {
-                                      console.log(
-                                        "this is the new fromTime value: ",
-                                        newValue
-                                      );
                                       setValues({
                                         ...values,
                                         fromTime: newValue,
@@ -567,30 +507,8 @@ export default function AppointmentReports() {
                                   />
                                 </Stack>
                               </LocalizationProvider>
-
-                              {/* <TimePicker
-                                // onFocusChange={this.onFocusChange.bind(this)}
-                                // onTimeChange={this.onTimeChange.bind(this)}
-                                value={values.fromTime}
-                                onChange={(newValue) => {
-                                  console.log(
-                                    "this is the new fromTime value: ",
-                                    newValue
-                                  );
-                                  setValues({
-                                    ...values,
-                                    fromTime: newValue,
-                                  });
-                                  setStartTime(newValue);
-                                }}
-                                rend
-                              /> */}
                             </Grid>
-                            <Grid
-                              item
-                              xs={12}
-                              // md={6}
-                            >
+                            <Grid item xs={12}>
                               <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <Stack spacing={3}>
                                   <TimePicker
@@ -616,11 +534,7 @@ export default function AppointmentReports() {
                               </LocalizationProvider>
                             </Grid>
 
-                            <Grid
-                              item
-                              xs={12}
-                              // md={6}
-                            >
+                            <Grid item xs={12}>
                               <button className={classes.button} type="submit">
                                 ذخیره اطلاعات
                               </button>
@@ -630,7 +544,6 @@ export default function AppointmentReports() {
                       </form>
                     </Grid>
                   </Grid>
-                  {/* </Box> */}
                 </TabPanel>
 
                 <TabPanel value={tabValue} index={1}>
@@ -643,23 +556,16 @@ export default function AppointmentReports() {
                       padding: "20px",
                       "& .MuiTextField-root": { m: 0.5 },
                       boxShadow: "0 0 5px 0 rgba(0,0,0,0.5)",
-                      // minWidth: "368px",
                     }}
                   >
                     <Grid container spacing={2}>
                       <Grid
                         container
-                        // xs={12}
-                        // sm={12}
-                        // md={12}
                         spacing={1}
                         sx={{
                           marginTop: "10px",
-                          // display: "flex",
-                          // justifyContent: "center",
                         }}
                       >
-                        {/* {console.log(rooms)} */}
                         {availableTimes.length !== 0 ? (
                           availableTimes
                             .sort((a, b) => a.day - b.day)
@@ -693,76 +599,17 @@ export default function AppointmentReports() {
                                       </Typography>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                      {/* <Typography sx={{ marginBottom: "7px" }}>
-                                    از ساعت: {time.from_time}
-                                  </Typography>
-                                  <Typography sx={{ marginBottom: "7px" }}>
-                                    تا ساعت: {time.to_time}
-                                  </Typography> */}
                                       <Button
                                         sx={{ marginTop: "10px" }}
                                         type="button"
                                         variant="outlined"
                                         color="doctor"
                                         onClick={() => {
-                                          // setFlag(true);
-                                          // setOpen(true);
-                                          // DeleteTimePopUp(time);
                                           handleDeleteTime(time);
-
-                                          // API.delete(
-                                          //   `/api/doctor/workday/${time.id}/`,
-                                          //   {
-                                          //     headers: {
-                                          //       Authorization:
-                                          //         "Bearer " + authData?.access,
-                                          //     },
-                                          //   }
-                                          // )
-                                          //   .then((res) => {
-                                          //     setAvailableTimes(
-                                          //       time.filter(
-                                          //         (rm) => rm.id !== time.id
-                                          //       )
-                                          //     );
-                                          //     toast.success(
-                                          //       "زمان موردنظر با موفقیت حذف شد",
-                                          //       {
-                                          //         position: "top-right",
-                                          //         autoClose: 2000,
-                                          //       }
-                                          //     );
-                                          //     // formikRoom.resetForm();
-                                          //     setLoading(true);
-                                          //   })
-                                          //   .catch((err) => {
-                                          //     toast.error("خطایی رخ داده است", {
-                                          //       position: "top-right",
-                                          //       autoClose: 2000,
-                                          //     });
-                                          //   });
                                         }}
                                       >
                                         حذف زمان موردنظر
                                       </Button>
-                                      {/* <Dialog
-                                        open={open}
-                                        onClose={() => setOpen(false)}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                      >
-                                        <DialogTitle id="alert-dialog-title">
-                                          <Typography
-                                            sx={{
-                                              display: "flex",
-                                              justifyContent: "center",
-                                            }}
-                                          >
-                                            {"حذف زمان انتخاب شده"}
-                                          </Typography>
-                                        </DialogTitle>
-                                        {flag && DeleteTimePopUp(time)}
-                                      </Dialog> */}
                                     </AccordionDetails>
                                   </Accordion>
                                 </Grid>

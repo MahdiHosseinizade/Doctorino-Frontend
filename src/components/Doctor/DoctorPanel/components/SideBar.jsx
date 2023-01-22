@@ -90,11 +90,6 @@ export default function SideBar() {
   const { logOut } = useContext(AuthContext);
 
   const menuItems = [
-    // {
-    //   text: "داشبورد",
-    //   path: "/doctor-panel/dashboard",
-    //   icon: <AddHomeIcon color="f4f4f4" />,
-    // },
     {
       text: "پروفایل",
       path: "/doctor-panel/doctor-profile",
@@ -106,26 +101,10 @@ export default function SideBar() {
       icon: <MenuIcon color="f4f4f4" />,
     },
     {
-      // text: "مدیریت نوبت ها",
       text: "مدیریت زمان نوبت دهی",
       path: "/doctor-panel/appointments-management",
       icon: <SummarizeIcon color="f4f4f4" />,
     },
-    // {
-    //   text: "امور مالی",
-    //   path: "/doctor-panel/finance-issues",
-    //   icon: <AccountBalanceIcon color="f4f4f4" />,
-    // },
-    // {
-    //   text: "تغییر رمزعبور",
-    //   path: "/doctor-panel/change-password",
-    //   icon: <PasswordIcon color="f4f4f4" />,
-    // },
-    // {
-    //   text: "خروج",
-    //   path: "/",
-    //   icon: <LogoutIcon color="f4f4f4" />,
-    // },
   ];
 
   const [open, setOpen] = React.useState(false);
