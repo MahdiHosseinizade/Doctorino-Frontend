@@ -53,7 +53,7 @@ export default function VerifyEmail() {
 
         onSubmit: (values) => {
             api.post("api/auth/change-password/verify/", {
-                'user-id': user.id,
+                'email': user.email,
                 'code': values.confirmation
             }).then(res => {
                 toast.success("با موفقیت تایید شد.", {
@@ -82,10 +82,10 @@ export default function VerifyEmail() {
     useEffect(() => {
         if (loading) {
             api.post("api/auth/change-password/send-code/", {
-                'user-id': user.id,
+                email: user.email,
             }).then(res => {
                 console.log(res)
-                toast.info("2 دقیقه وقت دارید کد تایید را وارد کنید.", {
+                toast.info(`کد تایید به ایمیل ${user.email} ارسال شد. 2 دقیقه وقت دارید ایمیل را تایید کنید.`, {
                     position: "top-right",
                     autoClose: 5000,
                 })

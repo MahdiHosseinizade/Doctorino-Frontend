@@ -57,7 +57,7 @@ export default function VerifyEmail() {
         onSubmit: (values) => {
             api.post("/api/auth/change-password/set-password/",
                 {
-                    'user-id': user.id,
+                    'email': user.email,
                     'password': values.new_pass,
                 }
             ).then(res => {

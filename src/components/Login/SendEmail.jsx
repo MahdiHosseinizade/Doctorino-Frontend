@@ -7,7 +7,6 @@ import { Button, Dialog, TextField } from "@mui/material";
 import "./SendEmail.css"
 import axios from "axios";
 import { useState } from "react";
-import Popup from "reactjs-popup";
 import { toast } from "react-toastify";
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -130,7 +129,8 @@ const EmailForgotPassword = () => {
                 <DialogActions>
                     {/* button to set code  */}
                     {/* <Button onClick={Setcode} >تایید </Button> */}
-                    <Button onClick={handleClosePost} color="primary">
+                    <Button onClick={() => setOpen(false)} color="error">انصراف</Button>
+                    <Button onClick={handleClosePost} color="primary" variant="outlined">
                         ارسال کد 
                     </Button>
                 </DialogActions>
