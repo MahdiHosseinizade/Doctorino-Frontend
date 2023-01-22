@@ -95,7 +95,6 @@ export default function HotelSearch() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("city id: ", city.id);
     await axios
       .post("http://188.121.113.74/api/hotel/search/", {
         province: city.id,
@@ -103,7 +102,6 @@ export default function HotelSearch() {
       })
       .then((response) => {
         if (response.data.length !== 0) {
-          console.log("the response of found hotels: ", response.data);
           history.push("/found-hotels", { hotels: response.data });
         } else {
           toast.error("هیچ هتلی یافت نشد");

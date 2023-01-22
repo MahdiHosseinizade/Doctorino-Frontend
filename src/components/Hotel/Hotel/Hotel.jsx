@@ -155,8 +155,6 @@ const Hotel = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("fromTime: ", fromTime.toISOString().split("T")[0]);
-    // console.log("toTime: ", toTime.toISOString().split("T")[0]);
     await axios
       .get(
         `http://188.121.113.74/api/hotel/${id}/${fromTime.toISOString().split("T")[0]
