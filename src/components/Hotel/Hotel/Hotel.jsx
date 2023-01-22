@@ -322,6 +322,11 @@ const Hotel = () => {
                         renderInput={(params) => <TextField {...params} />}
                       />
                     </LocalizationProvider>
+
+                    <Grid item xs={6} md={6}>
+                      <br />
+                    </Grid>
+
                     <LocalizationProvider
                       dateAdapter={AdapterJalali}
                       sx={{ marginTop: "20px" }}

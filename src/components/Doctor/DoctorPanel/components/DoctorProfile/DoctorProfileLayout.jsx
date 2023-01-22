@@ -163,16 +163,10 @@ export default function DoctorProfileLayout() {
       })
         .then((response) => {
           setTimeout(() => {
-            console.log("this is the response of specialties", response.data);
             setAvailableSpecilaities(response.data);
-            console.log(
-              "this is the available specialties: ",
-              availableSpecilaities
-            );
           }, 1000);
         })
         .catch((error) => {
-          console.log("Error returned from fetching specialties: ", error);
         });
 
       // Fetching doctor's information from the database
@@ -182,20 +176,17 @@ export default function DoctorProfileLayout() {
         },
       })
         .then((response) => {
-          console.log("the response of doctorID", response.data);
           API.get(`/api/doctor/${response.data.id}/`, {
             headers: {
               Authorization: `Bearer ${authData?.access}`,
             },
           })
             .then((response) => {
-              console.log("the response of doctor", response.data);
               const temp = availableSpecilaities.filter((specialty) => {
                 if (specialty.name === response.data.specialties[0].name) {
                   return specialty.name;
                 }
               });
-              console.log("specialty temp: ", temp);
               setDoctorImage(response.data.image);
               setDoctor({
                 ...response.data,
@@ -321,13 +312,9 @@ export default function DoctorProfileLayout() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("in handle submit");
 
     if (doctorImage) {
-
-      console.log("the doctor, ", doctor);
-
-      const temp = { 
+      const temp = {
         // ...doctor,
         id: doctor.id,
         user: {
@@ -364,7 +351,7 @@ export default function DoctorProfileLayout() {
         // work_periods: doctor.work_periods,
         description: doctor.description,
         image: doctorImage,
-       };
+      };
 
       const formData = new FormData();
       formData.append("id", doctor.id);
@@ -413,13 +400,12 @@ export default function DoctorProfileLayout() {
       formData.append("image", doctor.image);
       // }
 
-      API
-        .put(`/api/doctor/${doctor.id}/`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${authData?.access}`,
-          },
-        })
+      API.put(`/api/doctor/${doctor.id}/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${authData?.access}`,
+        },
+      })
         .then((response) => {
           toast.success(`تکمیل اطلاعات با موفقیت انجام شد.`, {
             position: "top-right",
@@ -449,6 +435,8 @@ export default function DoctorProfileLayout() {
               <Grid
                 item
                 xs={12}
+                sm={12}
+                md={6}
                 lg={6}
                 sx={{
                   display: "flex",
@@ -495,17 +483,19 @@ export default function DoctorProfileLayout() {
                       : "http://188.121.113.74/media/doctor-image/DoctorProfilePhoto_Ymp68AL.jpg"
                   }
                   style={{
-                    display: { 
-                      xs: "none", 
-                      md: "flex"
-                       },
-                    minWidth: "0px",
+                    display: {
+                      xs: "none",
+                      md: "flex",
+                    },
+                    minWidth: "250px",
+                    maxWidth: "250px",
                     width: "50%",
                     marginTop: 3,
                     height: "85%",
                     objectFit: "fill",
                     borderRadius: "50%",
-                    border: `5px solid ${theme.palette.doctor.main}`,
+                    // border: `4px solid ${theme.palette.doctor.main}`,
+                    border: `2px solid #B2B2B2`,
                   }}
                 />
                 {/* </Grid>
@@ -519,16 +509,17 @@ export default function DoctorProfileLayout() {
                     width: "60px",
                     height: "60px",
                     marginTop: 200,
-                    marginRight: "30px",
+                    marginRight: "20px",
                     objectFit: "fill",
                     borderRadius: "80%",
-                    border: `2px solid ${theme.palette.doctor.main}`,
+                    // border: `2px solid ${theme.palette.doctor.main}`,
+                    border: `1px solid #B2B2B2`,
                   }}
                 />
                 {/* </Grid> */}
               </Grid>
 
-              <Grid item xs={12} lg={6}>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
                 <CardContent sx={{ marginTop: "20px" }}>
                   <Box>
                     <Grid container spacing={3.5}>
