@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
       first_name: data['first-name'],
       last_name: data['last-name'],
       role: role,
+      email: data["email"],
     };
   }
 
