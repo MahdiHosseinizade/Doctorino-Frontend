@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
 
     if (response.status === 200) {
       setAuthTokens(data);
-      
+      history.push('/')
       setUser(extractUserData(data));
 
       localStorage.setItem("authData", JSON.stringify(data));

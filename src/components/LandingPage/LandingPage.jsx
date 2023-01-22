@@ -128,6 +128,7 @@ export default function LandingPage() {
             <div className="EnterCity">
               <FormControl className="FormControlCity" fullWidth>
                 <Select
+                  placeholder="انتخاب شهر "
                   value={city}
                   onChange={(e) =>cityHandler(e)}
                   options={provinces}
@@ -140,6 +141,7 @@ export default function LandingPage() {
             <div className="typeScale">
               <h1>تخصص : </h1>
               <Select 
+                placeholder="انتخاب تخصص "
                 options={specialityJson}
                 onChange={(e) => SpecialityHandler(e)}
                 value={speciality}

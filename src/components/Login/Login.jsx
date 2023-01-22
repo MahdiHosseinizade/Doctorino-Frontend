@@ -69,7 +69,6 @@ const Login = ({ history }) => {
     onSubmit: (values, e) => {
       // postuserHandler(values);
       loginUser(values.email, values.password, destination);
-      // if login successfull redirect to landing page
       if (document.cookie.token) {
         history.push("/");
       }
@@ -133,15 +132,8 @@ const Login = ({ history }) => {
                   }
                   {...formik.getFieldProps("email")}
                 />
-                {/* <Input formik={formik} name= "email" type="email" label="ایمیل" /> */}
               </div>
               <div className="mb4">
-                {/* <Input
-                  formik={formik}
-                  name="password"
-                  type="password"
-                  label="کلمه عبور"
-                /> */}
                 <STextField
                   fullWidth
                   error={
@@ -176,6 +168,13 @@ const Login = ({ history }) => {
             <button disabled={!(formik.isValid && formik.dirty)} type="submit">
               ورود
             </button>
+            <div className="ForgotPasword">
+                  <h2 >
+                    <Link className="forgotPasswordlink" to='/email-verification' >
+                      فراموشی رمز عبور
+                    </Link>
+                  </h2>
+            </div>
             <h2 className="h2text">
               آیا حساب کاربری ندارید ؟
               <Link className="link" to="/signup">

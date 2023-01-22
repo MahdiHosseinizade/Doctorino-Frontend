@@ -47,6 +47,7 @@
     "react-time-picker": "^5.2.0",
     "react-times": "^3.1.12",
     "react-toastify": "^9.1.1",
+    "reactjs-popup": "^2.0.5",
     "stream": "^0.0.2",
     "styled-components": "^5.3.6",
     "stylis": "^4.1.3",

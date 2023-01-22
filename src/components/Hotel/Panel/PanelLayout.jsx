@@ -22,6 +22,10 @@ export default function PanelLayout({ children }) {
               path: "/hotel-search",
             },
             {
+              text: "اطلاعات رزرو",
+              path: "/hotel-panel/booking-reports"
+            },
+            {
               text: "اضافه کردن هتل",
               path: "/hotel-panel/add-hotel",
             },

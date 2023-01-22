@@ -248,13 +248,16 @@
     border: 1px solid #ccc;
     text-decoration: none;
     color: white;
-    /* margin-right: 10px; */
+    -moz-box-shadow: inset 0 -10px 50px -10px #000000;
+    -webkit-box-shadow: inset 0 -10px 20px -10px #000000;
+    box-shadow: inset 0 -10px 150px -10px #000000;
 }
 .showSpecialieties h3{
     font-family: 'IranYekan';
-    font-size: 16px;
-    color: #010101;
-    margin-top: 53%;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin-top: 62%;
 }
 /* .SelectSpeciality{
     display: flex;
